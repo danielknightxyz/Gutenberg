@@ -1,0 +1,222 @@
+package us.sourcefoundry.gutenberg.services;
+
+import org.apache.commons.cli.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
+
+/**
+ * Cli
+ *
+ * @author Daniel Knight <daniel.knight@creditcards.com>
+ */
+public class Cli {
+
+    //Options
+    final Logger logger = LoggerFactory.getLogger(Cli.class);
+    //The cli options.
+    private Options cliOptions;
+    //Set the commandline interface object.
+    private CommandLine commandLine;
+
+    /**
+     * Constructor
+     */
+    public Cli() {
+    }
+
+    /**
+     * Constructor
+     */
+    public Cli(String[] args) {
+        this.load(args);
+    }
+
+    /**
+     * Load
+     *
+     * @param args ApplicationManager arguments;\.
+     */
+    public void load(String[] args) {
+        //Build the CLI options.
+        Options options = this.buildCLIOptions();
+
+        for (String arg : args)
+            logger.debug("cli argument: {}", arg);
+
+        try {
+            //Get the options values from the command line.
+            this.commandLine = this.buildCLI(options, args);
+            this.cliOptions = options;
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Has Option
+     *
+     * @param option The name of the option.
+     * @return boolean
+     */
+    public boolean hasOption(String option) {
+        return commandLine.hasOption(option);
+    }
+
+    /**
+     * Get Option Value
+     *
+     * @param option The name of the option.
+     * @return The value of the option.
+     */
+    public String getOptionValue(String option) {
+        return commandLine.getOptionValue(option);
+    }
+
+    /**
+     * Print Help
+     */
+    public void printHelp() {
+        HelpFormatter formatter = new HelpFormatter();
+        formatter.printHelp("gutenberg [options] [source] [destination] ", cliOptions);
+    }
+
+    /**
+     * Notifier Version
+     */
+    public void printVersion() {
+        System.out.println(
+                "Gutenberg " + Cli.class.getPackage().getImplementationVersion()
+        );
+    }
+
+    /**
+     * Build Cli Options
+     *
+     * @return Options
+     */
+    private Options buildCLIOptions() {
+        logger.debug("building cli options");
+
+        Option help2 = new Option("help", "Prints this message.");
+
+        Option answersFileName = OptionBuilder
+                .withArgName("path")
+                .hasArg()
+                .withDescription("Save the answers to any prompts. This should be a relative path for the answers file.")
+                .create("saveanswers");
+
+        Option answersFile = OptionBuilder
+                .withArgName("path")
+                .hasArg()
+                .withDescription("Relative path to the answers file.")
+                .create("answersfile");
+
+        Options options = new Options();
+        options.addOption(help2);
+        options.addOption(answersFileName);
+        options.addOption(answersFile);
+
+        return options;
+    }
+
+    /**
+     * Build Cli
+     *
+     * @param options The options object for the application.
+     * @param args    The command line arguments for the application.
+     * @return CommandLine
+     * @throws ParseException
+     */
+    private CommandLine buildCLI(Options options, String[] args) throws ParseException {
+        logger.debug("parsing cli options");
+        CommandLineParser parser = new GnuParser();
+        return parser.parse(options, args);
+    }
+
+    /**
+     * Check if any blocking options have been passed to Cli
+     *
+     * @return boolean
+     */
+    public boolean hasBlockingOption() {
+        boolean hasHelp = this.hasHelp();
+        boolean hasVersion = this.hasVersion();
+
+        //If the want the version, display the version information and exit.
+        // This will only show with a package built with maven.
+        return hasVersion || hasHelp;
+
+    }
+
+    /**
+     * Print a blocking option if there is one
+     */
+    public void printBlockingOption() {
+
+        //If we have a help request, display the help and nothing else.
+        if (hasHelp()) {
+            this.printHelp();
+        }
+
+        //If the want the version, display the version information and exit.
+        // This will only show with a package built with maven.
+        if (hasVersion()) {
+            this.printVersion();
+        }
+    }
+
+    /**
+     * Has Version
+     *
+     * @return boolean
+     */
+    public boolean hasVersion() {
+        //Check for the version request.
+        return this.hasOption("version");
+    }
+
+    /**
+     * Has Help
+     *
+     * @return boolean
+     */
+    public boolean hasHelp() {
+        //Check for the help request.
+        return (this.hasOption("h") || this.hasOption("help"));
+    }
+
+    /**
+     * Has Verbosity
+     *
+     * @return boolean
+     */
+    public boolean hasVerbosity() {
+        //Check for verbosity.
+        return (this.hasOption("v") || this.hasOption("verbose"));
+    }
+
+    /**
+     * Verbosity
+     *
+     * @return
+     */
+    public boolean verbosity() {
+        //Check for verbosity.
+        return (this.hasOption("v") || this.hasOption("verbose"));
+    }
+
+    /**
+     * Log Activity
+     *
+     * @return boolean
+     */
+    public boolean logActivity() {
+        return this.hasOption("logActivity");
+    }
+
+    public List getArgList() {
+        return this.commandLine.getArgList();
+    }
+}

@@ -1,0 +1,3 @@
+When using answers file, and some answers are missing, prompt for missing values.
+But stages into tasks.
+Log answers and log entries into a .gutenberg folder in the output directory.

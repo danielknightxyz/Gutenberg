@@ -83,7 +83,9 @@ public class Cli {
      */
     private void printVersion() {
         System.out.println(
-                "Gutenberg " + Cli.class.getPackage().getImplementationVersion()
+                "Gutenberg " + (Cli.class.getPackage().getImplementationVersion() != null ?
+                        Cli.class.getPackage().getImplementationVersion() != null :
+                        "Unreleased")
         );
     }
 

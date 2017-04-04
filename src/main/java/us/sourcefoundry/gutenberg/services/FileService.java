@@ -34,7 +34,6 @@ public class FileService {
 
             System.out.println(MessageFormat.format("Creating File from Template... {0}",destFilePath));
 
-
             HashMap<String, Object> variables = new HashMap<String, Object>() {{
                 put("forme", formeContext);
                 put("variables", fileTemplateEntry.getVariables());

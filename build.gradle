@@ -27,9 +27,16 @@ dependencies {
 
 jar {
     manifest {
-        attributes 'Main-Class': 'us.sourcefoundry.gutenberg.Main'
+        attributes ('Main-Class': 'us.sourcefoundry.gutenberg.Main',
+                'Implementation-Version': version)
     }
     from {
         configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
     }
+}
+
+
+// This will build and install the compiled project locally.
+task install(type: Exec, dependsOn: build){
+    commandLine "etc/install.sh"
 }

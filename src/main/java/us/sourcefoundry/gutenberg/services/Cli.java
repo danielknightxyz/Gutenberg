@@ -1,8 +1,6 @@
 package us.sourcefoundry.gutenberg.services;
 
 import org.apache.commons.cli.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -13,8 +11,6 @@ import java.util.List;
  */
 public class Cli {
 
-    //Options
-    final Logger logger = LoggerFactory.getLogger(Cli.class);
     //The cli options.
     private Options cliOptions;
     //Set the commandline interface object.
@@ -41,9 +37,6 @@ public class Cli {
     public void load(String[] args) {
         //Build the CLI options.
         Options options = this.buildCLIOptions();
-
-        for (String arg : args)
-            logger.debug("cli argument: {}", arg);
 
         try {
             //Get the options values from the command line.
@@ -77,15 +70,18 @@ public class Cli {
     /**
      * Print Help
      */
-    public void printHelp() {
+    private void printHelp() {
         HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp("gutenberg [options] [source] [destination] ", cliOptions);
+        formatter.setWidth(250);
+        String header = "\nActions: init, build <path to build>\nOptions:";
+        String footer = "\nPlease visit https://github.com/sourcefoundryus/gutenberg for more information.";
+        formatter.printHelp("gutenberg [ACTION] [ARG...]", header, cliOptions, footer, true);
     }
 
     /**
      * Notifier Version
      */
-    public void printVersion() {
+    private void printVersion() {
         System.out.println(
                 "Gutenberg " + Cli.class.getPackage().getImplementationVersion()
         );
@@ -97,26 +93,41 @@ public class Cli {
      * @return Options
      */
     private Options buildCLIOptions() {
-        logger.debug("building cli options");
+        Option help = OptionBuilder.withLongOpt("help").withDescription("Prints this message.").create("h");
+        Option force = OptionBuilder.withLongOpt("force").withDescription("Force the action to complete.").create("f");
+        Option version = OptionBuilder.withLongOpt("version").withDescription("Get Version").create("v");
 
-        Option help2 = new Option("help", "Prints this message.");
-
-        Option answersFileName = OptionBuilder
+        Option inputLocation = OptionBuilder
+                .withLongOpt("input")
                 .withArgName("path")
+                .hasArg()
+                .withDescription("Absolute path of the directory containing the forme file and source/template resources.")
+                .create("i");
+
+        Option saveAnswers = OptionBuilder
+                .withLongOpt("saveanswers")
+                .withArgName("path to answers file")
                 .hasArg()
                 .withDescription("Save the answers to any prompts. This should be a relative path for the answers file.")
-                .create("saveanswers");
+                .create("s");
 
         Option answersFile = OptionBuilder
-                .withArgName("path")
+                .withLongOpt("answersfile")
+                .withArgName("path to save file")
                 .hasArg()
                 .withDescription("Relative path to the answers file.")
-                .create("answersfile");
+                .create("a");
+
+        OptionGroup answersOptionGroup = new OptionGroup();
+        answersOptionGroup.addOption(saveAnswers);
+        answersOptionGroup.addOption(answersFile);
 
         Options options = new Options();
-        options.addOption(help2);
-        options.addOption(answersFileName);
-        options.addOption(answersFile);
+        options.addOption(help);
+        options.addOption(force);
+        options.addOption(version);
+        options.addOption(inputLocation);
+        options.addOptionGroup(answersOptionGroup);
 
         return options;
     }
@@ -130,7 +141,6 @@ public class Cli {
      * @throws ParseException
      */
     private CommandLine buildCLI(Options options, String[] args) throws ParseException {
-        logger.debug("parsing cli options");
         CommandLineParser parser = new GnuParser();
         return parser.parse(options, args);
     }

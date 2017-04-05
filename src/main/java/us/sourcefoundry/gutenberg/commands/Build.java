@@ -42,6 +42,7 @@ public class Build implements Command {
 
             (new Console()).message("Building Template \"{0}\"", formeContext.getName());
 
+            //Check to make sure the output directory is available.
             if(!this.checkOutputDir(applicationContext))
                 return;
 

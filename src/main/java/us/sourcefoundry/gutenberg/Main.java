@@ -16,18 +16,16 @@ public class Main {
     private final static Logger logger = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) throws IOException {
-        /*
-         * Setup some shit.
-         */
-
+        //Start by getting the CLI args.
         Cli cli = new Cli(args);
-
+        //If we need to show a blocking option, do it.
         if (cli.hasBlockingOption()) {
             cli.printBlockingOption();
             return;
         }
-
-        String banner = " _____       _             _                    \n" +
+        
+        String banner = "\n" +
+                        " _____       _             _                    \n" +
                         "|  __ \\     | |           | |                   \n" +
                         "| |  \\/_   _| |_ ___ _ __ | |__   ___ _ __ __ _ \n" +
                         "| | __| | | | __/ _ \\ '_  \\| '_   \\/ _ \\ '__/  _` |\n" +
@@ -43,10 +41,12 @@ public class Main {
         String workingDir = System.getProperty("user.dir");
         String sourceDir = workingDir;
 
+        //Get the input/source directory.
         if(cli.hasOption("i"))
             sourceDir = cli.getOptionValue("i");
 
-        String userSpecifiedCommand = cli.getArgList().get(0).toString();
+        //Get the action specified by the user.
+        String userSpecifiedCommand = (cli.getArgList().size() > 0  ? cli.getArgList().get(0).toString() : "");
 
         //Create an application context for use later in the process.
         ApplicationContext applicationContext = new ApplicationContext();

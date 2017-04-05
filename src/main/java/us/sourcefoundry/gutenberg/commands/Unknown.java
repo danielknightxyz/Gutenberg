@@ -15,7 +15,7 @@ public class Unknown implements Command{
     public void execute() {
         //Throw an error because the requested command is not provided.
         if(this.applicationContext.getCommand().equals("")) {
-            (new Console()).error("! Action not provided.  See help for options.");
+            (new Console()).message("Yay! Gutenberg is installed!  See help for options.");
             return;
         }
 

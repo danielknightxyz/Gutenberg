@@ -15,11 +15,11 @@ public class Unknown implements Command{
     public void execute() {
         //Throw an error because the requested command is not provided.
         if(this.applicationContext.getCommand().equals("")) {
-            (new Console()).message("Yay! Gutenberg is installed!  See help for usage.");
+            (new Console()).message("Yay! Gutenberg is installed! See help for usage.");
             return;
         }
 
         //Throw an error because the requested command is not valid.
-        (new Console()).error("! Action \"{0}\" is not valid.",this.applicationContext.getCommand());
+        (new Console()).error("! Action \"{0}\" is not valid. See help for usage.",this.applicationContext.getCommand());
     }
 }

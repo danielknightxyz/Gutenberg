@@ -6,7 +6,8 @@ import com.github.mustachejava.MustacheFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import us.sourcefoundry.gutenberg.models.ApplicationContext;
-import us.sourcefoundry.gutenberg.services.Cli;
+import us.sourcefoundry.gutenberg.services.*;
+import us.sourcefoundry.gutenberg.services.Console;
 
 import java.io.*;
 import java.util.HashMap;
@@ -31,11 +32,17 @@ public class Init implements Command {
             String destFilePath = this.applicationContext.getSourceDirectory() + "/forme.yml";
             InputStream templateFileStream = Init.class.getClassLoader().getResourceAsStream("forme.yml.mustache");
 
+            (new Console()).message("Initializing Forme...");
+
             File formeFile = new File(destFilePath);
 
             if(formeFile.exists() && !cli.hasOption("force")){
-                logger.error("This location as already been initialized.");
+                (new Console()).error("! Already initialized.");
                 return;
+            }
+
+            if(formeFile.exists() && cli.hasOption("force")){
+                (new Console()).warning("# Already initialized. Continuing anyways.");
             }
 
             PrintWriter writer = new PrintWriter(destFilePath);

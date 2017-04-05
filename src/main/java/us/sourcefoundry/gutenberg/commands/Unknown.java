@@ -14,6 +14,6 @@ public class Unknown implements Command{
     @Override
     public void execute() {
         //Throw an error because the requested command is unknown.
-        (new Console()).error("Action \"{0}\" is not valid.",this.applicationContext.getCommand());
+        (new Console()).error("! Action \"{0}\" is not valid.",this.applicationContext.getCommand());
     }
 }

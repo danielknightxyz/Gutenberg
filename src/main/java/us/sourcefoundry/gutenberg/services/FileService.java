@@ -32,7 +32,7 @@ public class FileService {
             String destFilePath =
                     (new SystemPathGenerator(this.applicationContext, this.formeContext)).create("{0}/{1}", applicationContext.getOutputDirectory(), fileTemplateEntry.getName());
 
-            System.out.println(MessageFormat.format("Creating File from Template... {0}",destFilePath));
+            (new Console()).info("+ Creating File from Template... {0}",destFilePath);
 
             HashMap<String, Object> variables = new HashMap<String, Object>() {{
                 put("forme", formeContext);

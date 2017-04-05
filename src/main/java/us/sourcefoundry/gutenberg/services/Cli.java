@@ -84,7 +84,7 @@ public class Cli {
     private void printVersion() {
         System.out.println(
                 "Gutenberg " + (Cli.class.getPackage().getImplementationVersion() != null ?
-                        Cli.class.getPackage().getImplementationVersion() != null :
+                        Cli.class.getPackage().getImplementationVersion() :
                         "Unreleased")
         );
     }
@@ -108,14 +108,14 @@ public class Cli {
 
         Option saveAnswers = OptionBuilder
                 .withLongOpt("saveanswers")
-                .withArgName("path to answers file")
+                .withArgName("path to save file")
                 .hasArg()
                 .withDescription("Save the answers to any prompts. This should be a relative path for the answers file.")
                 .create("s");
 
         Option answersFile = OptionBuilder
                 .withLongOpt("answersfile")
-                .withArgName("path to save file")
+                .withArgName("path to answers file")
                 .hasArg()
                 .withDescription("Relative path to the answers file.")
                 .create("a");

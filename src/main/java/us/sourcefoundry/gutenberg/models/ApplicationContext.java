@@ -4,11 +4,19 @@ import java.util.Map;
 
 public class ApplicationContext {
 
+    private String command;
     private String workingDirectory;
     private String sourceDirectory;
     private String outputDirectory;
     private Map<String, Object> userResponses;
 
+    public String getCommand() {
+        return command;
+    }
+
+    public void setCommand(String command) {
+        this.command = command;
+    }
 
     public String getWorkingDirectory() {
         return workingDirectory;

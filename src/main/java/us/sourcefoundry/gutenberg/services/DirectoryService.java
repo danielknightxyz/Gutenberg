@@ -27,7 +27,7 @@ public class DirectoryService {
     }
 
     public boolean create(String directoryPath) {
-        System.out.println(MessageFormat.format("Creating Directory... {0}",directoryPath));
+        (new Console()).info("+ Creating Directory... {0}",directoryPath);
         return (new File(directoryPath)).mkdirs();
     }
 

@@ -3,6 +3,7 @@ package us.sourcefoundry.gutenberg.factories;
 import us.sourcefoundry.gutenberg.commands.Command;
 import us.sourcefoundry.gutenberg.commands.Build;
 import us.sourcefoundry.gutenberg.commands.Init;
+import us.sourcefoundry.gutenberg.commands.Unknown;
 import us.sourcefoundry.gutenberg.models.ApplicationContext;
 import us.sourcefoundry.gutenberg.services.Cli;
 
@@ -20,8 +21,7 @@ public class CommandFactory {
         switch (cliCommand){
             case "init": return new Init(this.applicationContext,this.cli);
             case "build": return new Build(this.applicationContext,this.cli);
+            default: return new Unknown(this.applicationContext);
         }
-
-        return null;
     }
 }

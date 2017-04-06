@@ -16,7 +16,7 @@ public class FormeContext {
     private List<VarPrompt> prompts = new ArrayList<>();
     private List<DirectoryTemplateEntry> directories = new ArrayList<>();
     private List<FileTemplateEntry> files = new ArrayList<>();
-    private List<CopyTemplateEntry> copy = new ArrayList<>();
+    private List<CopyEntry> copy = new ArrayList<>();
 
     public int getVersion() {
         return version;
@@ -50,11 +50,11 @@ public class FormeContext {
         this.files = files;
     }
 
-    public List<CopyTemplateEntry> getCopy() {
+    public List<CopyEntry> getCopy() {
         return copy;
     }
 
-    public void setCopy(List<CopyTemplateEntry> copy) {
+    public void setCopy(List<CopyEntry> copy) {
         this.copy = copy;
     }
 

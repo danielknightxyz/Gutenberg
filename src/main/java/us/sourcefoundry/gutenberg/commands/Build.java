@@ -8,12 +8,12 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 import us.sourcefoundry.gutenberg.factories.TemplateContextFactory;
 import us.sourcefoundry.gutenberg.models.ApplicationContext;
-import us.sourcefoundry.gutenberg.models.CopyTemplateEntry;
+import us.sourcefoundry.gutenberg.models.CopyEntry;
 import us.sourcefoundry.gutenberg.models.FormeContext;
 import us.sourcefoundry.gutenberg.services.*;
 import us.sourcefoundry.gutenberg.services.Console;
 import us.sourcefoundry.gutenberg.utils.Pair;
-import us.sourcefoundry.gutenberg.utils.SystemPathGenerator;
+import us.sourcefoundry.gutenberg.utils.SystemPathTemplate;
 
 import java.io.*;
 import java.text.MessageFormat;
@@ -32,27 +32,37 @@ public class Build implements Command {
     @Override
     public void execute() {
         try {
+            String sourceDirectory = this.applicationContext.getSourceDirectory();
+            String userOutputDirectory = cli.getArgList().get(1).toString();
+
+            //Get the forme file and make sure it exists.
+            File formeFile = new File(MessageFormat.format("{0}/forme.yml",sourceDirectory));
+            if(!formeFile.exists()) {
+                (new Console()).error("! Could not locate a forme file in source location.  Does it needss to be initialized?");
+                return;
+            }
+
             //Get the template file.
-            InputStream templateFile = new FileInputStream(new File(MessageFormat.format("{0}/forme.yml", this.applicationContext.getSourceDirectory())));
+            InputStream templateFile = new FileInputStream(formeFile);
             //Parse it into a context object.
             FormeContext formeContext = (new TemplateContextFactory()).make(templateFile);
 
             //Set the application context with the output directory.
-            this.applicationContext.setOutputDirectory(cli.getArgList().get(1).toString());
+            this.applicationContext.setOutputDirectory(userOutputDirectory);
 
             (new Console()).message("Building Template \"{0}\"", formeContext.getName());
 
             //Check to make sure the output directory is available.
-            if(!this.checkOutputDir(applicationContext))
+            if (!this.checkOutputDir(userOutputDirectory,this.cli.hasOption("f")))
                 return;
 
             //Run any prompts the forme may require.
-            HashMap<String, Object> userResponses = getUserResponseToPrompts(formeContext, this.applicationContext.getSourceDirectory(), cli);
+            HashMap<String, Object> userResponses = getUserResponseToPrompts(formeContext, sourceDirectory, cli);
             this.applicationContext.setUserResponses(userResponses);
 
             //If the user wants their answers saved, then this will save those answers for use in later runs.
             if (cli.hasOption("s"))
-                saveUserAnswersFromPrompts(cli, this.applicationContext.getSourceDirectory(), userResponses);
+                saveUserAnswersFromPrompts(cli, sourceDirectory, userResponses);
 
             /*
              * Run the process bellow.
@@ -70,10 +80,10 @@ public class Build implements Command {
         }
     }
 
-    private static void copyDir(CopyTemplateEntry copy, FormeContext formeContext, ApplicationContext applicationContext) {
+    private static void copyDir(CopyEntry copy, FormeContext formeContext, ApplicationContext applicationContext) {
         try {
-            String sorucePath = (new SystemPathGenerator(applicationContext, formeContext)).create("{0}/{1}", applicationContext.getSourceDirectory(), copy.getSource());
-            String destPath = (new SystemPathGenerator(applicationContext, formeContext)).create("{0}/{1}", applicationContext.getOutputDirectory(), copy.getDest());
+            String sorucePath = (new SystemPathTemplate(applicationContext, formeContext)).create("{0}/{1}", applicationContext.getSourceDirectory(), copy.getSource());
+            String destPath = (new SystemPathTemplate(applicationContext, formeContext)).create("{0}/{1}", applicationContext.getOutputDirectory(), copy.getDest());
 
             (new Console()).info("+ Copying Directory... {0}", destPath);
 
@@ -85,10 +95,10 @@ public class Build implements Command {
         }
     }
 
-    private static void copyFile(CopyTemplateEntry copy, FormeContext formeContext, ApplicationContext applicationContext) {
+    private static void copyFile(CopyEntry copy, FormeContext formeContext, ApplicationContext applicationContext) {
         try {
-            String sorucePath = (new SystemPathGenerator(applicationContext, formeContext)).create("{0}/{1}", applicationContext.getSourceDirectory(), copy.getSource());
-            String destPath = (new SystemPathGenerator(applicationContext, formeContext)).create("{0}/{1}", applicationContext.getOutputDirectory(), copy.getDest());
+            String sorucePath = (new SystemPathTemplate(applicationContext, formeContext)).create("{0}/{1}", applicationContext.getSourceDirectory(), copy.getSource());
+            String destPath = (new SystemPathTemplate(applicationContext, formeContext)).create("{0}/{1}", applicationContext.getOutputDirectory(), copy.getDest());
 
             (new Console()).info("+ Copying File... {0}", destPath);
 
@@ -133,32 +143,32 @@ public class Build implements Command {
         writer.flush();
     }
 
-    private boolean checkOutputDir(ApplicationContext applicationContext){
-        File existingOutputDirectory = new File(this.applicationContext.getOutputDirectory());
+    private boolean checkOutputDir(String outputDirectory, boolean force) {
+        File existingOutputDirectory = new File(outputDirectory);
         boolean outputDirectoryExists = existingOutputDirectory.exists();
         boolean isDirectory = existingOutputDirectory.isDirectory();
 
-        if (outputDirectoryExists && !cli.hasOption("f")) {
+        if (outputDirectoryExists && !force) {
             boolean isEmptyDirectory = existingOutputDirectory.list().length == 0;
 
             if (isDirectory && !isEmptyDirectory) {
-                (new Console()).error("! Could not build. {0} exists and is not empty.", this.applicationContext.getOutputDirectory());
+                (new Console()).error("! Could not build. {0} exists and is not empty.", outputDirectory);
                 return false;
             }
 
             if (!isDirectory) {
-                (new Console()).error("! Could not build. {0} exists and is not a directory.", this.applicationContext.getOutputDirectory());
+                (new Console()).error("! Could not build. {0} exists and is not a directory.", outputDirectory);
                 return false;
             }
         }
 
-        if (outputDirectoryExists && cli.hasOption("f") && !isDirectory){
-            (new Console()).error("! Could not force build. {0} exists and is not a directory.", this.applicationContext.getOutputDirectory());
+        if (outputDirectoryExists && force && !isDirectory) {
+            (new Console()).error("! Could not force build. {0} exists and is not a directory.", outputDirectory);
             return false;
         }
 
-        if (outputDirectoryExists && cli.hasOption("f") && isDirectory)
-            (new Console()).warning("# {0} already exists. Building anyways.", this.applicationContext.getOutputDirectory());
+        if (outputDirectoryExists && force && isDirectory)
+            (new Console()).warning("# {0} already exists. Building anyways.", outputDirectory);
 
         return true;
 

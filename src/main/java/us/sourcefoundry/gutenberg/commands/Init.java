@@ -1,17 +1,14 @@
 package us.sourcefoundry.gutenberg.commands;
 
-import com.github.mustachejava.DefaultMustacheFactory;
-import com.github.mustachejava.Mustache;
-import com.github.mustachejava.MustacheFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import us.sourcefoundry.gutenberg.models.ApplicationContext;
+import us.sourcefoundry.gutenberg.models.templates.FileTemplate;
 import us.sourcefoundry.gutenberg.services.*;
 import us.sourcefoundry.gutenberg.services.Console;
 
 import java.io.*;
 import java.util.HashMap;
-import java.util.UUID;
 
 public class Init implements Command {
 
@@ -27,32 +24,28 @@ public class Init implements Command {
 
     @Override
     public void execute() {
+        (new Console()).message("Initializing Forme...");
 
-        try {
-            String destFilePath = this.applicationContext.getSourceDirectory() + "/forme.yml";
-            InputStream templateFileStream = Init.class.getClassLoader().getResourceAsStream("forme.yml.mustache");
+        String destFilePath = this.applicationContext.getSourceDirectory() + "/forme.yml";
 
-            (new Console()).message("Initializing Forme...");
+        if(!this.checkOutputLocation(destFilePath))
+            return;
 
-            File formeFile = new File(destFilePath);
+        InputStream templateFileStream = Init.class.getClassLoader().getResourceAsStream("forme.yml.mustache");
+        (new FileTemplate()).create(new InputStreamReader(templateFileStream),destFilePath,new HashMap<>());
+    }
 
-            if(formeFile.exists() && !cli.hasOption("force")){
-                (new Console()).error("! Already initialized.");
-                return;
-            }
+    private boolean checkOutputLocation(String destFilePath){
+        File formeFile = new File(destFilePath);
 
-            if(formeFile.exists() && cli.hasOption("force")){
-                (new Console()).warning("# Already initialized. Continuing anyways.");
-            }
-
-            PrintWriter writer = new PrintWriter(destFilePath);
-            MustacheFactory mf = new DefaultMustacheFactory();
-            Mustache mustache = mf.compile(new InputStreamReader(templateFileStream), UUID.randomUUID().toString());
-            mustache.execute(writer, new HashMap<String, Object>());
-            writer.flush();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        if(formeFile.exists() && !cli.hasOption("force")){
+            (new Console()).error("! Already initialized.");
+            return false;
         }
 
+        if(formeFile.exists() && cli.hasOption("force"))
+            (new Console()).warning("# Already initialized. Continuing anyways.");
+
+        return true;
     }
 }

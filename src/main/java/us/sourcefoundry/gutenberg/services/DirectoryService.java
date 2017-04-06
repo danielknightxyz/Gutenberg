@@ -4,11 +4,10 @@ import org.apache.commons.io.FileUtils;
 import us.sourcefoundry.gutenberg.models.ApplicationContext;
 import us.sourcefoundry.gutenberg.models.DirectoryTemplateEntry;
 import us.sourcefoundry.gutenberg.models.FormeContext;
-import us.sourcefoundry.gutenberg.utils.SystemPathGenerator;
+import us.sourcefoundry.gutenberg.utils.SystemPathTemplate;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.MessageFormat;
 
 public class DirectoryService {
 
@@ -22,7 +21,7 @@ public class DirectoryService {
 
     public boolean createFromTemplate(DirectoryTemplateEntry directoryTemplateEntry) {
         return this.create(
-                (new SystemPathGenerator(this.applicationContext, this.formeContext)).create("{0}/{1}", this.applicationContext.getOutputDirectory(), directoryTemplateEntry.getName())
+                (new SystemPathTemplate(this.applicationContext, this.formeContext)).create("{0}/{1}", this.applicationContext.getOutputDirectory(), directoryTemplateEntry.getName())
         );
     }
 

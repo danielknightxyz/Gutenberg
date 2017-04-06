@@ -2,6 +2,7 @@ package us.sourcefoundry.gutenberg.utils;
 
 import us.sourcefoundry.gutenberg.models.ApplicationContext;
 import us.sourcefoundry.gutenberg.models.FormeContext;
+import us.sourcefoundry.gutenberg.models.templates.StringTemplate;
 
 import java.text.MessageFormat;
 import java.util.HashMap;
@@ -10,12 +11,12 @@ import java.util.HashMap;
  * This will generate a system path taking into template variables.  This class, essentially, is a mash up of message
  * formatting with Mustache template framework.
  */
-public class SystemPathGenerator extends StringGenerator {
+public class SystemPathTemplate extends StringTemplate {
 
     private ApplicationContext applicationContext;
     private FormeContext formeContext;
 
-    public SystemPathGenerator(ApplicationContext applicationContext, FormeContext formeContext) {
+    public SystemPathTemplate(ApplicationContext applicationContext, FormeContext formeContext) {
         this.applicationContext = applicationContext;
         this.formeContext = formeContext;
     }

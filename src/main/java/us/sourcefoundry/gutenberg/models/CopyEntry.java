@@ -1,6 +1,6 @@
 package us.sourcefoundry.gutenberg.models;
 
-public class CopyTemplateEntry {
+public class CopyEntry {
 
     private String source;
     private String dest;

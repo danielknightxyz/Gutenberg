@@ -1,4 +1,4 @@
-package us.sourcefoundry.gutenberg.utils;
+package us.sourcefoundry.gutenberg.models.templates;
 
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
@@ -9,8 +9,18 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class StringGenerator {
+/**
+ * This will process a string as a template.
+ */
+public class StringTemplate {
 
+    /**
+     * Create a new string using a string and variables as variables.
+     *
+     * @param template  The string template.
+     * @param variables The variables for the template.
+     * @return String
+     */
     public String create(final String template, HashMap<String, Object> variables) {
         StringWriter writer = new StringWriter();
         MustacheFactory mf = new DefaultMustacheFactory();

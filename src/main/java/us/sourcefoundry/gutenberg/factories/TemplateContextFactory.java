@@ -6,8 +6,16 @@ import us.sourcefoundry.gutenberg.models.FormeContext;
 
 import java.io.InputStream;
 
+/**
+ * Reads the settings file from an input streamFile and hydrates a object model with the values from that file.
+ */
 public class TemplateContextFactory {
 
+    /**
+     * Makes an object hydrated with the values from the forme file.
+     * @param settingFile The inputstream from the file.
+     * @return FormeContext Object
+     */
     public FormeContext make(InputStream settingFile) {
         try {
             //Get the property handler.

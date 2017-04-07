@@ -1,4 +1,4 @@
-package us.sourcefoundry.gutenberg.utils;
+package us.sourcefoundry.gutenberg.models.templates;
 
 import us.sourcefoundry.gutenberg.models.ApplicationContext;
 import us.sourcefoundry.gutenberg.models.FormeContext;

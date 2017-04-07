@@ -3,17 +3,16 @@ package us.sourcefoundry.gutenberg.commands;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
-import org.apache.commons.io.FileUtils;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 import us.sourcefoundry.gutenberg.factories.TemplateContextFactory;
 import us.sourcefoundry.gutenberg.models.ApplicationContext;
-import us.sourcefoundry.gutenberg.models.CopyEntry;
 import us.sourcefoundry.gutenberg.models.FormeContext;
-import us.sourcefoundry.gutenberg.services.*;
+import us.sourcefoundry.gutenberg.services.Cli;
 import us.sourcefoundry.gutenberg.services.Console;
+import us.sourcefoundry.gutenberg.services.FileSystemService;
+import us.sourcefoundry.gutenberg.services.UserPromptService;
 import us.sourcefoundry.gutenberg.utils.Pair;
-import us.sourcefoundry.gutenberg.utils.SystemPathTemplate;
 
 import java.io.*;
 import java.text.MessageFormat;
@@ -36,76 +35,46 @@ public class Build implements Command {
             String userOutputDirectory = cli.getArgList().get(1).toString();
 
             //Get the forme file and make sure it exists.
-            File formeFile = new File(MessageFormat.format("{0}/forme.yml",sourceDirectory));
-            if(!formeFile.exists()) {
+            File formeFile = (new FileSystemService()).getByLocation(MessageFormat.format("{0}/forme.yml", sourceDirectory));
+            if (!formeFile.exists()) {
                 (new Console()).error("! Could not locate a forme file in source location.  Does it needss to be initialized?");
                 return;
             }
 
-            //Get the template file.
-            InputStream templateFile = new FileInputStream(formeFile);
             //Parse it into a context object.
-            FormeContext formeContext = (new TemplateContextFactory()).make(templateFile);
-
-            //Set the application context with the output directory.
-            this.applicationContext.setOutputDirectory(userOutputDirectory);
+            FormeContext formeContext = (new TemplateContextFactory()).make(
+                    (new FileSystemService()).streamFile(formeFile)
+            );
 
             (new Console()).message("Building Template \"{0}\"", formeContext.getName());
 
             //Check to make sure the output directory is available.
-            if (!this.checkOutputDir(userOutputDirectory,this.cli.hasOption("f")))
+            if (!this.checkOutputDir(userOutputDirectory, this.cli.hasOption("f")))
                 return;
+
+            //Set the application context with the output directory.
+            this.applicationContext.setOutputDirectory(userOutputDirectory);
 
             //Run any prompts the forme may require.
             HashMap<String, Object> userResponses = getUserResponseToPrompts(formeContext, sourceDirectory, cli);
             this.applicationContext.setUserResponses(userResponses);
 
-            //If the user wants their answers saved, then this will save those answers for use in later runs.
-            if (cli.hasOption("s"))
-                saveUserAnswersFromPrompts(cli, sourceDirectory, userResponses);
-
             /*
              * Run the process bellow.
              */
             //Make the directories.
-            formeContext.getDirectories().forEach(d -> (new DirectoryService(applicationContext, formeContext)).createFromTemplate(d));
+            formeContext.getDirectories().forEach(d -> d.create(applicationContext, formeContext));
             //Make the files from the templates.
-            formeContext.getFiles().forEach(f -> (new FileService(applicationContext, formeContext)).createFromTemplate(f));
+            formeContext.getFiles().forEach(f -> f.create(applicationContext, formeContext));
             //Perform the static directory copy.
-            formeContext.getCopy().stream().filter(c -> c.getType().equals("directory")).forEach(c -> copyDir(c, formeContext, applicationContext));
+            formeContext.getCopy().stream().filter(c -> c.getType().equals("directory")).forEach(c -> c.copy(formeContext, applicationContext));
             //Perform the static file copy.
-            formeContext.getCopy().stream().filter(c -> c.getType().equals("file")).forEach(c -> copyFile(c, formeContext, applicationContext));
+            formeContext.getCopy().stream().filter(c -> c.getType().equals("file")).forEach(c -> c.copy(formeContext, applicationContext));
+
+            //If the user wants their answers saved, then this will save those answers for use in later runs.
+            if (cli.hasOption("s"))
+                saveUserAnswersFromPrompts(cli, sourceDirectory, userResponses);
         } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static void copyDir(CopyEntry copy, FormeContext formeContext, ApplicationContext applicationContext) {
-        try {
-            String sorucePath = (new SystemPathTemplate(applicationContext, formeContext)).create("{0}/{1}", applicationContext.getSourceDirectory(), copy.getSource());
-            String destPath = (new SystemPathTemplate(applicationContext, formeContext)).create("{0}/{1}", applicationContext.getOutputDirectory(), copy.getDest());
-
-            (new Console()).info("+ Copying Directory... {0}", destPath);
-
-            FileUtils.copyDirectory(
-                    new File(sorucePath), new File(destPath)
-            );
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static void copyFile(CopyEntry copy, FormeContext formeContext, ApplicationContext applicationContext) {
-        try {
-            String sorucePath = (new SystemPathTemplate(applicationContext, formeContext)).create("{0}/{1}", applicationContext.getSourceDirectory(), copy.getSource());
-            String destPath = (new SystemPathTemplate(applicationContext, formeContext)).create("{0}/{1}", applicationContext.getOutputDirectory(), copy.getDest());
-
-            (new Console()).info("+ Copying File... {0}", destPath);
-
-            FileUtils.copyFile(
-                    new File(sorucePath), new File(destPath)
-            );
-        } catch (IOException e) {
             e.printStackTrace();
         }
     }

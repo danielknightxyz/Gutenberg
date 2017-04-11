@@ -1,7 +1,5 @@
 package us.sourcefoundry.gutenberg.services;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import us.sourcefoundry.gutenberg.models.FormeContext;
 import us.sourcefoundry.gutenberg.models.VarPrompt;
 

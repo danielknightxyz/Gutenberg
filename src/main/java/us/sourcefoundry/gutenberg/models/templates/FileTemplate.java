@@ -3,10 +3,9 @@ package us.sourcefoundry.gutenberg.models.templates;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
+import us.sourcefoundry.gutenberg.services.FileSystemService;
 
-import java.io.FileReader;
-import java.io.PrintWriter;
-import java.io.Reader;
+import java.io.*;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -42,7 +41,7 @@ public class FileTemplate {
      */
     public boolean create(Reader sourceReader, String destinationPath, HashMap<String, Object> variables) {
         try {
-            PrintWriter writer = new PrintWriter(destinationPath);
+            PrintWriter writer = new PrintWriter((new FileSystemService()).getByLocation((destinationPath)));
             MustacheFactory mf = new DefaultMustacheFactory();
             Mustache mustache = mf.compile(sourceReader, UUID.randomUUID().toString());
             mustache.execute(writer, variables);

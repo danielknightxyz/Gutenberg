@@ -5,6 +5,7 @@ import java.util.Map;
 public class ApplicationContext {
 
     private String command;
+    private String installDirectory = System.getProperty("user.home") + "/.gutenberg";
     private String workingDirectory;
     private String sourceDirectory;
     private String outputDirectory;
@@ -12,6 +13,14 @@ public class ApplicationContext {
 
     public String getCommand() {
         return command;
+    }
+
+    public String getInstallDirectory() {
+        return installDirectory;
+    }
+
+    public void setInstallDirectory(String installDirectory) {
+        this.installDirectory = installDirectory;
     }
 
     public void setCommand(String command) {

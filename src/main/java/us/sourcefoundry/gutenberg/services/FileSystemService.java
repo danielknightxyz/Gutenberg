@@ -3,6 +3,7 @@ package us.sourcefoundry.gutenberg.services;
 import org.apache.commons.io.FileUtils;
 
 import java.io.*;
+import java.text.MessageFormat;
 
 /**
  * This will allow you to interact with the file system.
@@ -17,6 +18,12 @@ public class FileSystemService {
      */
     public File getByLocation(String location) {
         return new File(location);
+    }
+
+    public File getByLocation(String location, Object... args){
+        return new File(
+                MessageFormat.format(location,args)
+        );
     }
 
     /**

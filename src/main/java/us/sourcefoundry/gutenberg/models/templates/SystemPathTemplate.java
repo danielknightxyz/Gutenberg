@@ -2,7 +2,6 @@ package us.sourcefoundry.gutenberg.models.templates;
 
 import us.sourcefoundry.gutenberg.models.ApplicationContext;
 import us.sourcefoundry.gutenberg.models.FormeContext;
-import us.sourcefoundry.gutenberg.models.templates.StringTemplate;
 
 import java.text.MessageFormat;
 import java.util.HashMap;

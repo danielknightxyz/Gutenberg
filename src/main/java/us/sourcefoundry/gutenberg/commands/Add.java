@@ -2,6 +2,7 @@ package us.sourcefoundry.gutenberg.commands;
 
 import com.google.common.io.ByteStreams;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.io.FilenameUtils;
@@ -15,6 +16,7 @@ import us.sourcefoundry.gutenberg.services.Console;
 import us.sourcefoundry.gutenberg.services.FileSystemService;
 
 import java.io.*;
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.*;
@@ -44,9 +46,9 @@ public class Add implements Command {
         Pattern pattern = Pattern.compile("^(.+)\\/(.+):(.+)$|^(.+)\\/(.+)$");
 
         HashMap<String, FormeInventoryItem> inventory = new HashMap<>();
-
+        Type type = new TypeToken<Map<String, FormeInventoryItem>>(){}.getType();
         try {
-            inventory = (new Gson()).fromJson(new FileReader((new FileSystemService()).getByLocation(installDir + "/inventory.json")),HashMap.class);
+            inventory = (new Gson()).fromJson(new FileReader((new FileSystemService()).getByLocation(installDir + "/inventory.json")),type);
         } catch (FileNotFoundException e) {
             (new Console()).info("! No inventory found. One will be created.");
         }

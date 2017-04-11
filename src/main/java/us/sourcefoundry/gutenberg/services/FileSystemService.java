@@ -43,6 +43,24 @@ public class FileSystemService {
     }
 
     /**
+     * Creates a file with the provided contents.
+     *
+     * @param location The path tot save the file.
+     * @param contents The contents to save in the file.
+     */
+    public void createFile(String location, String contents) {
+        try {
+            File file = new File("test1.txt");
+            FileWriter fileWriter = new FileWriter(new File(location));
+            fileWriter.write(contents);
+            fileWriter.flush();
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * Copies a directory from one location to  another.
      *
      * @param sourcePath      The location of the directory to copy.

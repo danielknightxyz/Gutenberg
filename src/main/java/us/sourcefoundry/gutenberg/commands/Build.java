@@ -3,11 +3,13 @@ package us.sourcefoundry.gutenberg.commands;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
+import com.google.gson.Gson;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 import us.sourcefoundry.gutenberg.factories.TemplateContextFactory;
 import us.sourcefoundry.gutenberg.models.ApplicationContext;
 import us.sourcefoundry.gutenberg.models.FormeContext;
+import us.sourcefoundry.gutenberg.models.FormeInventoryItem;
 import us.sourcefoundry.gutenberg.services.Cli;
 import us.sourcefoundry.gutenberg.services.Console;
 import us.sourcefoundry.gutenberg.services.FileSystemService;
@@ -31,8 +33,25 @@ public class Build implements Command {
     @Override
     public void execute() {
         try {
-            String sourceDirectory = this.applicationContext.getSourceDirectory();
-            String userOutputDirectory = cli.getArgList().get(1).toString();
+            String installDir = System.getProperty("user.home") + "/.gutenberg";
+
+            HashMap<String, FormeInventoryItem> inventory = new HashMap<>();
+
+            try {
+                inventory = (new Gson()).fromJson(new FileReader((new FileSystemService()).getByLocation(installDir + "/inventory.json")),HashMap.class);
+            } catch (FileNotFoundException e) {
+                (new Console()).info("! No inventory found.");
+                return;
+            }
+
+            String sourceDirectory = installDir + "/formes/" + (cli.getArgList().size() > 1 ? inventory.get(cli.getArgList().get(1).toString()) : "");
+            String userOutputDirectory = this.applicationContext.getWorkingDirectory();
+
+            if(this.cli.hasOption("local"))
+                sourceDirectory = this.cli.getOptionValue("local");
+
+            if(this.cli.hasOption("o"))
+                userOutputDirectory = this.cli.getOptionValue("o");
 
             //Get the forme file and make sure it exists.
             File formeFile = (new FileSystemService()).getByLocation(MessageFormat.format("{0}/forme.yml", sourceDirectory));
@@ -52,6 +71,8 @@ public class Build implements Command {
             if (!this.checkOutputDir(userOutputDirectory, this.cli.hasOption("f")))
                 return;
 
+            //Set the application source directory.
+            this.applicationContext.setSourceDirectory(sourceDirectory);
             //Set the application context with the output directory.
             this.applicationContext.setOutputDirectory(userOutputDirectory);
 

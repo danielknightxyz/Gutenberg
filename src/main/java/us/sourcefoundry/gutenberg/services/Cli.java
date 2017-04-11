@@ -73,7 +73,7 @@ public class Cli {
     private void printHelp() {
         HelpFormatter formatter = new HelpFormatter();
         formatter.setWidth(250);
-        String header = "\nActions: init, build <path to build>\nOptions:";
+        String header = "\nActions: init, build <forme>, add <user/repo:ref>\nOptions:";
         String footer = "\nPlease visit https://github.com/sourcefoundryus/gutenberg for more information.";
         formatter.printHelp("gutenberg [ACTION] [ARG...]", header, cliOptions, footer, true);
     }
@@ -99,12 +99,19 @@ public class Cli {
         Option force = OptionBuilder.withLongOpt("force").withDescription("Force the action to complete.").create("f");
         Option version = OptionBuilder.withLongOpt("version").withDescription("Get Version").create("v");
 
-        Option inputLocation = OptionBuilder
-                .withLongOpt("input")
+        Option localPath = OptionBuilder
+                .withLongOpt("local")
                 .withArgName("path")
                 .hasArg()
                 .withDescription("Absolute path of the directory containing the forme file and source/template resources.")
-                .create("i");
+                .create();
+
+        Option outputPath = OptionBuilder
+                .withLongOpt("output")
+                .withArgName("path")
+                .hasArg()
+                .withDescription("Absolute path of the directory in which to build the output.")
+                .create("o");
 
         Option saveAnswers = OptionBuilder
                 .withLongOpt("saveanswers")
@@ -128,7 +135,8 @@ public class Cli {
         options.addOption(help);
         options.addOption(force);
         options.addOption(version);
-        options.addOption(inputLocation);
+        options.addOption(localPath);
+        options.addOption(outputPath);
         options.addOptionGroup(answersOptionGroup);
 
         return options;

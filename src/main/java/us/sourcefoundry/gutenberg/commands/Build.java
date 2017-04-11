@@ -55,8 +55,6 @@ public class Build implements Command {
             if(this.cli.hasOption("o"))
                 outputDirectoryPath = this.cli.getOptionValue("o");
 
-            System.out.println(sourceDirectoryPath);
-
             //Get the forme file and make sure it exists.
             File formeFile = (new FileSystemService()).getByLocation("{0}/forme.yml", sourceDirectoryPath);
             if (!formeFile.exists()) {

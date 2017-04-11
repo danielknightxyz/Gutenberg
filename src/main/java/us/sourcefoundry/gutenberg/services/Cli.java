@@ -103,28 +103,28 @@ public class Cli {
                 .withLongOpt("local")
                 .withArgName("path")
                 .hasArg()
-                .withDescription("Absolute path of the directory containing the forme file and source/template resources.")
+                .withDescription("Path of the directory containing the forme file and source/template resources.")
                 .create();
 
         Option outputPath = OptionBuilder
                 .withLongOpt("output")
                 .withArgName("path")
                 .hasArg()
-                .withDescription("Absolute path of the directory in which to build the output.")
+                .withDescription("Path of the directory in which to build the output.")
                 .create("o");
 
         Option saveAnswers = OptionBuilder
                 .withLongOpt("saveanswers")
                 .withArgName("path to save file")
                 .hasArg()
-                .withDescription("Save the answers to any prompts. This should be a relative path for the answers file.")
+                .withDescription("Save the answers to any prompts.")
                 .create("s");
 
         Option answersFile = OptionBuilder
                 .withLongOpt("answersfile")
                 .withArgName("path to answers file")
                 .hasArg()
-                .withDescription("Relative path to the answers file.")
+                .withDescription("Path to the answers file.")
                 .create("a");
 
         OptionGroup answersOptionGroup = new OptionGroup();

@@ -20,10 +20,7 @@ import javax.inject.Inject;
 import java.io.*;
 import java.net.URL;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -86,7 +83,7 @@ public class Add implements Command {
 
                     String resourceURL = MessageFormat.format(githubURL, githubUser, githubRepo, githubRef);
 
-                    (new Console()).message("> Add Forme {0}", r);
+                    (new Console()).message("> Add from {0}", r);
                     (new Console()).message("# Downloading {0}", resourceURL);
 
                     try {
@@ -116,6 +113,7 @@ public class Add implements Command {
                         Map<String, FormeInventoryItem> newInventory = archiveScanResults
                                 .stream()
                                 .map(scanResult -> {
+                                    (new Console()).info("> {0} added",scanResult.getForme().getName());
                                     FormeInventoryItem item = new FormeInventoryItem();
                                     item.setUsername(githubUser);
                                     item.setRepository(githubRepo);

@@ -1,4 +1,6 @@
-package us.sourcefoundry.gutenberg.models;
+package us.sourcefoundry.gutenberg.models.commands.add;
+
+import us.sourcefoundry.gutenberg.models.forme.Forme;
 
 /**
  * This represents the a located forme file in a tar archive.  This used when adding forme(s) from an arvhive downloaded

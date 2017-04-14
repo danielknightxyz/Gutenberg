@@ -1,61 +1,62 @@
 package us.sourcefoundry.gutenberg.models;
 
-import java.util.Map;
+import javax.inject.Singleton;
 
+/**
+ * This class provides some information about the environment the application is running.
+ */
+@Singleton
 public class ApplicationContext {
 
+    //The command provided in the command line.
     private String command;
+    //The location of the .gutenberg folder with the inventory and formes.
     private String installDirectory = System.getProperty("user.home") + "/.gutenberg";
+    //The current directory the application was invoked.
     private String workingDirectory;
-    private String sourceDirectory;
-    private String outputDirectory;
-    private Map<String, Object> userResponses;
 
+    /**
+     * Get the command.
+     *
+     * @return String
+     */
     public String getCommand() {
         return command;
     }
 
-    public String getInstallDirectory() {
-        return installDirectory;
-    }
-
-    public void setInstallDirectory(String installDirectory) {
-        this.installDirectory = installDirectory;
-    }
-
+    /**
+     * Set the command.
+     *
+     * @param command String
+     */
     public void setCommand(String command) {
         this.command = command;
     }
 
+    /**
+     * Get the install directory.
+     *
+     * @return String
+     */
+    public String getInstallDirectory() {
+        return installDirectory;
+    }
+
+    /**
+     * Get the working directory.
+     *
+     * @return String
+     */
     public String getWorkingDirectory() {
         return workingDirectory;
     }
 
+    /**
+     * Set the working directory.
+     *
+     * @param workingDirectory String
+     */
     public void setWorkingDirectory(String workingDirectory) {
         this.workingDirectory = workingDirectory;
-    }
-
-    public String getSourceDirectory() {
-        return sourceDirectory;
-    }
-
-    public void setSourceDirectory(String sourceDirectory) {
-        this.sourceDirectory = sourceDirectory;
-    }
-
-    public String getOutputDirectory() {
-        return outputDirectory;
-    }
-
-    public void setOutputDirectory(String outputDirectory) {
-        this.outputDirectory = outputDirectory;
-    }
-
-    public Map<String, Object> getUserResponses() {
-        return userResponses;
-    }
-
-    public void setUserResponses(Map<String, Object> userResponses) {
-        this.userResponses = userResponses;
     }
 }

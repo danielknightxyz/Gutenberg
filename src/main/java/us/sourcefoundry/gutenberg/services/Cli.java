@@ -2,6 +2,7 @@ package us.sourcefoundry.gutenberg.services;
 
 import org.apache.commons.cli.*;
 
+import javax.inject.Singleton;
 import java.util.List;
 
 /**
@@ -9,6 +10,7 @@ import java.util.List;
  *
  * @author Daniel Knight <daniel.knight@creditcards.com>
  */
+@Singleton
 public class Cli {
 
     //The cli options.
@@ -73,7 +75,7 @@ public class Cli {
     private void printHelp() {
         HelpFormatter formatter = new HelpFormatter();
         formatter.setWidth(250);
-        String header = "\nActions: init, build <forme>, add <user/repo:ref>\nOptions:";
+        String header = "\nActions: init, build <forme>, add <user/repo:ref>, list\nOptions:";
         String footer = "\nPlease visit https://github.com/sourcefoundryus/gutenberg for more information.";
         formatter.printHelp("gutenberg [ACTION] [ARG...]", header, cliOptions, footer, true);
     }
@@ -208,34 +210,10 @@ public class Cli {
     }
 
     /**
-     * Has Verbosity
+     * Get the remaining argument list from the command.
      *
-     * @return boolean
+     * @return List
      */
-    public boolean hasVerbosity() {
-        //Check for verbosity.
-        return (this.hasOption("v") || this.hasOption("verbose"));
-    }
-
-    /**
-     * Verbosity
-     *
-     * @return
-     */
-    public boolean verbosity() {
-        //Check for verbosity.
-        return (this.hasOption("v") || this.hasOption("verbose"));
-    }
-
-    /**
-     * Log Activity
-     *
-     * @return boolean
-     */
-    public boolean logActivity() {
-        return this.hasOption("logActivity");
-    }
-
     public List getArgList() {
         return this.commandLine.getArgList();
     }

@@ -7,14 +7,16 @@ import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
-import us.sourcefoundry.gutenberg.factories.TemplateContextFactory;
-import us.sourcefoundry.gutenberg.models.ArchiveScanResult;
-import us.sourcefoundry.gutenberg.models.FormeContext;
+import us.sourcefoundry.gutenberg.factories.FormeFactory;
+import us.sourcefoundry.gutenberg.factories.InventoryFactory;
+import us.sourcefoundry.gutenberg.models.commands.add.ArchiveScanResult;
+import us.sourcefoundry.gutenberg.models.forme.Forme;
 import us.sourcefoundry.gutenberg.models.FormeInventoryItem;
 import us.sourcefoundry.gutenberg.services.Cli;
 import us.sourcefoundry.gutenberg.services.Console;
 import us.sourcefoundry.gutenberg.services.FileSystemService;
 
+import javax.inject.Inject;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.net.URL;
@@ -30,6 +32,7 @@ public class Add implements Command {
 
     private Cli cli;
 
+    @Inject
     public Add(Cli cli) {
         this.cli = cli;
     }
@@ -45,15 +48,8 @@ public class Add implements Command {
 
         Pattern pattern = Pattern.compile("^(.+)\\/(.+):(.+)$|^(.+)\\/(.+)$");
 
-        HashMap<String, FormeInventoryItem> inventory = new HashMap<>();
-        Type type = new TypeToken<Map<String, FormeInventoryItem>>(){}.getType();
-        try {
-            inventory = (new Gson()).fromJson(new FileReader((new FileSystemService()).getByLocation(installDir + "/inventory.json")),type);
-        } catch (FileNotFoundException e) {
-            (new Console()).info("! No inventory found. One will be created.");
-        }
+        Map<String, FormeInventoryItem> inventory = (new InventoryFactory()).newInstance(installDir + "/inventory.json");
 
-        HashMap<String, FormeInventoryItem> finalInventory = inventory;
         repositories.forEach(
                 r -> {
                     Matcher matcher = pattern.matcher(r);
@@ -68,7 +64,7 @@ public class Add implements Command {
                     String resourceURL = MessageFormat.format(githubURL, githubUser, githubRepo, githubRef);
 
                     (new Console()).message("> Add Forme {0}", r);
-                    (new Console()).message("# Adding {0}", resourceURL);
+                    (new Console()).message("# Downloading {0}", resourceURL);
 
                     try {
                         //Download the file from Github and buffer it for processing.
@@ -86,7 +82,7 @@ public class Add implements Command {
                                 ", ",
                                 archiveScanResults.stream()
                                         .map(
-                                                scanResult -> scanResult.getContext().getName()
+                                                scanResult -> scanResult.getForme().getName()
                                         )
                                         .collect(Collectors.toList())
                                 )
@@ -101,20 +97,20 @@ public class Add implements Command {
                                     item.setUsername(githubUser);
                                     item.setRepository(githubRepo);
                                     item.setReference(githubRef);
-                                    item.setName(scanResult.getContext().getName());
+                                    item.setName(scanResult.getForme().getName());
                                     item.setInstallPath(this.strip(scanResult.getArchivePath()));
                                     return item;
                                 })
                                 .collect(Collectors.toMap(FormeInventoryItem::getName, Function.identity()));
 
-                        finalInventory.putAll(newInventory);
+                        inventory.putAll(newInventory);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
         );
 
-        (new FileSystemService()).createFile(installDir + "/inventory.json",(new Gson().toJson(finalInventory)));
+        (new FileSystemService()).createFile(installDir + "/inventory.json", (new Gson().toJson(inventory)));
     }
 
     private List<ArchiveScanResult> scanArchiveForFormes(InputStream urlStream) throws IOException {
@@ -130,10 +126,10 @@ public class Add implements Command {
             if (entry.isDirectory())
                 currentArchiveDirectory = entry.getName();
             else if (FilenameUtils.getName(entry.getName().toLowerCase()).equals("forme.yml")) {
-                FormeContext formeContext = (new TemplateContextFactory()).make(tar);
+                Forme forme = (new FormeFactory()).newInstance(tar);
                 ArchiveScanResult result = new ArchiveScanResult();
                 result.setArchivePath(currentArchiveDirectory);
-                result.setContext(formeContext);
+                result.setForme(forme);
                 results.add(result);
             }
 
@@ -173,7 +169,7 @@ public class Add implements Command {
         return false;
     }
 
-    private String strip(String path){
+    private String strip(String path) {
         List<String> foldersPath = Arrays.asList(path.split("/"));
         return String.join("/", foldersPath.subList(1, foldersPath.size()));
     }

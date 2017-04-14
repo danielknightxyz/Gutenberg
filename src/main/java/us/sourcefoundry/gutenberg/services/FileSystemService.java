@@ -20,9 +20,16 @@ public class FileSystemService {
         return new File(location);
     }
 
-    public File getByLocation(String location, Object... args){
+    /**
+     * Allows you to get a location from the file system by providing a path with message formatting.
+     *
+     * @param location The location of the file or directory to get.
+     * @param args     Replacement Arguments.
+     * @return A File
+     */
+    public File getByLocation(String location, Object... args) {
         return new File(
-                MessageFormat.format(location,args)
+                MessageFormat.format(location, args)
         );
     }
 

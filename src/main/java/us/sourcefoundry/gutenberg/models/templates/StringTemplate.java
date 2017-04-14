@@ -14,17 +14,22 @@ import java.util.UUID;
  */
 public class StringTemplate {
 
+    private String template;
+
+    public StringTemplate(final String template) {
+        this.template = template;
+    }
+
     /**
      * Create a new string using a string and variables as variables.
      *
-     * @param template  The string template.
      * @param variables The variables for the template.
      * @return String
      */
-    public String create(final String template, HashMap<String, Object> variables) {
+    public String create(HashMap<String, Object> variables) {
         StringWriter writer = new StringWriter();
         MustacheFactory mf = new DefaultMustacheFactory();
-        Mustache mustache = mf.compile(new StringReader(template), UUID.randomUUID().toString());
+        Mustache mustache = mf.compile(new StringReader(this.template), UUID.randomUUID().toString());
         mustache.execute(writer, variables);
         return writer.toString();
     }

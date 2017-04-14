@@ -63,7 +63,7 @@ public class Build implements Command {
             Forme forme = this.getFormeFile(formeLocation);
 
             //Only continue if the forme was found.
-            if(forme == null)
+            if (forme == null)
                 return;
 
             //Get the build path for the generated files.

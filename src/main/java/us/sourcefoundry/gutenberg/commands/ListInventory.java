@@ -35,19 +35,19 @@ public class ListInventory implements Command {
         Map<String, FormeInventoryItem> inventory = (new InventoryFactory()).newInstance(this.applicationContext.getInstallDirectory() + "/inventory.json");
 
         //If inventory is not present, tell the user.
-        if(inventory == null) {
+        if (inventory == null) {
             (new Console()).warning("! Inventory not found or empty.");
             return;
         }
 
         //If teh inventory is empty, tell the user.
-        if(inventory.size() < 1){
+        if (inventory.size() < 1) {
             (new Console()).warning("! Inventory empty.");
             return;
         }
 
         //Otherwise, show the contents of the inventory to the user.
         (new Console()).message("Inventory Contents:");
-        inventory.forEach((k,v) -> (new Console()).info("> {0}", v.getName()));
+        inventory.forEach((k, v) -> (new Console()).info("> {0}", v.getName()));
     }
 }

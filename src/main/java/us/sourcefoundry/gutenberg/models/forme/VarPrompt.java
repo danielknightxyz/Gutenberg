@@ -14,6 +14,7 @@ public class VarPrompt {
 
     /**
      * Gets the message.
+     *
      * @return String
      */
     public String getMessage() {
@@ -22,6 +23,7 @@ public class VarPrompt {
 
     /**
      * Sets the message.
+     *
      * @param message String
      */
     public void setMessage(String message) {
@@ -30,6 +32,7 @@ public class VarPrompt {
 
     /**
      * Gets Name.
+     *
      * @return String
      */
     public String getName() {
@@ -38,6 +41,7 @@ public class VarPrompt {
 
     /**
      * Sets Name
+     *
      * @param name String
      */
     public void setName(String name) {
@@ -46,6 +50,7 @@ public class VarPrompt {
 
     /**
      * Gets the Default Value.
+     *
      * @return String
      */
     public String getDefaultValue() {
@@ -54,6 +59,7 @@ public class VarPrompt {
 
     /**
      * Sets the default value.
+     *
      * @param defaultValue String
      */
     public void setDefaultValue(String defaultValue) {

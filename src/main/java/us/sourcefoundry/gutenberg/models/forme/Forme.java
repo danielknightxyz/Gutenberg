@@ -33,6 +33,7 @@ public class Forme {
 
     /**
      * Gets the version.
+     *
      * @return int
      */
     public int getVersion() {
@@ -41,6 +42,7 @@ public class Forme {
 
     /**
      * Sets the version.
+     *
      * @param version Int
      */
     public void setVersion(int version) {
@@ -49,6 +51,7 @@ public class Forme {
 
     /**
      * Gets the name.
+     *
      * @return String
      */
     public String getName() {
@@ -57,6 +60,7 @@ public class Forme {
 
     /**
      * Sets the name.
+     *
      * @param name String
      */
     public void setName(String name) {
@@ -65,6 +69,7 @@ public class Forme {
 
     /**
      * Gets the directories.
+     *
      * @return List
      */
     public List<DirectoryFormeEntry> getDirectories() {
@@ -73,6 +78,7 @@ public class Forme {
 
     /**
      * Sets the directories.
+     *
      * @param directories List
      */
     public void setDirectories(List<DirectoryFormeEntry> directories) {
@@ -81,6 +87,7 @@ public class Forme {
 
     /**
      * Gets the file.
+     *
      * @return List
      */
     public List<FileFormeEntry> getFiles() {
@@ -89,6 +96,7 @@ public class Forme {
 
     /**
      * Sets the files.
+     *
      * @param files List
      */
     public void setFiles(List<FileFormeEntry> files) {
@@ -97,6 +105,7 @@ public class Forme {
 
     /**
      * Gets the copy items.
+     *
      * @return List
      */
     public List<CopyEntry> getCopy() {
@@ -105,6 +114,7 @@ public class Forme {
 
     /**
      * Sets the copy.
+     *
      * @param copy List
      */
     public void setCopy(List<CopyEntry> copy) {
@@ -113,6 +123,7 @@ public class Forme {
 
     /**
      * Gets the author.
+     *
      * @return String
      */
     public String getAuthor() {
@@ -121,6 +132,7 @@ public class Forme {
 
     /**
      * Sets the author.
+     *
      * @param author String
      */
     public void setAuthor(String author) {
@@ -129,6 +141,7 @@ public class Forme {
 
     /**
      * Gets the email.
+     *
      * @return String
      */
     public String getEmail() {
@@ -137,6 +150,7 @@ public class Forme {
 
     /**
      * Sets the email.
+     *
      * @param email String
      */
     public void setEmail(String email) {
@@ -145,6 +159,7 @@ public class Forme {
 
     /**
      * Gets the meta data.
+     *
      * @return Map
      */
     public Map<String, Object> getMeta() {
@@ -153,6 +168,7 @@ public class Forme {
 
     /**
      * Sets the Meta.
+     *
      * @param meta Map
      */
     public void setMeta(Map<String, Object> meta) {
@@ -161,6 +177,7 @@ public class Forme {
 
     /**
      * Gets the variables.
+     *
      * @return Map
      */
     public Map<String, Object> getVariables() {
@@ -169,6 +186,7 @@ public class Forme {
 
     /**
      * Sets the variables.
+     *
      * @param variables Map
      */
     public void setVariables(Map<String, Object> variables) {
@@ -177,6 +195,7 @@ public class Forme {
 
     /**
      * Gets the prompts.
+     *
      * @return List
      */
     public List<VarPrompt> getPrompts() {
@@ -185,6 +204,7 @@ public class Forme {
 
     /**
      * Sets the prompts.
+     *
      * @param prompts List
      */
     public void setPrompts(List<VarPrompt> prompts) {

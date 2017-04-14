@@ -1,9 +1,7 @@
 package us.sourcefoundry.gutenberg.services;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import us.sourcefoundry.gutenberg.models.FormeContext;
-import us.sourcefoundry.gutenberg.models.VarPrompt;
+import us.sourcefoundry.gutenberg.models.forme.Forme;
+import us.sourcefoundry.gutenberg.models.forme.VarPrompt;
 
 import java.text.MessageFormat;
 import java.util.HashMap;
@@ -13,16 +11,16 @@ public class UserPromptService {
 
     private final static String PROMPT_TEMPLATE = "{0} [{1}]: ";
 
-    private FormeContext formeContext;
+    private Forme forme;
 
-    public UserPromptService(FormeContext formeContext) {
-        this.formeContext = formeContext;
+    public UserPromptService(Forme forme) {
+        this.forme = forme;
     }
 
     public HashMap<String, Object> requestAnswers() {
         HashMap<String, Object> userResponses = new HashMap<>();
 
-        for (VarPrompt prompt : this.formeContext.getPrompts()) {
+        for (VarPrompt prompt : this.forme.getPrompts()) {
             Scanner reader = new Scanner(System.in);
             System.out.print(MessageFormat.format(
                     PROMPT_TEMPLATE,

@@ -1,0 +1,52 @@
+---
+#
+# This is a Forme file for the Gutenberg template utility.  This will drive what is built by Gutenberg.
+# The following order applies regardless the order in which they are specified in this file:
+#   1st) Directories are created.
+#   2nd) Files are generated using mustache templates.
+#   3rd) Directories are copied.
+#   4th) Files are copied.
+#
+#
+# Some details for who ever implements the template.
+#
+version: 1
+name:
+author:
+email:
+#
+# Optional variables.  These will be available in your mustache templates as 'forme.variables.?'.
+#
+variables:
+#
+# Optional meta data.  These will be be available in your mustache templates as 'forme.meta.?'.
+#
+meta:
+#
+# User entry prompts.  These will trigger the user to be prompted for input.  These will be available in your
+# mustache templates as 'user.?'.
+#
+prompts:
+#  - message:
+#    name:
+#    defaultValue:
+#
+# A list of directories to create.  These are created recursively.
+#
+directories:
+#  - dest:
+#
+# A list of files to create using provided templates.  Any variables will be available in your mustache template as, simply,
+# 'variables.?'.  All mustache template paths are relative to this file.
+#
+files:
+#  - source:
+#    dest:
+#    variables:
+#
+# A list of files or directories to copy into their destination.
+#
+copy:
+#  - source:
+#    dest:
+#    type:

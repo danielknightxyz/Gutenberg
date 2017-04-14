@@ -12,29 +12,29 @@ import java.util.Map;
  */
 public class FileFormeEntry {
 
-    //The destination file name.
-    private String name;
+    //The destination file dest.
+    private String dest;
     //The source Mustache template.
     private String source;
     //The variables provided in the form file for this entry.
     private Map<String, Object> variables = new HashMap<>();
 
     /**
-     * Gets the name.
+     * Gets the dest.
      *
      * @return String
      */
-    public String getName() {
-        return name;
+    public String getDest() {
+        return dest;
     }
 
     /**
-     * Sets the name.
+     * Sets the dest.
      *
-     * @param name String
+     * @param dest String
      */
-    public void setName(String name) {
-        this.name = name;
+    public void setDest(String dest) {
+        this.dest = dest;
     }
 
     /**
@@ -95,7 +95,7 @@ public class FileFormeEntry {
                 (new FormattedStringTemplate("{0}/{1}", formeLocation, this.getSource())).create(variables);
         //Build the full path to the destination.
         String destFilePath =
-                (new FormattedStringTemplate("{0}/{1}", destinationPath, this.getName())).create(variables);
+                (new FormattedStringTemplate("{0}/{1}", destinationPath, this.getDest())).create(variables);
 
         //Since this is a event, tell the user.
         (new Console()).info("+ Creating File... {0}", destFilePath);

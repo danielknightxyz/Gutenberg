@@ -11,25 +11,25 @@ import java.util.HashMap;
  */
 public class DirectoryFormeEntry {
 
-    //The name of the directory.
-    private String name;
+    //The dest of the directory.
+    private String dest;
 
     /**
-     * Gets the name.
+     * Gets the dest.
      *
      * @return String
      */
-    public String getName() {
-        return name;
+    public String getDest() {
+        return dest;
     }
 
     /**
-     * Sets the name.
+     * Sets the dest.
      *
-     * @param name String.
+     * @param dest String.
      */
-    public void setName(String name) {
-        this.name = name;
+    public void setDest(String dest) {
+        this.dest = dest;
     }
 
     /**
@@ -50,7 +50,7 @@ public class DirectoryFormeEntry {
         //Build the expected destination the directory.
         String destination =
                 (new FormattedStringTemplate(
-                        "{0}/{1}", destinationPath, this.getName()))
+                        "{0}/{1}", destinationPath, this.getDest()))
                         .create(variables);
 
         //Since this is a event, tell the user.

@@ -7,8 +7,14 @@ import javax.inject.Inject;
 
 public class Unknown implements Command {
 
+    //The application context.
     private ApplicationContext applicationContext;
 
+    /**
+     * Constructor.
+     *
+     * @param applicationContext The application context.
+     */
     @Inject
     public Unknown(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;

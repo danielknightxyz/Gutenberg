@@ -64,8 +64,11 @@ public class FileSystemService {
      */
     public void createFile(String location, String contents) {
         try {
-            File file = new File("test1.txt");
-            FileWriter fileWriter = new FileWriter(new File(location));
+            File newFile = new File(location);
+            newFile.setReadable(true,true);
+            newFile.setWritable(true,true);
+            newFile.setExecutable(true,true);
+            FileWriter fileWriter = new FileWriter(newFile);
             fileWriter.write(contents);
             fileWriter.flush();
             fileWriter.close();

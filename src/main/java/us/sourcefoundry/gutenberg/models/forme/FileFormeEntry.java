@@ -16,6 +16,8 @@ public class FileFormeEntry {
     private String dest;
     //The source Mustache template.
     private String source;
+    //The permissions of the file being created.
+    private Permissions permissions = new Permissions();
     //The variables provided in the form file for this entry.
     private Map<String, Object> variables = new HashMap<>();
 
@@ -53,6 +55,24 @@ public class FileFormeEntry {
      */
     public void setSource(String source) {
         this.source = source;
+    }
+
+    /**
+     * Gets Permissions
+     *
+     * @return Permissions
+     */
+    public Permissions getPermissions() {
+        return permissions;
+    }
+
+    /**
+     * Sets Permissions
+     *
+     * @param permissions Permissions
+     */
+    public void setPermissions(Permissions permissions) {
+        this.permissions = permissions;
     }
 
     /**
@@ -100,6 +120,6 @@ public class FileFormeEntry {
         //Since this is a event, tell the user.
         (new Console()).info("+ Creating File... {0}", destFilePath);
         //Create the file.
-        (new FileTemplate()).create(sourceFilePath, destFilePath, variables);
+        (new FileTemplate()).create(sourceFilePath, destFilePath, this.permissions, variables);
     }
 }

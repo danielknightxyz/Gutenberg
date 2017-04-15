@@ -65,9 +65,6 @@ public class FileSystemService {
     public void createFile(String location, String contents) {
         try {
             File newFile = new File(location);
-            newFile.setReadable(true,true);
-            newFile.setWritable(true,true);
-            newFile.setExecutable(true,true);
             FileWriter fileWriter = new FileWriter(newFile);
             fileWriter.write(contents);
             fileWriter.flush();
@@ -84,9 +81,24 @@ public class FileSystemService {
      * @param destinationPath The location to copy the directory.
      */
     public void copyDirectory(String sourcePath, String destinationPath) throws IOException {
-        FileUtils.copyDirectory(
-                this.getByLocation(sourcePath), this.getByLocation(destinationPath)
-        );
+        this.copyDirectory(sourcePath,destinationPath, true, true, false);
+    }
+
+    /**
+     * Copies a directory from one location to  another.
+     *
+     * @param sourcePath      The location of the directory to copy.
+     * @param destinationPath The location to copy the directory.
+     */
+    public void copyDirectory(String sourcePath, String destinationPath, boolean read, boolean write, boolean execute) throws IOException {
+        File source = this.getByLocation(sourcePath);
+        File destination = this.getByLocation(destinationPath);
+
+        FileUtils.copyDirectory(source,destination);
+
+        destination.setReadable(read);
+        destination.setWritable(write);
+        destination.setExecutable(execute);
     }
 
     /**
@@ -96,8 +108,26 @@ public class FileSystemService {
      * @param destinationPath The location to copy the directory.
      */
     public void copyFile(String sourcePath, String destinationPath) throws IOException {
-        FileUtils.copyFile(
-                this.getByLocation(sourcePath), this.getByLocation(destinationPath)
-        );
+        this.copyFile(sourcePath, destinationPath, true, true, false);
+    }
+
+    /**
+     * Copies a file from one location to  another.
+     *
+     * @param sourcePath      The location of the file to copy.
+     * @param destinationPath The location to copy the directory.
+     * @param read            Should the file be permission as read allowed.
+     * @param write           Should the file be permission as write allowed.
+     * @param execute         Should the file be permission as execute allowed.
+     */
+    public void copyFile(String sourcePath, String destinationPath, boolean read, boolean write, boolean execute) throws IOException {
+        File source = this.getByLocation(sourcePath);
+        File destination = this.getByLocation(destinationPath);
+
+        FileUtils.copyFile(source, destination);
+
+        destination.setReadable(read);
+        destination.setWritable(write);
+        destination.setExecutable(execute);
     }
 }

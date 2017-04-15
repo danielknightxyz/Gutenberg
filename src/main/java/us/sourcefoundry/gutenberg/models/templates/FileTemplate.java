@@ -3,6 +3,7 @@ package us.sourcefoundry.gutenberg.models.templates;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
+import us.sourcefoundry.gutenberg.models.forme.Permissions;
 import us.sourcefoundry.gutenberg.services.FileSystemService;
 
 import java.io.FileReader;
@@ -24,7 +25,7 @@ public class FileTemplate {
      * @param variables          Any variables to use in the template.
      * @return True if it completed without error.  False otherwise.
      */
-    public boolean create(String sourceTemplatePath, String destinationPath, HashMap<String, Object> variables) {
+    public boolean create(String sourceTemplatePath, String destinationPath, Permissions permissions, HashMap<String, Object> variables) {
         try {
             return this.create(new FileReader(sourceTemplatePath), destinationPath, variables);
         } catch (Exception e) {

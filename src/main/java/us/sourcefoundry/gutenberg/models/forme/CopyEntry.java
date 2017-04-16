@@ -83,7 +83,7 @@ public class CopyEntry {
     private void copyDir(String sourcePath, String destinationPath) {
         try {
             (new Console()).info("+ Copying Directory... {0}", destinationPath);
-            (new FileSystemService()).copyDirectory(sourcePath, destinationPath,this.permissions.canRead(),this.permissions.canWrite(),this.permissions.canExecute());
+            (new FileSystemService()).copyDirectory(sourcePath, destinationPath);
         } catch (IOException e) {
             e.printStackTrace();
         }

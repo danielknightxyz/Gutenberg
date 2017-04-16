@@ -6,6 +6,7 @@ import com.github.mustachejava.MustacheFactory;
 import us.sourcefoundry.gutenberg.models.forme.Permissions;
 import us.sourcefoundry.gutenberg.services.FileSystemService;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.PrintWriter;
 import java.io.Reader;
@@ -27,7 +28,7 @@ public class FileTemplate {
      */
     public boolean create(String sourceTemplatePath, String destinationPath, Permissions permissions, HashMap<String, Object> variables) {
         try {
-            return this.create(new FileReader(sourceTemplatePath), destinationPath, variables);
+            return this.create(new FileReader(sourceTemplatePath), permissions, destinationPath, variables);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -42,13 +43,17 @@ public class FileTemplate {
      * @param variables       Any variables to use in the template.
      * @return True if it completed without error.  False otherwise.
      */
-    public boolean create(Reader sourceReader, String destinationPath, HashMap<String, Object> variables) {
+    public boolean create(Reader sourceReader, Permissions permissions, String destinationPath, HashMap<String, Object> variables) {
         try {
-            PrintWriter writer = new PrintWriter((new FileSystemService()).getByLocation(destinationPath));
+            File newFile = (new FileSystemService()).getByLocation(destinationPath);
+
+            PrintWriter writer = new PrintWriter(newFile);
             MustacheFactory mf = new DefaultMustacheFactory();
             Mustache mustache = mf.compile(sourceReader, UUID.randomUUID().toString());
             mustache.execute(writer, variables);
             writer.flush();
+
+            (new FileSystemService()).setPermissions(newFile,permissions.canRead(),permissions.canWrite(),permissions.canExecute());
             return true;
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,6 +1,7 @@
 package us.sourcefoundry.gutenberg.commands;
 
 import us.sourcefoundry.gutenberg.models.ApplicationContext;
+import us.sourcefoundry.gutenberg.models.forme.Permissions;
 import us.sourcefoundry.gutenberg.models.templates.FileTemplate;
 import us.sourcefoundry.gutenberg.services.Cli;
 import us.sourcefoundry.gutenberg.services.Console;
@@ -51,7 +52,7 @@ public class Init implements Command {
         //Create the file using the template in the resource directory.
         InputStream templateFileStream = Init.class.getClassLoader().getResourceAsStream("templates/forme.yml.mustache");
         //Create the file in the output path.
-        (new FileTemplate()).create(new InputStreamReader(templateFileStream), destFilePath, new HashMap<>());
+        (new FileTemplate()).create(new InputStreamReader(templateFileStream), new Permissions(), destFilePath, new HashMap<>());
     }
 
     /**

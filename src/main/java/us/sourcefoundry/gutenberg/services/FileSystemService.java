@@ -81,24 +81,10 @@ public class FileSystemService {
      * @param destinationPath The location to copy the directory.
      */
     public void copyDirectory(String sourcePath, String destinationPath) throws IOException {
-        this.copyDirectory(sourcePath,destinationPath, true, true, false);
-    }
-
-    /**
-     * Copies a directory from one location to  another.
-     *
-     * @param sourcePath      The location of the directory to copy.
-     * @param destinationPath The location to copy the directory.
-     */
-    public void copyDirectory(String sourcePath, String destinationPath, boolean read, boolean write, boolean execute) throws IOException {
         File source = this.getByLocation(sourcePath);
         File destination = this.getByLocation(destinationPath);
 
-        FileUtils.copyDirectory(source,destination);
-
-        destination.setReadable(read);
-        destination.setWritable(write);
-        destination.setExecutable(execute);
+        FileUtils.copyDirectory(source, destination);
     }
 
     /**
@@ -125,9 +111,20 @@ public class FileSystemService {
         File destination = this.getByLocation(destinationPath);
 
         FileUtils.copyFile(source, destination);
+        this.setPermissions(destination, read, write, execute);
+    }
 
-        destination.setReadable(read);
-        destination.setWritable(write);
-        destination.setExecutable(execute);
+    /**
+     * Sets the permissions on a destination.
+     *
+     * @param file    The file to change the permissions.
+     * @param read    Should the file be permission as read allowed.
+     * @param write   Should the file be permission as write allowed.
+     * @param execute Should the file be permission as execute allowed.
+     */
+    public void setPermissions(File file, boolean read, boolean write, boolean execute) {
+        file.setReadable(read);
+        file.setWritable(write);
+        file.setExecutable(execute);
     }
 }

@@ -37,16 +37,28 @@ directories:
 #  - dest:
 #
 # A list of files to create using provided templates.  Any variables will be available in your mustache template as, simply,
-# 'variables.?'.  All mustache template paths are relative to this file.
+# 'variables.?'.  All mustache template paths are relative to this file.  You can provide expected file permissions for the
+# destination files.  If not provided, file permissions will be '0644'.  Directories will default to '0755'
 #
 files:
 #  - source:
 #    dest:
 #    variables:
+#    permissions:
+#       read: yes
+#       write: yes
+#       execute: no
 #
-# A list of files or directories to copy into their destination.
+# A list of files or directories to copy into their destination. For file copy entries, you can provide expected file permissions for the
+# destination files.  If not provided, file permissions will be '0644'.  Directories will default to '0755'
 #
 copy:
 #  - source:
 #    dest:
 #    type:
+#
+#    permissions:
+#    #Permissions are only available for file copy entries.
+#       read: yes
+#       write: yes
+#       execute: no

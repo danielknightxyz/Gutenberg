@@ -218,7 +218,7 @@ public class Build implements Command {
             answers.add(new Pair<>(entry.getKey(), entry.getValue()));
 
         (new Console()).info("+ Creating Answer File... {0}", answersFilePath);
-        (new AnswersFileTemplate()).create(answersFilePath, userResponses);
+        (new AnswersFileTemplate()).create(answersFilePath, answers);
     }
 
     /**

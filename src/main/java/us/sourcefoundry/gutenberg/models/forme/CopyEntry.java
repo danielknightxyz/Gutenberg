@@ -7,11 +7,19 @@ import us.sourcefoundry.gutenberg.services.FileSystemService;
 import java.io.IOException;
 import java.util.HashMap;
 
+/**
+ * This class represents an instruction to copy either a file or directory(recursively) into the build path.
+ */
 public class CopyEntry {
 
+    //The source file or directory.
     private String source;
+    //The expected destination in the build path.
     private String dest;
+    //The type of entry it is: file or directory.
     private String type;
+    //The permissions of the file or directory being created.
+    private Permissions permissions = new Permissions();
 
     public String getSource() {
         return source;
@@ -35,6 +43,24 @@ public class CopyEntry {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    /**
+     * Gets Permissions
+     *
+     * @return Permissions
+     */
+    public Permissions getPermissions() {
+        return permissions;
+    }
+
+    /**
+     * Sets Permissions
+     *
+     * @param permissions Permissions
+     */
+    public void setPermissions(Permissions permissions) {
+        this.permissions = permissions;
     }
 
     public void copy(String formeLocation, String buildPath, Forme forme, HashMap<String, Object> userResponses) {
@@ -66,7 +92,7 @@ public class CopyEntry {
     private void copyFile(String sourcePath, String destinationPath) {
         try {
             (new Console()).info("+ Copying File... {0}", destinationPath);
-            (new FileSystemService()).copyFile(sourcePath, destinationPath);
+            (new FileSystemService()).copyFile(sourcePath, destinationPath,this.permissions.canRead(),this.permissions.canWrite(),this.permissions.canExecute());
         } catch (IOException e) {
             e.printStackTrace();
         }

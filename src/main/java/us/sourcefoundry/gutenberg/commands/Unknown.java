@@ -5,6 +5,9 @@ import us.sourcefoundry.gutenberg.services.Console;
 
 import javax.inject.Inject;
 
+/**
+ * The default command to run.  In the case the command is not in the factory and therefore not found.
+ */
 public class Unknown implements Command {
 
     //The application context.
@@ -20,6 +23,9 @@ public class Unknown implements Command {
         this.applicationContext = applicationContext;
     }
 
+    /**
+     * Runs the command.
+     */
     @Override
     public void execute() {
         //Throw an error because the requested command is not provided.

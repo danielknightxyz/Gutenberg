@@ -1,7 +1,5 @@
 package us.sourcefoundry.gutenberg;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import us.sourcefoundry.gutenberg.commands.Command;
 import us.sourcefoundry.gutenberg.factories.ApplicationContextFactory;
 import us.sourcefoundry.gutenberg.factories.CliFactory;
@@ -13,10 +11,16 @@ import us.sourcefoundry.gutenberg.utils.DependencyInjector;
 
 import java.io.IOException;
 
+/**
+ * This is this main class and entry point into the application.
+ */
 public class Main {
 
-    private final static Logger logger = LoggerFactory.getLogger(Main.class);
-
+    /**
+     * This will run the application.
+     *
+     * @param args Command line arguments.
+     */
     public static void main(String[] args) throws IOException {
         //Initialize the dependency injection.
         DependencyInjector.init();

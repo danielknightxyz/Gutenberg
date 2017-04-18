@@ -2,6 +2,9 @@ package us.sourcefoundry.gutenberg.factories;
 
 import us.sourcefoundry.gutenberg.services.Cli;
 
+/**
+ * Creates a Cli object for the application.
+ */
 public class CliFactory extends AbstractFactory<Cli> {
 
     /**

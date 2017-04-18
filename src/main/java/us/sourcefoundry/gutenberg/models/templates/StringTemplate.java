@@ -14,8 +14,14 @@ import java.util.UUID;
  */
 public class StringTemplate {
 
+    //The string template.
     private String template;
 
+    /**
+     * Constructor
+     *
+     * @param template The template string.
+     */
     public StringTemplate(final String template) {
         this.template = template;
     }

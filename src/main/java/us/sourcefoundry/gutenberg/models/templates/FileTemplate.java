@@ -53,7 +53,7 @@ public class FileTemplate {
             mustache.execute(writer, variables);
             writer.flush();
 
-            (new FileSystemService()).setPermissions(newFile,permissions.canRead(),permissions.canWrite(),permissions.canExecute());
+            (new FileSystemService()).setPermissions(newFile, permissions.canRead(), permissions.canWrite(), permissions.canExecute());
             return true;
         } catch (Exception e) {
             e.printStackTrace();

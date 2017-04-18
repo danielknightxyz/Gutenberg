@@ -11,6 +11,11 @@ import java.io.InputStream;
  */
 public class FormeFactory extends AbstractFactory<Forme> {
 
+    /**
+     * Creates a new instance of Forme.
+     *
+     * @return Forme
+     */
     public Forme newInstance() {
         return this.getInstance(Forme.class);
     }

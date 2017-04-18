@@ -12,13 +12,23 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Creates a new map from the inventory file located in the installation directory.
+ */
 public class InventoryFactory extends AbstractFactory<Map<String, FormeInventoryItem>> {
 
+    //Return a empty HashMap by default.
     @Override
     public Map<String, FormeInventoryItem> newInstance() {
-        return null;
+        return new HashMap<>();
     }
 
+    /**
+     * Reads inventory file from the installation directory.
+     *
+     * @param inventoryLocation The location of the installation directory.
+     * @return Map
+     */
     public Map<String, FormeInventoryItem> newInstance(String inventoryLocation) {
         try {
             Map<String, FormeInventoryItem> inventory = new HashMap<>();

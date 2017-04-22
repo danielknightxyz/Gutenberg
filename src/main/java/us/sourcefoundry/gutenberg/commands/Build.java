@@ -143,7 +143,7 @@ public class Build implements Command {
         //If the forme is local, then look some where other than the inventory; which will be supplied by the user.
         if (this.cli.hasOption("local"))
             //Get local forme.
-            return this.cli.getOptionValue("local");
+            return this.cli.getOptionValue("local").equals(".") ? this.applicationContext.getWorkingDirectory() : this.cli.getOptionValue("local");
 
         //Else, lets check out the inventory.
         String formeName = (this.cli.getArgList().get(1) != null ? this.cli.getArgList().get(1).toString() : null);
@@ -254,7 +254,16 @@ public class Build implements Command {
         if (outputDirectoryExists && force)
             (new Console()).warning("# {0} already exists. Building anyways.", buildPath.getAbsolutePath());
 
-        return true;
+        if(!outputDirectoryExists) {
+            if(buildPath.mkdir()) {
+                (new Console()).warning("# {0} did not exist, it was created.", buildPath.getAbsolutePath());
+                return true;
+            }
 
+            (new Console()).warning("# {0} did not exist and could not be created.", buildPath.getAbsolutePath());
+            return false;
+        }
+
+        return true;
     }
 }

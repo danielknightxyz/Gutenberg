@@ -12,6 +12,8 @@ public class ArchiveScanResult {
     private String archivePath;
     //The forme from the archive.  This is the actual forme which was located.
     private Forme forme;
+    //The level the forme file is located within.
+    private int depth = 1;
 
     /**
      * Get the archive path.
@@ -47,5 +49,23 @@ public class ArchiveScanResult {
      */
     public void setForme(Forme forme) {
         this.forme = forme;
+    }
+
+    /**
+     * Get the depth.
+     *
+     * @return int
+     */
+    public int getDepth() {
+        return depth;
+    }
+
+    /**
+     * Set the depth.
+     *
+     * @param depth int
+     */
+    public void setDepth(int depth) {
+        this.depth = depth;
     }
 }

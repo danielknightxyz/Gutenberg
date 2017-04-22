@@ -34,15 +34,7 @@ public class Main {
             return;
         }
 
-        String banner = "\n" +
-                " _____       _             _                    \n" +
-                "|  __ \\     | |           | |                   \n" +
-                "| |  \\/_   _| |_ ___ _ __ | |__   ___ _ __ __ _ \n" +
-                "| | __| | | | __/ _ \\ '_  \\| '_   \\/ _ \\ '__/  _` |\n" +
-                "| |_\\ \\ |_| | ||  __/ | | | |_) |  __/ | | (_| |\n" +
-                " \\____/\\__,_|\\__\\___|_| |_|_.__/ \\___|_|  \\__, |\n" +
-                "                                           __/ |\n" +
-                "                                          |___/\n";
+        String banner = "Gutenberg is running... Stay tuned!";
 
         //Show the banner
         (new Console()).message(banner);

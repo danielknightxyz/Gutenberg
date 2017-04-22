@@ -122,12 +122,14 @@ public class Add implements Command {
                                     item.setRepository(githubRepo);
                                     item.setReference(githubRef);
                                     item.setName(scanResult.getForme().getName());
-                                    item.setInstallPath(this.strip(scanResult.getArchivePath()));
+                                    item.setInstallPath(scanResult.getForme().getName());
                                     return item;
                                 })
                                 .collect(Collectors.toMap(FormeInventoryItem::getName, Function.identity()));
 
                         inventory.putAll(newInventory);
+                    } catch (FileNotFoundException e) {
+                        (new Console()).error("{0} could not be found on Github.", r);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -153,7 +155,6 @@ public class Add implements Command {
         String currentArchiveDirectory = "";
 
         while (entry != null) {
-
             if (entry.isDirectory())
                 currentArchiveDirectory = entry.getName();
             else if (FilenameUtils.getName(entry.getName().toLowerCase()).equals("forme.yml")) {
@@ -161,6 +162,7 @@ public class Add implements Command {
                 ArchiveScanResult result = new ArchiveScanResult();
                 result.setArchivePath(currentArchiveDirectory);
                 result.setForme(forme);
+                result.setDepth(Arrays.asList(FilenameUtils.getPath(entry.getName()).split("/")).size());
                 results.add(result);
             }
 
@@ -178,39 +180,59 @@ public class Add implements Command {
      * @param archiveScanResults The results of the archive scan.
      */
     private void extractUsingStream(InputStream urlStream, String destination, List<ArchiveScanResult> archiveScanResults) throws IOException {
+        //Open the archive from the input stream.
         GZIPInputStream input = new GZIPInputStream(urlStream);
         TarArchiveInputStream tar = new TarArchiveInputStream(input);
 
+        //Get the first/next entry in the archive.
         ArchiveEntry entry = tar.getNextEntry();
 
+        //Go until we run out of entries in the archive.
         while (entry != null) {
-            String outputPath = destination + "/" + this.strip(entry.getName());
 
+            //Check to make sure this entry is part of the scan results.
             if (this.includeEntry(archiveScanResults, entry.getName())) {
-
+                ArchiveScanResult archiveScanResult = this.getArchiveScanResult(archiveScanResults, entry.getName());
+                //Set the expected install path.
+                String outputPath = destination + "/" + archiveScanResult.getForme().getName() + "/" + this.strip(entry.getName(), archiveScanResult.getDepth());
+                //If its a directory, we'll need to create it.
                 if (entry.isDirectory())
                     (new FileSystemService()).createDirectory(outputPath);
                 else
+                    //If its a file, we need to copy it from the archive to the install directory.
                     ByteStreams.copy(tar, new FileOutputStream(new File(outputPath)));
             }
 
+            //Advance the entry.
             entry = tar.getNextEntry();
         }
     }
 
     /**
-     * Checks to see if the entry from the archve should be included.
+     * Get the scan result for a particular path.
+     *
+     * @param archiveScanResults The scan results from when the archive was checked for formes.
+     * @param entryName          The entry name.
+     * @return ArchiveScanResult
+     */
+    private ArchiveScanResult getArchiveScanResult(List<ArchiveScanResult> archiveScanResults, String entryName) {
+        for (ArchiveScanResult result : archiveScanResults)
+            if (entryName.contains(result.getArchivePath()))
+                return result;
+        return null;
+    }
+
+    /**
+     * Checks to see if the entry from the archive should be included.
      *
      * @param archiveScanResults The results of the archive scan.
      * @param entryName          The archive entry name.
      * @return boolean.
      */
     private boolean includeEntry(List<ArchiveScanResult> archiveScanResults, String entryName) {
-
         for (ArchiveScanResult result : archiveScanResults)
             if (entryName.contains(result.getArchivePath()))
                 return true;
-
         return false;
     }
 
@@ -220,8 +242,8 @@ public class Add implements Command {
      * @param path The entry path.
      * @return String, the path with the root element stripped.
      */
-    private String strip(String path) {
+    private String strip(String path, int startingDepth) {
         List<String> foldersPath = Arrays.asList(path.split("/"));
-        return String.join("/", foldersPath.subList(1, foldersPath.size()));
+        return String.join("/", foldersPath.subList(startingDepth, foldersPath.size()));
     }
 }

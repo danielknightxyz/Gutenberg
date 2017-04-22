@@ -11,6 +11,7 @@ import us.sourcefoundry.gutenberg.factories.InventoryFactory;
 import us.sourcefoundry.gutenberg.models.ApplicationContext;
 import us.sourcefoundry.gutenberg.models.FormeInventoryItem;
 import us.sourcefoundry.gutenberg.models.commands.add.ArchiveScanResult;
+import us.sourcefoundry.gutenberg.models.commands.add.GithubLocation;
 import us.sourcefoundry.gutenberg.models.forme.Forme;
 import us.sourcefoundry.gutenberg.services.Cli;
 import us.sourcefoundry.gutenberg.services.Console;
@@ -25,8 +26,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
 
@@ -65,26 +64,17 @@ public class Add implements Command {
 
         //This github api url.
         String githubURL = "https://api.github.com/repos/{0}/{1}/tarball/{2}";
-        List<String> repositories = this.cli.getArgList().subList(1, this.cli.getArgList().size());
+        List<String> repositories = this.getCommandlineRepostiories();
 
-        //Compile the Github repository pattern.
-        Pattern pattern = Pattern.compile("^(.+)\\/(.+):(.+)$|^(.+)\\/(.+)$");
         //Get the existing inventory.
         Map<String, FormeInventoryItem> inventory = (new InventoryFactory()).newInstance(installDir + "/inventory.json");
 
         //For each repository you want to add, do the following to download, scan, and add them to the local inventory.
         repositories.forEach(
                 r -> {
-                    Matcher matcher = pattern.matcher(r);
+                    GithubLocation githubLocation = new GithubLocation(r);
 
-                    if (!matcher.matches())
-                        return;
-
-                    String githubUser = (matcher.group(1) != null ? matcher.group(1) : matcher.group(4));
-                    String githubRepo = (matcher.group(2) != null ? matcher.group(2) : matcher.group(5));
-                    String githubRef = (matcher.group(3) != null ? matcher.group(3) : "master");
-
-                    String resourceURL = MessageFormat.format(githubURL, githubUser, githubRepo, githubRef);
+                    String resourceURL = MessageFormat.format(githubURL, githubLocation.getUser(), githubLocation.getRepository(), githubLocation.getReference());
 
                     (new Console()).message("> Add from {0}", r);
                     (new Console()).message("# Downloading {0}", resourceURL);
@@ -118,9 +108,9 @@ public class Add implements Command {
                                 .map(scanResult -> {
                                     (new Console()).info("> {0} added", scanResult.getForme().getName());
                                     FormeInventoryItem item = new FormeInventoryItem();
-                                    item.setUsername(githubUser);
-                                    item.setRepository(githubRepo);
-                                    item.setReference(githubRef);
+                                    item.setUsername(githubLocation.getUser());
+                                    item.setRepository(githubLocation.getRepository());
+                                    item.setReference(githubLocation.getReference());
                                     item.setName(scanResult.getForme().getName());
                                     item.setInstallPath(scanResult.getForme().getName());
                                     return item;
@@ -138,6 +128,15 @@ public class Add implements Command {
 
         //Store the inventory.
         (new FileSystemService()).createFile(installDir + "/inventory.json", (new Gson().toJson(inventory)));
+    }
+
+    /**
+     * Gets the repositories locations from the command line ignoring the first argument which is the action.
+     *
+     * @return List
+     */
+    private List<String> getCommandlineRepostiories() {
+        return this.cli.getArgList().subList(1, this.cli.getArgList().size());
     }
 
     /**

@@ -34,7 +34,7 @@ public class Main {
             return;
         }
 
-        String banner = "Gutenberg is running... Stay tuned!";
+        String banner = "\nGutenberg is running... Stay tuned!\n";
 
         //Show the banner
         (new Console()).message(banner);

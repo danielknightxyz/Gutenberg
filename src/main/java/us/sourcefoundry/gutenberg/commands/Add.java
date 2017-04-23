@@ -20,6 +20,7 @@ import us.sourcefoundry.gutenberg.services.FileSystemService;
 import javax.inject.Inject;
 import java.io.*;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -118,7 +119,7 @@ public class Add implements Command {
                                 .collect(Collectors.toMap(FormeInventoryItem::getName, Function.identity()));
 
                         inventory.putAll(newInventory);
-                    } catch (FileNotFoundException e) {
+                    } catch (FileNotFoundException | UnknownHostException e) {
                         (new Console()).error("{0} could not be found on Github.", r);
                     } catch (IOException e) {
                         e.printStackTrace();

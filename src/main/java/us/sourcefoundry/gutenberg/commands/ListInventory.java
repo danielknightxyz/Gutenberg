@@ -48,6 +48,7 @@ public class ListInventory implements Command {
 
         //Otherwise, show the contents of the inventory to the user.
         (new Console()).message("Inventory Contents:");
-        inventory.forEach((k, v) -> (new Console()).info("> {0}", v.getName()));
+        inventory.forEach((k, v) -> (new Console()).info("   > {0}", v.getName()));
+        (new Console()).message("\n");
     }
 }

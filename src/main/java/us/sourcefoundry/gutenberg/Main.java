@@ -6,7 +6,6 @@ import us.sourcefoundry.gutenberg.factories.CliFactory;
 import us.sourcefoundry.gutenberg.factories.CommandFactory;
 import us.sourcefoundry.gutenberg.models.ApplicationContext;
 import us.sourcefoundry.gutenberg.services.Cli;
-import us.sourcefoundry.gutenberg.services.Console;
 import us.sourcefoundry.gutenberg.utils.DependencyInjector;
 
 import java.io.IOException;
@@ -33,11 +32,6 @@ public class Main {
             cli.printBlockingOption();
             return;
         }
-
-        String banner = "\nGutenberg is running... Stay tuned!\n";
-
-        //Show the banner
-        (new Console()).message(banner);
 
         //Create an application context for use later in the process.
         ApplicationContext applicationContext = (new ApplicationContextFactory()).newInstance(cli);

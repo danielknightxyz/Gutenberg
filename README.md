@@ -2,6 +2,15 @@
 
 Gutenberg is a small, yet purposeful, utility which allows you to create templates and scaffolding for any file asset creation you're doing redundantly.  For example, if you're a Java software developer and you find yourself creating the same Spring-Boot application boiler plate or scaffolding repeatedly, you can use Gutenberg to create your perfect Spring-Boot template and generate your projects with ease.
 
+### Installation
+
+#### Install with Homebrew
+
+```bash
+brew tap sourcefoundryus/gutenberg
+brew install gutenberg
+```
+
 ### Principles
 
 Gutenberg is small, which means that everything it does it needs to be principled and thoughtful as to not create confusion in terms of purpose and usage. 
@@ -28,14 +37,13 @@ The first thing you need to know to start using Gutenberg is two actions:
 
 To add the getting started template run the following command:
 
-```
+```bash
 gutenberg add sourcefoundryus/gbg-getting-started
 ```
 
 You should see something like the following:
 
 ```
-Gutenberg is running... Stay tuned!
 > Add from sourcefoundryus/gbg-getting-started
 # Downloading https://api.github.com/repos/sourcefoundryus/gbg-getting-started/tarball/master
 # 1 formes found: gbg-getting-started
@@ -48,20 +56,19 @@ Notice the last line?  It states that the getting-started template was added to 
 
 Now lets build.  First we need a directory to hold our built assets.  Make a new directory called 'hello-world' and change directory into it.
 
-```
+```bash
 mkdir hello-world && cd hello-world
 ```
 
 Now run the build process using the template you added before:
 
-```
+```bash
 gutenberg build gbg-getting-started
 ```
 
 When prompted type your name or hit enter for the default.  You should now see the following:
 
 ```
-Gutenberg is running... Stay tuned!
 Building Forme "gbg-getting-started"
 What is your name? [world]: 
 + Creating File... /Users/danielknight/Documents/hello-world/helloworld.txt

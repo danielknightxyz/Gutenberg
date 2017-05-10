@@ -39,8 +39,18 @@ jar {
     }
 }
 
-
 // This will build and install the compiled project locally.
 task install(type: Exec, dependsOn: build){
     commandLine "etc/install.sh"
+}
+
+//This will create a zip file for release and distribution through Homebrew.
+task brewDist(type: Zip, dependsOn: build) {
+    from ('build/libs/')
+    include 'gutenberg-*.jar'
+    from ('etc')
+    include 'gutenberg'
+
+    archiveName 'gutenberg-' + version + '.zip'
+    destinationDir(file('build/distributions/homebrew'))
 }

@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * This represents a form entry to create a file from a Mustache template.
  */
-public class FileFormeEntry {
+public class FileEntry {
 
     //The destination file dest.
     private String dest;

@@ -6,9 +6,17 @@ Gutenberg is a small, yet purposeful, utility which allows you to create templat
 
 #### Install with Homebrew
 
+To install with Homebrew you'll need to add the tap and install.  The commands are listed below.
+
 ```bash
 brew tap sourcefoundryus/gutenberg
 brew install gutenberg
+```
+
+Once its installed you can run ```gutenberg``` to make sure its installed. You should see:
+
+```
+Gutenberg is installed! See help for usage.
 ```
 
 ### Principles

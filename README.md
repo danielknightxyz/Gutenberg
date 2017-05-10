@@ -79,10 +79,10 @@ When prompted type your name or hit enter for the default.  You should now see t
 ```
 Building Forme "gbg-getting-started"
 What is your name? [world]: 
-+ Creating File... /Users/danielknight/Documents/hello-world/helloworld.txt
++ Creating File... /PATH/TO/FOLDER/hello-world/helloworld.txt
 ```
 
-When you list to contents of the directory, you'll notice a new file named 'helloworld.txt' and inside that file it says 'hello, ' and the what ever you answered for the prompt.  [Here](https://github.com/sourcefoundryus/gbg-getting-started) is the source to the template on Github.
+When you list the contents of the directory, you'll notice a new file named 'helloworld.txt' and inside that file it says 'hello, ' and the what ever you answered for the prompt.  [Here](https://github.com/sourcefoundryus/gbg-getting-started) is the source to the template on Github.
 
 ### The Forme File
 

@@ -52,6 +52,9 @@ public class Build implements Command {
     @Override
     public void execute() {
         try {
+
+            (new Console()).message("\nBuilding...\n");
+
             //Get the forme location.
             String formeLocation = this.determineFormeLocation();
 
@@ -73,15 +76,14 @@ public class Build implements Command {
             if (!this.checkBuildPath((new FileSystemService()).getByLocation(buildPath), this.cli.hasOption("f")))
                 return;
 
-            //Show the message that the build is starting.
-            (new Console()).message("Building Forme \"{0}\"", forme.getName());
-
             //Run any prompts the forme may require.
             HashMap<String, Object> userResponses = this.getUserResponseToPrompts(forme, cli);
 
             /*
              * Run the process bellow.
              */
+            //Show the message that the build is starting.
+            (new Console()).message("Building Forme \"{0}\"", forme.getName());
             //Make the directories.
             forme.getDirectories().forEach(d -> d.create(buildPath, forme, userResponses));
             //Make the files from the templates.
@@ -221,7 +223,7 @@ public class Build implements Command {
         for (Map.Entry entry : userResponses.entrySet())
             answers.add(new Pair<>(entry.getKey(), entry.getValue()));
 
-        (new Console()).info("+ Creating Answer File... {0}", answersFilePath);
+        (new Console()).message("\nCreating Answer File... {0}", answersFilePath);
         (new AnswersFileTemplate()).create(answersFilePath, answers);
     }
 
@@ -240,31 +242,26 @@ public class Build implements Command {
             boolean isEmptyDirectory = buildPath.list().length == 0;
 
             if (isDirectory && !isEmptyDirectory) {
-                (new Console()).error("! Could not build. {0} exists and is not empty.", buildPath.getAbsolutePath());
+                (new Console()).error("! Could not build. {0} exists and is not empty.\n", buildPath.getAbsolutePath());
                 return false;
             }
 
             if (!isDirectory) {
-                (new Console()).error("! Could not build. {0} exists and is not a directory.", buildPath.getAbsolutePath());
+                (new Console()).error("! Could not build. {0} exists and is not a directory.\n", buildPath.getAbsolutePath());
                 return false;
             }
         }
 
         if (outputDirectoryExists && force && !isDirectory) {
-            (new Console()).error("! Could not force build. {0} exists and is not a directory.", buildPath.getAbsolutePath());
+            (new Console()).error("! Could not force build. {0} exists and is not a directory.\n", buildPath.getAbsolutePath());
             return false;
         }
 
         if (outputDirectoryExists && force)
-            (new Console()).warning("# {0} already exists. Building anyways.", buildPath.getAbsolutePath());
+            (new Console()).warning("# {0} already exists. Building anyways.\n", buildPath.getAbsolutePath());
 
-        if(!outputDirectoryExists) {
-            if(buildPath.mkdir()) {
-                (new Console()).warning("# {0} did not exist, it was created.", buildPath.getAbsolutePath());
-                return true;
-            }
-
-            (new Console()).warning("# {0} did not exist and could not be created.", buildPath.getAbsolutePath());
+        if(!outputDirectoryExists && !buildPath.mkdir()) {
+            (new Console()).warning("# {0} did not exist and could not be created.\n", buildPath.getAbsolutePath());
             return false;
         }
 

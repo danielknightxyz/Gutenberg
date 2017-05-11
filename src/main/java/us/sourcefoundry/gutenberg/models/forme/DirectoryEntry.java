@@ -54,7 +54,7 @@ public class DirectoryEntry {
                         .create(variables);
 
         //Since this is a event, tell the user.
-        (new Console()).info("+ Creating Directory... {0}", destination);
+        (new Console()).info("\t+ Creating Directory... {0}", destination);
         //Create the directory use the file system service.
         (new FileSystemService()).createDirectory(destination);
     }

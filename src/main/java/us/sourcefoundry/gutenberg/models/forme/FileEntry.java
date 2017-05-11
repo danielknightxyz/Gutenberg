@@ -167,7 +167,7 @@ public class FileEntry {
                 (new FormattedStringTemplate("{0}/{1}", formeLocation, this.getSource())).create(variables);
 
         //Since this is a event, tell the user.
-        (new Console()).info("+ Creating File... {0}", destFilePath);
+        (new Console()).info("\t+ Creating File... {0}", destFilePath);
         //Create the file.
         (new FileTemplate()).create(sourceFilePath, destFilePath, this.permissions, variables);
     }
@@ -183,7 +183,7 @@ public class FileEntry {
         StringReader reader = new StringReader((new StringTemplate(this.getContent())).create(variables));
 
         //Since this is a event, tell the user.
-        (new Console()).info("+ Creating File... {0}", destFilePath);
+        (new Console()).info("\t+ Creating File... {0}", destFilePath);
         //Create the file.
         (new FileTemplate()).create(reader, this.permissions, destFilePath, variables);
     }

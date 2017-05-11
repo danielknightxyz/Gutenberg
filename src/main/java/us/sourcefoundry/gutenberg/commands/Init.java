@@ -47,7 +47,7 @@ public class Init implements Command {
             return;
 
         //Tell the user what we are doing.
-        (new Console()).message("? Creating Forme...");
+        (new Console()).message("Creating Forme...");
 
         //Create the file using the template in the resource directory.
         InputStream templateFileStream = Init.class.getClassLoader().getResourceAsStream("templates/forme.yml.mustache");

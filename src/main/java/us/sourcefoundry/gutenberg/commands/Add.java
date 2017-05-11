@@ -77,8 +77,8 @@ public class Add implements Command {
 
                     String resourceURL = MessageFormat.format(githubURL, githubLocation.getUser(), githubLocation.getRepository(), githubLocation.getReference());
 
-                    (new Console()).message("> Add from {0}", r);
-                    (new Console()).message("# Downloading {0}", resourceURL);
+                    (new Console()).message("Add from {0}", r);
+                    (new Console()).info("\n# Downloading {0}", resourceURL);
 
                     try {
                         //Download the file from Github and buffer it for processing.
@@ -92,7 +92,7 @@ public class Add implements Command {
                         List<ArchiveScanResult> archiveScanResults = scanArchiveForFormes(bais);
                         bais.reset();
 
-                        (new Console()).message("# {0} formes found: {1}", archiveScanResults.size(), String.join(
+                        (new Console()).message("\nAdding {0} formes: {1}", archiveScanResults.size(), String.join(
                                 ", ",
                                 archiveScanResults.stream()
                                         .map(
@@ -107,7 +107,7 @@ public class Add implements Command {
                         Map<String, FormeInventoryItem> newInventory = archiveScanResults
                                 .stream()
                                 .map(scanResult -> {
-                                    (new Console()).info("> {0} added", scanResult.getForme().getName());
+                                    (new Console()).info("\t+ {0} added", scanResult.getForme().getName());
                                     FormeInventoryItem item = new FormeInventoryItem();
                                     item.setUsername(githubLocation.getUser());
                                     item.setRepository(githubLocation.getRepository());

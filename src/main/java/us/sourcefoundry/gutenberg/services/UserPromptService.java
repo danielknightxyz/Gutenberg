@@ -16,6 +16,8 @@ public class UserPromptService {
     //The template for the user prompt.
     private final static String PROMPT_TEMPLATE = "{0} [{1}]: ";
 
+    private boolean first = true;
+
     //The forme, which will supply the prompts.
     private Forme forme;
 
@@ -67,6 +69,12 @@ public class UserPromptService {
      * @return String
      */
     private String promptForAnswer(VarPrompt prompt) {
+
+        if(this.first) {
+            (new Console()).message("To build, please answer the following questions:");
+            this.first = false;
+        }
+
         //Get the input scanner.
         Scanner reader = new Scanner(System.in);
         //Build the message and prompt.

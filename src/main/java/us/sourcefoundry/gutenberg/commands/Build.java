@@ -194,14 +194,18 @@ public class Build implements Command {
      * @return Map of variable name to response.
      */
     private HashMap<String, Object> getUserResponseToPrompts(Forme forme, Cli cli) throws FileNotFoundException {
-        if (!cli.hasOption("a"))
-            return (new UserPromptService(forme).requestAnswers());
+        Map<String, Object> answers = new HashMap<>();
 
-        String answersFile = cli.getOptionValue("a");
-        InputStream answerFileIS = new FileInputStream((new FileSystemService()).getByLocation(answersFile));
+        if (cli.hasOption("a")) {
+            String answersFile = cli.getOptionValue("a");
+            InputStream answerFileIS = new FileInputStream((new FileSystemService()).getByLocation(answersFile));
+            Yaml parser = new Yaml(new Constructor(HashMap.class));
+            answers = (HashMap<String, Object>) parser.load(answerFileIS);
+        }
 
-        Yaml parser = new Yaml(new Constructor(HashMap.class));
-        return (HashMap<String, Object>) parser.load(answerFileIS);
+        //TODO: NOT RETURNING VALUES.
+        return (new UserPromptService(forme).requestAnswers(answers));
+
     }
 
     /**

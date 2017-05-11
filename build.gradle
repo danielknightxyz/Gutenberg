@@ -48,7 +48,7 @@ task install(type: Exec, dependsOn: build){
 task brewDist(type: Zip, dependsOn: build) {
     from ('build/libs/')
     include 'gutenberg-*.jar'
-    from ('etc')
+    from ('etc/homebrew')
     include 'gutenberg'
 
     archiveName 'gutenberg-' + version + '.zip'

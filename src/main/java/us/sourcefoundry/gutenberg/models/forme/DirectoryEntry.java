@@ -9,7 +9,7 @@ import java.util.HashMap;
 /**
  * This class represents a forme entry to create a directory.  This allows the use of Mustache templates.
  */
-public class DirectoryFormeEntry {
+public class DirectoryEntry {
 
     //The dest of the directory.
     private String dest;

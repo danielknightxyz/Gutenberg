@@ -7,6 +7,7 @@ import com.github.mustachejava.MustacheFactory;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -32,7 +33,7 @@ public class StringTemplate {
      * @param variables The variables for the template.
      * @return String
      */
-    public String create(HashMap<String, Object> variables) {
+    public String create(Map<String, Object> variables) {
         StringWriter writer = new StringWriter();
         MustacheFactory mf = new DefaultMustacheFactory();
         Mustache mustache = mf.compile(new StringReader(this.template), UUID.randomUUID().toString());

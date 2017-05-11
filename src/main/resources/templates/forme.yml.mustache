@@ -31,17 +31,20 @@ prompts:
 #    name:
 #    defaultValue:
 #
-# A list of directories to create.  These are created recursively.
+# A list of directories to create.  These are created recursively.  Directories will default to mode '0755'.
 #
 directories:
 #  - dest:
 #
 # A list of files to create using provided templates.  Any variables will be available in your mustache template as, simply,
 # 'variables.?'.  All mustache template paths are relative to this file.  You can provide expected file permissions for the
-# destination files.  If not provided, file permissions will be '0644'.  Directories will default to '0755'
+# destination files.  If not provided, file permissions will be '0644'.  To create a file from a mustache template file, supply
+# the path to the template file as the 'source'.  To supply the template here, provide the template text as 'content. Choose either
+# source or content.  But not both.  Source will take precedence.
 #
 files:
 #  - source:
+#    content:
 #    dest:
 #    variables:
 #    permissions:

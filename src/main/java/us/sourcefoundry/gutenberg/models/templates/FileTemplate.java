@@ -11,6 +11,7 @@ import java.io.FileReader;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -26,7 +27,7 @@ public class FileTemplate {
      * @param variables          Any variables to use in the template.
      * @return True if it completed without error.  False otherwise.
      */
-    public boolean create(String sourceTemplatePath, String destinationPath, Permissions permissions, HashMap<String, Object> variables) {
+    public boolean create(String sourceTemplatePath, String destinationPath, Permissions permissions, Map<String, Object> variables) {
         try {
             return this.create(new FileReader(sourceTemplatePath), permissions, destinationPath, variables);
         } catch (Exception e) {
@@ -43,7 +44,7 @@ public class FileTemplate {
      * @param variables       Any variables to use in the template.
      * @return True if it completed without error.  False otherwise.
      */
-    public boolean create(Reader sourceReader, Permissions permissions, String destinationPath, HashMap<String, Object> variables) {
+    public boolean create(Reader sourceReader, Permissions permissions, String destinationPath, Map<String, Object> variables) {
         try {
             File newFile = (new FileSystemService()).getByLocation(destinationPath);
 

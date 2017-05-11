@@ -25,9 +25,9 @@ public class Forme {
     //Any prompts which will ask the user for information when the forme is used.
     private List<VarPrompt> prompts = new ArrayList<>();
     //Any directories to create.
-    private List<DirectoryFormeEntry> directories = new ArrayList<>();
+    private List<DirectoryEntry> directories = new ArrayList<>();
     //Any files to create with Mustache.
-    private List<FileFormeEntry> files = new ArrayList<>();
+    private List<FileEntry> files = new ArrayList<>();
     //Any static content to copy.
     private List<CopyEntry> copy = new ArrayList<>();
 
@@ -72,7 +72,7 @@ public class Forme {
      *
      * @return List
      */
-    public List<DirectoryFormeEntry> getDirectories() {
+    public List<DirectoryEntry> getDirectories() {
         return directories;
     }
 
@@ -81,7 +81,7 @@ public class Forme {
      *
      * @param directories List
      */
-    public void setDirectories(List<DirectoryFormeEntry> directories) {
+    public void setDirectories(List<DirectoryEntry> directories) {
         this.directories = directories;
     }
 
@@ -90,7 +90,7 @@ public class Forme {
      *
      * @return List
      */
-    public List<FileFormeEntry> getFiles() {
+    public List<FileEntry> getFiles() {
         return files;
     }
 
@@ -99,7 +99,7 @@ public class Forme {
      *
      * @param files List
      */
-    public void setFiles(List<FileFormeEntry> files) {
+    public void setFiles(List<FileEntry> files) {
         this.files = files;
     }
 

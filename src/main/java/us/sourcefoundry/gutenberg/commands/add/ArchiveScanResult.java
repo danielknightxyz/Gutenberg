@@ -1,4 +1,4 @@
-package us.sourcefoundry.gutenberg.models.commands.add;
+package us.sourcefoundry.gutenberg.commands.add;
 
 import us.sourcefoundry.gutenberg.models.forme.Forme;
 

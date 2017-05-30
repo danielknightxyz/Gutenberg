@@ -1,7 +1,8 @@
-package us.sourcefoundry.gutenberg.commands;
+package us.sourcefoundry.gutenberg.commands.build;
 
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
+import us.sourcefoundry.gutenberg.commands.Command;
 import us.sourcefoundry.gutenberg.factories.FormeFactory;
 import us.sourcefoundry.gutenberg.factories.InventoryFactory;
 import us.sourcefoundry.gutenberg.models.ApplicationContext;

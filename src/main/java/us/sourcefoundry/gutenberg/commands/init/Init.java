@@ -1,5 +1,6 @@
-package us.sourcefoundry.gutenberg.commands;
+package us.sourcefoundry.gutenberg.commands.init;
 
+import us.sourcefoundry.gutenberg.commands.Command;
 import us.sourcefoundry.gutenberg.models.ApplicationContext;
 import us.sourcefoundry.gutenberg.models.forme.Permissions;
 import us.sourcefoundry.gutenberg.models.templates.FileTemplate;

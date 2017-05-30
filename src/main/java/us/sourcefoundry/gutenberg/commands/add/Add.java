@@ -1,4 +1,4 @@
-package us.sourcefoundry.gutenberg.commands;
+package us.sourcefoundry.gutenberg.commands.add;
 
 import com.google.common.io.ByteStreams;
 import com.google.gson.Gson;
@@ -6,12 +6,11 @@ import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+import us.sourcefoundry.gutenberg.commands.Command;
 import us.sourcefoundry.gutenberg.factories.FormeFactory;
 import us.sourcefoundry.gutenberg.factories.InventoryFactory;
 import us.sourcefoundry.gutenberg.models.ApplicationContext;
 import us.sourcefoundry.gutenberg.models.FormeInventoryItem;
-import us.sourcefoundry.gutenberg.models.commands.add.ArchiveScanResult;
-import us.sourcefoundry.gutenberg.models.commands.add.GithubLocation;
 import us.sourcefoundry.gutenberg.models.forme.Forme;
 import us.sourcefoundry.gutenberg.services.Cli;
 import us.sourcefoundry.gutenberg.services.Console;

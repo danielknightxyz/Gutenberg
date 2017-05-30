@@ -1,5 +1,6 @@
-package us.sourcefoundry.gutenberg.commands;
+package us.sourcefoundry.gutenberg.commands.listinventory;
 
+import us.sourcefoundry.gutenberg.commands.Command;
 import us.sourcefoundry.gutenberg.factories.InventoryFactory;
 import us.sourcefoundry.gutenberg.models.ApplicationContext;
 import us.sourcefoundry.gutenberg.models.FormeInventoryItem;

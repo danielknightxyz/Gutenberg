@@ -1,6 +1,10 @@
 package us.sourcefoundry.gutenberg.factories;
 
 import us.sourcefoundry.gutenberg.commands.*;
+import us.sourcefoundry.gutenberg.commands.add.Add;
+import us.sourcefoundry.gutenberg.commands.build.Build;
+import us.sourcefoundry.gutenberg.commands.init.Init;
+import us.sourcefoundry.gutenberg.commands.listinventory.ListInventory;
 import us.sourcefoundry.gutenberg.utils.DependencyInjector;
 
 /**

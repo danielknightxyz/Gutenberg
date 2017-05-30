@@ -1,4 +1,4 @@
-package us.sourcefoundry.gutenberg.models.commands.add;
+package us.sourcefoundry.gutenberg.commands.add;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

@@ -11,6 +11,8 @@ public class VarPrompt {
     private String name;
     //The default value of the variable if the user does not supply an response and instead hits enter/return.
     private String defaultValue = "";
+    //Can this prompt be saved.
+    private boolean allowSave = true;
 
     /**
      * Gets the message.
@@ -64,5 +66,23 @@ public class VarPrompt {
      */
     public void setDefaultValue(String defaultValue) {
         this.defaultValue = defaultValue;
+    }
+
+    /**
+     * Is this prompt allowed to be saved.
+     *
+     * @return boolean
+     */
+    public boolean isAllowSave() {
+        return allowSave;
+    }
+
+    /**
+     * Set if this prompt is allowed to be saved.
+     *
+     * @param allowSave boolean
+     */
+    public void setAllowSave(boolean allowSave) {
+        this.allowSave = allowSave;
     }
 }

@@ -23,6 +23,11 @@ variables:
 #
 meta:
 #
+# Optional, Defaults to false.  This will allow you to specify if the prompt answers should be auto saved.  If set to true
+# any answers provided to prompts will be saved to a file called 'auto-save.yml' unless a custom answer file name is set.
+#
+#autoSaveAnswers: false
+#
 # User entry prompts.  These will trigger the user to be prompted for input.  These will be available in your
 # mustache templates as 'user.?'.
 #
@@ -30,6 +35,7 @@ prompts:
 #  - message:
 #    name:
 #    defaultValue:
+#    allowSave: true
 #
 # A list of directories to create.  These are created recursively.  Directories will default to mode '0755'.
 #

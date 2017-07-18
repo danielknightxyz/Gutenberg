@@ -8,6 +8,7 @@ import us.sourcefoundry.gutenberg.factories.InventoryFactory;
 import us.sourcefoundry.gutenberg.models.ApplicationContext;
 import us.sourcefoundry.gutenberg.models.FormeInventoryItem;
 import us.sourcefoundry.gutenberg.models.forme.Forme;
+import us.sourcefoundry.gutenberg.models.forme.VarPrompt;
 import us.sourcefoundry.gutenberg.models.templates.AnswersFileTemplate;
 import us.sourcefoundry.gutenberg.services.Cli;
 import us.sourcefoundry.gutenberg.services.Console;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * This class will execute the BUILD action for Gutenberg.
@@ -96,8 +98,12 @@ public class Build implements Command {
             forme.getCopy().stream().filter(c -> c.getType().equals("file")).forEach(c -> c.copy(formeLocation, buildPath, forme, userResponses));
 
             //If the user wants their answers saved, then this will save those answers for use in later runs.
-            if (cli.hasOption("s"))
-                this.saveUserAnswersFromPrompts(cli, userResponses);
+            //Also if there is an autosave enabled.
+            if (cli.hasOption("s") || forme.shouldAutoSaveAnswers()) {
+                //Get the prompts which are allowed to be saved.
+                List<String> allowed = forme.getPrompts().stream().filter(VarPrompt::isAllowSave).map(VarPrompt::getName).collect(Collectors.toList());
+                this.saveUserAnswersFromPrompts(cli, userResponses, allowed);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -217,12 +223,14 @@ public class Build implements Command {
      * @param cli           The command line.
      * @param userResponses The user responses to prompts.
      */
-    private void saveUserAnswersFromPrompts(Cli cli, HashMap<String, Object> userResponses) throws FileNotFoundException {
+    private void saveUserAnswersFromPrompts(Cli cli, HashMap<String, Object> userResponses, List<String> allowed) throws FileNotFoundException {
         List<Pair<Object, Object>> answers = new ArrayList<>();
-        String answersFilePath = cli.getOptionValue("s");
+        String answersFilePath = (cli.hasOption("s") ? cli.getOptionValue("s") : "auto-save.yml");
 
-        for (Map.Entry entry : userResponses.entrySet())
-            answers.add(new Pair<>(entry.getKey(), entry.getValue()));
+        //Loop through the answers and only save those that are allowed to be saved.
+        for (Map.Entry<String, Object> entry : userResponses.entrySet())
+            if(allowed.contains(entry.getKey()))
+                answers.add(new Pair<>(entry.getKey(), entry.getValue()));
 
         (new Console()).message("\nCreating Answer File... {0}", answersFilePath);
         (new AnswersFileTemplate()).create(answersFilePath, answers);

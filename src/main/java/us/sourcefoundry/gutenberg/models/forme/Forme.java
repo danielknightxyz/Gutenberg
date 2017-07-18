@@ -24,6 +24,8 @@ public class Forme {
     private Map<String, Object> meta = new HashMap<>();
     //Any prompts which will ask the user for information when the forme is used.
     private List<VarPrompt> prompts = new ArrayList<>();
+    //Should the answers be auto-saved?
+    private boolean autoSaveAnswers = false;
     //Any directories to create.
     private List<DirectoryEntry> directories = new ArrayList<>();
     //Any files to create with Mustache.
@@ -209,5 +211,23 @@ public class Forme {
      */
     public void setPrompts(List<VarPrompt> prompts) {
         this.prompts = prompts;
+    }
+
+    /**
+     * Should the answers be auto-saved.
+     *
+     * @return boolean
+     */
+    public boolean shouldAutoSaveAnswers() {
+        return autoSaveAnswers;
+    }
+
+    /**
+     * Set if the answers should be auto-saved.
+     *
+     * @param autoSaveAnswers boolean
+     */
+    public void setAutoSaveAnswers(boolean autoSaveAnswers) {
+        this.autoSaveAnswers = autoSaveAnswers;
     }
 }

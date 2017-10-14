@@ -5,5 +5,5 @@
 
 # Set the location of the installation.
 LIB_HOME="/usr/local/lib"
-# Relay the command to the quikbus script.
+# Relay the command to the script.
 java -jar $LIB_HOME/gutenberg-*.jar $@

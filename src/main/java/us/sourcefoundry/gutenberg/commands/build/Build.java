@@ -229,7 +229,7 @@ public class Build implements Command {
 
         //Loop through the answers and only save those that are allowed to be saved.
         for (Map.Entry<String, Object> entry : userResponses.entrySet())
-            if(allowed.contains(entry.getKey()))
+            if (allowed.contains(entry.getKey()))
                 answers.add(new Pair<>(entry.getKey(), entry.getValue()));
 
         (new Console()).message("\nCreating Answer File... {0}", answersFilePath);
@@ -269,7 +269,7 @@ public class Build implements Command {
         if (outputDirectoryExists && force)
             (new Console()).warning("# {0} already exists. Building anyways.\n", buildPath.getAbsolutePath());
 
-        if(!outputDirectoryExists && !buildPath.mkdir()) {
+        if (!outputDirectoryExists && !buildPath.mkdir()) {
             (new Console()).warning("# {0} did not exist and could not be created.\n", buildPath.getAbsolutePath());
             return false;
         }

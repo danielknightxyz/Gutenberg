@@ -70,7 +70,7 @@ public class UserPromptService {
      */
     private String promptForAnswer(VarPrompt prompt) {
 
-        if(this.first) {
+        if (this.first) {
             (new Console()).message("To build, please answer the following questions:");
             this.first = false;
         }

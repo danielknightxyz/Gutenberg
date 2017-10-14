@@ -15,15 +15,14 @@ import java.util.regex.Pattern;
 @NoArgsConstructor
 public class GithubLocation {
 
+    //The regex pattern which will identify and allow the above components to be parsed.
+    private final Pattern PATTERN = Pattern.compile("^(.+)\\/(.+):(.+)$|^(.+)\\/(.+)$");
     //The user or organization in Github.
     private String user;
     //The name of the Github repository..
     private String repository;
     //The Github reference.  This will eventually default to master.
     private String reference;
-
-    //The regex pattern which will identify and allow the above components to be parsed.
-    private final Pattern PATTERN = Pattern.compile("^(.+)\\/(.+):(.+)$|^(.+)\\/(.+)$");
 
     /**
      * Constructor

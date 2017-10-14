@@ -1,6 +1,7 @@
 package us.sourcefoundry.gutenberg.factories;
 
-import us.sourcefoundry.gutenberg.commands.*;
+import us.sourcefoundry.gutenberg.commands.Command;
+import us.sourcefoundry.gutenberg.commands.Unknown;
 import us.sourcefoundry.gutenberg.commands.add.Add;
 import us.sourcefoundry.gutenberg.commands.build.Build;
 import us.sourcefoundry.gutenberg.commands.init.Init;

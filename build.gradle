@@ -1,5 +1,5 @@
 group 'us.sourcefoundry'
-version '0.1.0-beta-3'
+version '1.0.0'
 
 apply plugin: 'java'
 apply plugin: 'application'
@@ -54,3 +54,22 @@ task brewDist(type: Zip, dependsOn: build) {
     archiveName 'gutenberg-' + version + '.zip'
     destinationDir(file('build/distributions/homebrew'))
 }
+
+task getSHA256(type: Exec, dependsOn: brewDist) {
+    commandLine 'openssl', 'sha', '-sha256', 'build/distributions/homebrew/gutenberg-' + version + '.zip'
+    standardOutput = new ByteArrayOutputStream()
+    ext.hash = {
+        return standardOutput.toString().trim().reverse().take(64).reverse() //"54cf72d9e441046432f5079535d3909fe5c470d8accd11d92d92bf246a18eaa5"
+    }
+}
+
+task writeFormula(type: Copy, dependsOn: getSHA256) {
+    from 'src/main/resources/homebrew'
+    into 'build/distributions/homebrew'
+    filter {
+        it.replace('${sha256}', tasks.getSHA256.hash() as String)
+          .replace('${version}', version as String)
+    }
+}
+
+writeFormula.mustRunAfter getSHA256

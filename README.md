@@ -1,6 +1,6 @@
 # The Gutenberg Utility
 
-Gutenberg is a small, yet purposeful, utility which allows you to create templates and scaffolding for any file asset creation you're doing redundantly.  For example, if you're a Java software developer and you find yourself creating the same Spring-Boot application boiler plate or scaffolding repeatedly, you can use Gutenberg to create your perfect Spring-Boot template and generate your projects with ease.
+Gutenberg is a small utility which allows you to create templates and scaffolding for any file asset creation you're doing redundantly.  For example, if you're a Java software developer and you find yourself creating the same Spring-Boot application boiler plate or scaffolding repeatedly, you can use Gutenberg to create your perfect Spring-Boot template and generate your projects with ease.
 
 ### Installation
 
@@ -24,15 +24,13 @@ Gutenberg is installed! See help for usage.
 Gutenberg is small, which means that everything it does it needs to be principled and thoughtful as to not create confusion in terms of purpose and usage. 
 
 * Templates consist of a Forme file, Mustache templates, and static assets.
-* Templates Instructions / definition files are called Formes and are written in [YAML](http://yaml.org/).  These file must be in the root of the template.
+* Template instructions / definition files are called Formes and are written in [YAML](http://yaml.org/).  These files must be in the root of the template.
 * Templates are written using [Mustache](https://mustache.github.io/).
 * Templates should be single purposed.  Meaning a single template should not generate both a Spring-Boot and a Play project.   This would require two templates.
 
 ### Audience
 
-Gutenberg is a designed to assist in the templating and scaffolding of file assets.  While I'm sure it can be used in a continuous deployment / server capacity, this is not directly supported.
-
-The target audience is a human developer, a human worker, or a team of humans looking to reduce the amount of time spent on redundant/predicable asset creation.
+The target audience is humans looking to reduce the amount of time spent on redundant/predicable asset creation.  While I'm sure Gutenberg can be used in a continuous deployment / server capacity, this is not directly supported.
 
 ### Getting Started
 
@@ -82,7 +80,7 @@ What is your name? [world]:
 + Creating File... /PATH/TO/FOLDER/hello-world/helloworld.txt
 ```
 
-When you list the contents of the directory, you'll notice a new file named 'helloworld.txt' and inside that file it says 'hello, ' and the what ever you answered for the prompt.  [Here](https://github.com/sourcefoundryus/gbg-getting-started) is the source to the template on Github.
+When you list the contents of the directory, you'll notice a new file named 'helloworld.txt' and inside that file it says 'hello, ' and the answer your provided at the prompt.  [Here](https://github.com/sourcefoundryus/gbg-getting-started) is the source to the template on Github.
 
 ### The Forme File
 
@@ -91,11 +89,11 @@ To use Gutenberg, the first thing you need to do is create a `forme.yml` file.  
 The Forme file will contains the following sections:
 
 * **Maintainer Information** - The name and contact information of the person responsible for the forme.
-* **Forme Variables** - Variables available to all directory and file.
-* **Forme Meta Data** - Meta data available to all directory and file.
+* **Forme Variables** - Variables available to all directories and files.
+* **Forme Meta Data** - Meta data available to all directories and files.
 * **Variable Prompts** - Any variables which will need to supplied by the user at runtime via command line prompts.  These are a great way to allow the user to customize at runtime.
 * **Directories** - Any directories which need to be created.
-* **Files Templates** - Any files which need to be created based off Mustache templates.
+* **Files Templates** - Any files which need to be created.  These can be templated using [Mustache](https://mustache.github.io/).
 * **Static Copies** - Any files which need to be copied AS IS into place.
 
 Gutenberg takes advantage of [Mustache](https://mustache.github.io/) templates to produce files.

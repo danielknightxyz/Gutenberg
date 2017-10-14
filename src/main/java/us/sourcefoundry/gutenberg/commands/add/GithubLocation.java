@@ -1,11 +1,18 @@
 package us.sourcefoundry.gutenberg.commands.add;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * This class will parse a string into the appropriate Github components.
  */
+@Getter
+@Setter
+@NoArgsConstructor
 public class GithubLocation {
 
     //The user or organization in Github.
@@ -23,63 +30,19 @@ public class GithubLocation {
      *
      * @param location The Github location.
      */
-    public GithubLocation(String location) {
+    private GithubLocation(String location) {
         //It checks out, so parse and hydrate.
         this.parseLocation(location);
     }
 
     /**
-     * Gets the Github user.
+     * Creates a new github location from a string.
      *
-     * @return String
+     * @param location The Github location.
+     * @return GithubLocation
      */
-    public String getUser() {
-        return user;
-    }
-
-    /**
-     * Sets the Github user.
-     *
-     * @param user String
-     */
-    public void setUser(String user) {
-        this.user = user;
-    }
-
-    /**
-     * Gets the Github repository
-     *
-     * @return String
-     */
-    public String getRepository() {
-        return repository;
-    }
-
-    /**
-     * Sets the Github repository.
-     *
-     * @param repository String
-     */
-    public void setRepository(String repository) {
-        this.repository = repository;
-    }
-
-    /**
-     * Gets the Repository reference.
-     *
-     * @return String
-     */
-    public String getReference() {
-        return reference;
-    }
-
-    /**
-     * Sets the Repository reference.
-     *
-     * @param reference String
-     */
-    public void setReference(String reference) {
-        this.reference = reference;
+    public static GithubLocation fromString(String location) {
+        return new GithubLocation(location);
     }
 
     /**

@@ -72,7 +72,7 @@ public class Add implements Command {
         //For each repository you want to add, do the following to download, scan, and add them to the local inventory.
         repositories.forEach(
                 r -> {
-                    GithubLocation githubLocation = new GithubLocation(r);
+                    GithubLocation githubLocation = GithubLocation.fromString(r);
 
                     String resourceURL = MessageFormat.format(githubURL, githubLocation.getUser(), githubLocation.getRepository(), githubLocation.getReference());
 

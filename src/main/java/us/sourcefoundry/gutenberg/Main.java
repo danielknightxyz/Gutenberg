@@ -37,7 +37,7 @@ public class Main {
         ApplicationContext applicationContext = (new ApplicationContextFactory()).newInstance(cli);
 
         //Create the command.
-        Command command = (new CommandFactory().newInstance(applicationContext.getCommand()));
+        Command command = (new CommandFactory()).newInstance(applicationContext.getCommand());
         command.execute();
     }
 }

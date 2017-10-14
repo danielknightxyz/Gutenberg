@@ -1,5 +1,8 @@
 package us.sourcefoundry.gutenberg.models.forme;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import us.sourcefoundry.gutenberg.models.templates.FormattedStringTemplate;
 import us.sourcefoundry.gutenberg.services.Console;
 import us.sourcefoundry.gutenberg.services.FileSystemService;
@@ -10,6 +13,9 @@ import java.util.HashMap;
 /**
  * This class represents an instruction to copy either a file or directory(recursively) into the build path.
  */
+@Getter
+@Setter
+@NoArgsConstructor
 public class CopyEntry {
 
     //The source file or directory.
@@ -20,79 +26,6 @@ public class CopyEntry {
     private String type;
     //The permissions of the file or directory being created.
     private Permissions permissions = new Permissions();
-
-    /**
-     * Gets the source.
-     *
-     * @return String
-     */
-    public String getSource() {
-        return source;
-    }
-
-    /**
-     * Sets the source.
-     *
-     * @param source String
-     */
-    public void setSource(String source) {
-        this.source = source;
-    }
-
-    /**
-     * Gets the destination.
-     *
-     * @return String
-     */
-    public String getDest() {
-        return dest;
-    }
-
-    /**
-     * s
-     * Sets the destination.
-     *
-     * @param dest String
-     */
-    public void setDest(String dest) {
-        this.dest = dest;
-    }
-
-    /**
-     * Gets the type.
-     *
-     * @return String
-     */
-    public String getType() {
-        return type;
-    }
-
-    /**
-     * Sets the type.
-     *
-     * @param type String
-     */
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    /**
-     * Gets Permissions
-     *
-     * @return Permissions
-     */
-    public Permissions getPermissions() {
-        return permissions;
-    }
-
-    /**
-     * Sets Permissions
-     *
-     * @param permissions Permissions
-     */
-    public void setPermissions(Permissions permissions) {
-        this.permissions = permissions;
-    }
 
     /**
      * Executes the appropriate copy of this resource.

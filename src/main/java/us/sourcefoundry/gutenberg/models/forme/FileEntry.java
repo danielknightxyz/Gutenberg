@@ -1,5 +1,8 @@
 package us.sourcefoundry.gutenberg.models.forme;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import us.sourcefoundry.gutenberg.models.templates.FileTemplate;
 import us.sourcefoundry.gutenberg.models.templates.FormattedStringTemplate;
 import us.sourcefoundry.gutenberg.models.templates.StringTemplate;
@@ -12,6 +15,9 @@ import java.util.Map;
 /**
  * This represents a form entry to create a file from a Mustache template.
  */
+@Getter
+@Setter
+@NoArgsConstructor
 public class FileEntry {
 
     //The destination file dest.
@@ -24,96 +30,6 @@ public class FileEntry {
     private Permissions permissions = new Permissions();
     //The variables provided in the form file for this entry.
     private Map<String, Object> variables = new HashMap<>();
-
-    /**
-     * Gets the dest.
-     *
-     * @return String
-     */
-    public String getDest() {
-        return dest;
-    }
-
-    /**
-     * Sets the dest.
-     *
-     * @param dest String
-     */
-    public void setDest(String dest) {
-        this.dest = dest;
-    }
-
-    /**
-     * Gets the source.
-     *
-     * @return String
-     */
-    public String getSource() {
-        return source;
-    }
-
-    /**
-     * Sets the source.
-     *
-     * @param source String
-     */
-    public void setSource(String source) {
-        this.source = source;
-    }
-
-    /**
-     * Gets the content.
-     *
-     * @return String
-     */
-    public String getContent() {
-        return content;
-    }
-
-    /**
-     * Sets the content.
-     *
-     * @param content String
-     */
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    /**
-     * Gets Permissions
-     *
-     * @return Permissions
-     */
-    public Permissions getPermissions() {
-        return permissions;
-    }
-
-    /**
-     * Sets Permissions
-     *
-     * @param permissions Permissions
-     */
-    public void setPermissions(Permissions permissions) {
-        this.permissions = permissions;
-    }
-
-    /**
-     * Gets the entry variables.
-     *
-     * @return Map
-     */
-    public Map<String, Object> getVariables() {
-        return variables;
-    }
-
-    /**
-     * Sets the variables.
-     *
-     * @param variables Map
-     */
-    public void setVariables(Map<String, Object> variables) {
-        this.variables = variables;
-    }
 
     /**
      * Is this file entry sourced from another file.

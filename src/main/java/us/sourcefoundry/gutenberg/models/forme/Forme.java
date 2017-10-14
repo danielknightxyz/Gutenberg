@@ -1,5 +1,9 @@
 package us.sourcefoundry.gutenberg.models.forme;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +12,9 @@ import java.util.Map;
 /**
  * This represents the form file found at the root of every forme template.
  */
+@Getter
+@Setter
+@NoArgsConstructor
 public class Forme {
 
     //Which version of forme is this.
@@ -33,185 +40,6 @@ public class Forme {
     //Any static content to copy.
     private List<CopyEntry> copy = new ArrayList<>();
 
-    /**
-     * Gets the version.
-     *
-     * @return int
-     */
-    public int getVersion() {
-        return version;
-    }
-
-    /**
-     * Sets the version.
-     *
-     * @param version Int
-     */
-    public void setVersion(int version) {
-        this.version = version;
-    }
-
-    /**
-     * Gets the name.
-     *
-     * @return String
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Sets the name.
-     *
-     * @param name String
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * Gets the directories.
-     *
-     * @return List
-     */
-    public List<DirectoryEntry> getDirectories() {
-        return directories;
-    }
-
-    /**
-     * Sets the directories.
-     *
-     * @param directories List
-     */
-    public void setDirectories(List<DirectoryEntry> directories) {
-        this.directories = directories;
-    }
-
-    /**
-     * Gets the file.
-     *
-     * @return List
-     */
-    public List<FileEntry> getFiles() {
-        return files;
-    }
-
-    /**
-     * Sets the files.
-     *
-     * @param files List
-     */
-    public void setFiles(List<FileEntry> files) {
-        this.files = files;
-    }
-
-    /**
-     * Gets the copy items.
-     *
-     * @return List
-     */
-    public List<CopyEntry> getCopy() {
-        return copy;
-    }
-
-    /**
-     * Sets the copy.
-     *
-     * @param copy List
-     */
-    public void setCopy(List<CopyEntry> copy) {
-        this.copy = copy;
-    }
-
-    /**
-     * Gets the author.
-     *
-     * @return String
-     */
-    public String getAuthor() {
-        return author;
-    }
-
-    /**
-     * Sets the author.
-     *
-     * @param author String
-     */
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    /**
-     * Gets the email.
-     *
-     * @return String
-     */
-    public String getEmail() {
-        return email;
-    }
-
-    /**
-     * Sets the email.
-     *
-     * @param email String
-     */
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    /**
-     * Gets the meta data.
-     *
-     * @return Map
-     */
-    public Map<String, Object> getMeta() {
-        return meta;
-    }
-
-    /**
-     * Sets the Meta.
-     *
-     * @param meta Map
-     */
-    public void setMeta(Map<String, Object> meta) {
-        this.meta = meta;
-    }
-
-    /**
-     * Gets the variables.
-     *
-     * @return Map
-     */
-    public Map<String, Object> getVariables() {
-        return variables;
-    }
-
-    /**
-     * Sets the variables.
-     *
-     * @param variables Map
-     */
-    public void setVariables(Map<String, Object> variables) {
-        this.variables = variables;
-    }
-
-    /**
-     * Gets the prompts.
-     *
-     * @return List
-     */
-    public List<VarPrompt> getPrompts() {
-        return prompts;
-    }
-
-    /**
-     * Sets the prompts.
-     *
-     * @param prompts List
-     */
-    public void setPrompts(List<VarPrompt> prompts) {
-        this.prompts = prompts;
-    }
 
     /**
      * Should the answers be auto-saved.
@@ -220,14 +48,5 @@ public class Forme {
      */
     public boolean shouldAutoSaveAnswers() {
         return autoSaveAnswers;
-    }
-
-    /**
-     * Set if the answers should be auto-saved.
-     *
-     * @param autoSaveAnswers boolean
-     */
-    public void setAutoSaveAnswers(boolean autoSaveAnswers) {
-        this.autoSaveAnswers = autoSaveAnswers;
     }
 }

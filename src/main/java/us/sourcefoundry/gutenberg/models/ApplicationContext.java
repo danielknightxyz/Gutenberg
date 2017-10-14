@@ -1,11 +1,18 @@
 package us.sourcefoundry.gutenberg.models;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.inject.Singleton;
 
 /**
  * This class provides some information about the environment the application is running.
  */
 @Singleton
+@Getter
+@Setter
+@NoArgsConstructor
 public class ApplicationContext {
 
     //The command provided in the command line.
@@ -15,48 +22,4 @@ public class ApplicationContext {
     //The current directory the application was invoked.
     private String workingDirectory;
 
-    /**
-     * Get the command.
-     *
-     * @return String
-     */
-    public String getCommand() {
-        return command;
-    }
-
-    /**
-     * Set the command.
-     *
-     * @param command String
-     */
-    public void setCommand(String command) {
-        this.command = command;
-    }
-
-    /**
-     * Get the install directory.
-     *
-     * @return String
-     */
-    public String getInstallDirectory() {
-        return installDirectory;
-    }
-
-    /**
-     * Get the working directory.
-     *
-     * @return String
-     */
-    public String getWorkingDirectory() {
-        return workingDirectory;
-    }
-
-    /**
-     * Set the working directory.
-     *
-     * @param workingDirectory String
-     */
-    public void setWorkingDirectory(String workingDirectory) {
-        this.workingDirectory = workingDirectory;
-    }
 }

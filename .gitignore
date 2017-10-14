@@ -4,3 +4,4 @@ build
 .gradle
 answers\.yml
 generated
+out

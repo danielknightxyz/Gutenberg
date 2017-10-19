@@ -6,10 +6,14 @@ import us.sourcefoundry.gutenberg.models.templates.FormattedStringTemplate;
 import us.sourcefoundry.gutenberg.services.Console;
 import us.sourcefoundry.gutenberg.services.FileSystemService;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.util.HashMap;
 
 public class CopyOperation implements FileSystemOperation<CopyEntry> {
+
+    @Inject
+    private Console console;
 
     @Override
     public void execute(CopyEntry fileSystemObject, BuildContext buildContext) {
@@ -41,7 +45,7 @@ public class CopyOperation implements FileSystemOperation<CopyEntry> {
      */
     private void copyDir(String sourcePath, String destinationPath) {
         try {
-            (new Console()).info("\t+ Copying Directory... {0}", destinationPath);
+            this.console.info("\t+ Copying Directory... {0}", destinationPath);
             (new FileSystemService()).copyDirectory(sourcePath, destinationPath);
         } catch (IOException e) {
             e.printStackTrace();
@@ -56,7 +60,7 @@ public class CopyOperation implements FileSystemOperation<CopyEntry> {
      */
     private void copyFile(CopyEntry fileSystemObject, String sourcePath, String destinationPath) {
         try {
-            (new Console()).info("\t+ Copying File... {0}", destinationPath);
+            this.console.info("\t+ Copying File... {0}", destinationPath);
             (new FileSystemService()).copyFile(sourcePath, destinationPath, fileSystemObject.getPermissions().canRead(), fileSystemObject.getPermissions().canWrite(), fileSystemObject.getPermissions().canExecute());
         } catch (IOException e) {
             e.printStackTrace();

@@ -6,9 +6,13 @@ import us.sourcefoundry.gutenberg.models.templates.FormattedStringTemplate;
 import us.sourcefoundry.gutenberg.services.Console;
 import us.sourcefoundry.gutenberg.services.FileSystemService;
 
+import javax.inject.Inject;
 import java.util.HashMap;
 
 public class DirectoryCreation implements FileSystemOperation<DirectoryEntry> {
+
+    @Inject
+    private Console console;
 
     @Override
     public void execute(DirectoryEntry directoryEntry, BuildContext buildContext) {
@@ -25,7 +29,7 @@ public class DirectoryCreation implements FileSystemOperation<DirectoryEntry> {
                         .create(variables);
 
         //Since this is a event, tell the user.
-        (new Console()).info("\t+ Creating Directory... {0}", destination);
+        this.console.info("\t+ Creating Directory... {0}", destination);
         //Create the directory use the file system service.
         (new FileSystemService()).createDirectory(destination);
     }

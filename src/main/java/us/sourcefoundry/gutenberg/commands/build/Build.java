@@ -17,6 +17,7 @@ import us.sourcefoundry.gutenberg.services.Cli;
 import us.sourcefoundry.gutenberg.services.Console;
 import us.sourcefoundry.gutenberg.services.FileSystemService;
 import us.sourcefoundry.gutenberg.services.UserPromptService;
+import us.sourcefoundry.gutenberg.utils.DependencyInjector;
 import us.sourcefoundry.gutenberg.utils.Pair;
 
 import javax.inject.Inject;
@@ -97,14 +98,14 @@ public class Build implements Command {
             //Show the message that the build is starting.
             this.console.message("Building Forme \"{0}\"", forme.getName());
             //Make the directories.
-            forme.getDirectories().forEach(d -> (new DirectoryCreation()).execute(d, buildContext));
+            forme.getDirectories().forEach(d -> (DependencyInjector.getInstance(DirectoryCreation.class)).execute(d, buildContext));
             //Make the files from the templates.
-            forme.getFiles().forEach(f -> (new FileCreation()).execute(f, buildContext));
+            forme.getFiles().forEach(f -> (DependencyInjector.getInstance(FileCreation.class)).execute(f, buildContext));
             //Perform the static directory copy.  This is the same data but we do the directory entries first, since
             //they will need to exist in case a file copy needs it.
-            forme.getCopy().stream().filter(c -> c.getType().equals("directory")).forEach(c -> (new CopyOperation()).execute(c, buildContext));
+            forme.getCopy().stream().filter(c -> c.getType().equals("directory")).forEach(c -> (DependencyInjector.getInstance(CopyOperation.class)).execute(c, buildContext));
             //Perform the static file copy.
-            forme.getCopy().stream().filter(c -> c.getType().equals("file")).forEach(c -> (new CopyOperation()).execute(c, buildContext));
+            forme.getCopy().stream().filter(c -> c.getType().equals("file")).forEach(c -> (DependencyInjector.getInstance(CopyOperation.class)).execute(c, buildContext));
 
             //If the user wants their answers saved, then this will save those answers for use in later runs.
             //Also if there is an autosave enabled.

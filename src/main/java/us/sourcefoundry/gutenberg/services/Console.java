@@ -1,20 +1,19 @@
 package us.sourcefoundry.gutenberg.services;
 
+import us.sourcefoundry.gutenberg.config.ApplicationProperties;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.text.MessageFormat;
-import java.util.HashMap;
 
 /**
  * This class will write to the console different types of user information.
  */
+@Singleton
 public class Console {
 
-    //The colors for the different types of information.
-    final private HashMap<String, String> colorCodes = new HashMap<String, String>() {{
-        put("message", "32m");
-        put("info", "36m");
-        put("warning", "33m");
-        put("error", "31m");
-    }};
+    @Inject
+    private ApplicationProperties properties = new ApplicationProperties();
 
     /**
      * Prints a message to the command line for the user.
@@ -24,7 +23,7 @@ public class Console {
      */
     public void message(String pattern, Object... args) {
         this.print(
-                this.colorCodes.get("message"), pattern, args
+                this.properties.getProperty("console.message.color"), pattern, args
         );
     }
 
@@ -36,7 +35,7 @@ public class Console {
      */
     public void info(String pattern, Object... args) {
         this.print(
-                this.colorCodes.get("info"), pattern, args
+                this.properties.getProperty("console.info.color"), pattern, args
         );
     }
 
@@ -48,7 +47,7 @@ public class Console {
      */
     public void warning(String pattern, Object... args) {
         this.print(
-                this.colorCodes.get("warning"), pattern, args
+                this.properties.getProperty("console.warning.color"), pattern, args
         );
     }
 
@@ -60,7 +59,7 @@ public class Console {
      */
     public void error(String pattern, Object... args) {
         this.print(
-                this.colorCodes.get("error"), pattern, args
+                this.properties.getProperty("console.error.color"), pattern, args
         );
     }
 
@@ -72,6 +71,8 @@ public class Console {
      * @param args      The arguments to inject into the message pattern.
      */
     private void print(String colorCode, String pattern, Object... args) {
+        if (colorCode == null)
+            colorCode = "00m";
         String preparedMessage = MessageFormat.format(pattern, args);
         String finalMessage = MessageFormat.format("\033[{0}{1}\033[0m", colorCode, preparedMessage);
         System.out.println(finalMessage);

@@ -3,7 +3,13 @@ package us.sourcefoundry.gutenberg.models.forme;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import us.sourcefoundry.gutenberg.models.FormeLocation;
+import us.sourcefoundry.gutenberg.factories.FormeFactory;
+import us.sourcefoundry.gutenberg.services.Console;
+import us.sourcefoundry.gutenberg.services.FileSystemService;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,5 +54,25 @@ public class Forme {
      */
     public boolean shouldAutoSaveAnswers() {
         return autoSaveAnswers;
+    }
+
+    /**
+     * This will find the forme file given a location on the file system.
+     *
+     * @param formeLocation The system path to the file.
+     * @return Forme
+     */
+    public static Forme fromLocation(FormeLocation formeLocation) throws FileNotFoundException {
+        //Get the forme file and make sure it exists.
+        File formeFile = (new FileSystemService()).getByLocation("{0}/forme.yml", formeLocation.getPath());
+        if (!formeFile.exists()) {
+            (new Console()).error("! Could not locate a forme file in source location.  Does it needs to be initialized?");
+            return null;
+        }
+
+        //Parse it into a forme object.
+        return (new FormeFactory()).newInstance(
+                (new FileSystemService()).streamFile(formeFile)
+        );
     }
 }

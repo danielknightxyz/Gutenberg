@@ -3,6 +3,7 @@ package us.sourcefoundry.gutenberg;
 import us.sourcefoundry.gutenberg.commands.Command;
 import us.sourcefoundry.gutenberg.config.ApplicationProperties;
 import us.sourcefoundry.gutenberg.factories.ApplicationContextFactory;
+import us.sourcefoundry.gutenberg.factories.ApplicationPropertiesFactory;
 import us.sourcefoundry.gutenberg.factories.CliFactory;
 import us.sourcefoundry.gutenberg.factories.CommandFactory;
 import us.sourcefoundry.gutenberg.models.ApplicationContext;
@@ -39,15 +40,8 @@ public class Main {
 
         //Create an application context for use later in the process.
         ApplicationContext applicationContext = (new ApplicationContextFactory()).newInstance(cli);
-
-        try {
-            InputStream is = Main.class.getClassLoader().getResourceAsStream("application.properties");
-            ApplicationProperties props = DependencyInjector.getInstance(ApplicationProperties.class);
-            props.load(is);
-            is.close();
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
+        //Get the application properties.
+        (new ApplicationPropertiesFactory()).newInstance("application.properties");
 
         //Create the command.
         Command command = (new CommandFactory()).newInstance(applicationContext.getCommand());

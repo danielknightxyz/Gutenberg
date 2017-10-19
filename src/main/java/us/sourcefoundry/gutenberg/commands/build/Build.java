@@ -3,12 +3,15 @@ package us.sourcefoundry.gutenberg.commands.build;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 import us.sourcefoundry.gutenberg.commands.Command;
-import us.sourcefoundry.gutenberg.factories.FormeFactory;
-import us.sourcefoundry.gutenberg.factories.InventoryFactory;
 import us.sourcefoundry.gutenberg.models.ApplicationContext;
-import us.sourcefoundry.gutenberg.models.FormeInventoryItem;
+import us.sourcefoundry.gutenberg.models.BuildContext;
+import us.sourcefoundry.gutenberg.models.BuildLocation;
+import us.sourcefoundry.gutenberg.models.FormeLocation;
 import us.sourcefoundry.gutenberg.models.forme.Forme;
 import us.sourcefoundry.gutenberg.models.forme.VarPrompt;
+import us.sourcefoundry.gutenberg.models.operations.CopyOperation;
+import us.sourcefoundry.gutenberg.models.operations.DirectoryCreation;
+import us.sourcefoundry.gutenberg.models.operations.FileCreation;
 import us.sourcefoundry.gutenberg.models.templates.AnswersFileTemplate;
 import us.sourcefoundry.gutenberg.services.Cli;
 import us.sourcefoundry.gutenberg.services.Console;
@@ -36,6 +39,9 @@ public class Build implements Command {
     private ApplicationContext applicationContext;
     //The CLI.
     private Cli cli;
+    //The console.
+    private Console console = new Console();
+
 
     /**
      * Constructor.
@@ -56,31 +62,33 @@ public class Build implements Command {
     public void execute() {
         try {
 
-            (new Console()).message("\nBuilding...\n");
+            this.console.message("\nBuilding...\n");
 
             //Get the forme location.
-            String formeLocation = this.determineFormeLocation();
+            FormeLocation formeLocation = FormeLocation.fromCli(this.cli, this.applicationContext);
 
             //If forme was not found, then just bounce out.
-            if (formeLocation == null)
+            if (formeLocation == null || formeLocation.getPath() == null)
                 return;
 
             //Get the forme file and make sure it exists.
-            Forme forme = this.getFormeFile(formeLocation);
+            Forme forme = Forme.fromLocation(formeLocation);
 
             //Only continue if the forme was found.
             if (forme == null)
                 return;
 
             //Get the build path for the generated files.
-            String buildPath = this.getBuildPath();
+            BuildLocation buildLocation = BuildLocation.fromCli(this.cli, this.applicationContext);
 
             //Check to newInstance sure the output directory is available.
-            if (!this.checkBuildPath((new FileSystemService()).getByLocation(buildPath), this.cli.hasOption("f")))
+            if (!this.checkBuildPath(buildLocation, this.cli.hasOption("f")))
                 return;
 
             //Run any prompts the forme may require.
             HashMap<String, Object> userResponses = this.getUserResponseToPrompts(forme, cli);
+
+            BuildContext buildContext = new BuildContext(buildLocation, forme, formeLocation, userResponses);
 
             /*
              * Run the process bellow.
@@ -88,14 +96,14 @@ public class Build implements Command {
             //Show the message that the build is starting.
             (new Console()).message("Building Forme \"{0}\"", forme.getName());
             //Make the directories.
-            forme.getDirectories().forEach(d -> d.create(buildPath, forme, userResponses));
+            forme.getDirectories().forEach(d -> (new DirectoryCreation()).execute(d, buildContext));
             //Make the files from the templates.
-            forme.getFiles().forEach(f -> f.create(formeLocation, buildPath, forme, userResponses));
+            forme.getFiles().forEach(f -> (new FileCreation()).execute(f, buildContext));
             //Perform the static directory copy.  This is the same data but we do the directory entries first, since
-            // they will need to exist in case a file copy needs it.
-            forme.getCopy().stream().filter(c -> c.getType().equals("directory")).forEach(c -> c.copy(formeLocation, buildPath, forme, userResponses));
+            //they will need to exist in case a file copy needs it.
+            forme.getCopy().stream().filter(c -> c.getType().equals("directory")).forEach(c -> (new CopyOperation()).execute(c, buildContext));
             //Perform the static file copy.
-            forme.getCopy().stream().filter(c -> c.getType().equals("file")).forEach(c -> c.copy(formeLocation, buildPath, forme, userResponses));
+            forme.getCopy().stream().filter(c -> c.getType().equals("file")).forEach(c -> (new CopyOperation()).execute(c, buildContext));
 
             //If the user wants their answers saved, then this will save those answers for use in later runs.
             //Also if there is an autosave enabled.
@@ -107,91 +115,6 @@ public class Build implements Command {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * This will find the forme file given a location on the file system.
-     *
-     * @param formeLocation The system path to the file.
-     * @return Forme
-     */
-    private Forme getFormeFile(String formeLocation) throws FileNotFoundException {
-        //Get the forme file and make sure it exists.
-        File formeFile = (new FileSystemService()).getByLocation("{0}/forme.yml", formeLocation);
-        if (!formeFile.exists()) {
-            (new Console()).error("! Could not locate a forme file in source location.  Does it needs to be initialized?");
-            return null;
-        }
-
-        //Parse it into a forme object.
-        return (new FormeFactory()).newInstance(
-                (new FileSystemService()).streamFile(formeFile)
-        );
-    }
-
-    /**
-     * Get the build path from the cli.  If build path is not specified, then it uses the current working directory.
-     *
-     * @return String
-     */
-    private String getBuildPath() {
-        return (this.cli.hasOption("o") ?
-                this.cli.getOptionValue("o") :
-                this.applicationContext.getWorkingDirectory()
-        );
-    }
-
-    /**
-     * Determines the location of the Forme file.  First by seeing if the forme location is being supplied by the user
-     * via the local option.  If not, its going to check and make sure there's a forme name provided as an argument.  If
-     * the forme name is given as a argument, this will be looked up in the inventory.
-     *
-     * @return String
-     */
-    private String determineFormeLocation() {
-        //If the forme is local, then look some where other than the inventory; which will be supplied by the user.
-        if (this.cli.hasOption("local"))
-            //Get local forme.
-            return this.cli.getOptionValue("local").equals(".") ? this.applicationContext.getWorkingDirectory() : this.cli.getOptionValue("local");
-
-        //Else, lets check out the inventory.
-        String formeName = (this.cli.getArgList().get(1) != null ? this.cli.getArgList().get(1).toString() : null);
-
-        //If the forme name is not provided, return null.
-        if (formeName == null)
-            return null;
-
-        return this.determineInventoryFormeLocation(formeName);
-    }
-
-    /**
-     * This will look up the installation path of a forme from the installed inventory.  If the inventory doesn't exist,
-     * then null will be returned.
-     *
-     * @param formeName The name of the forme to look up in inventory.
-     * @return
-     */
-    private String determineInventoryFormeLocation(String formeName) {
-        //Get the install directory.
-        String installDir = this.applicationContext.getInstallDirectory();
-        //Get the inventory.
-        Map<String, FormeInventoryItem> inventory = (new InventoryFactory()).newInstance(installDir + "/inventory.json");
-
-        //Check to make sure the inventory is valid.  If the user is trying to run a local forme, then we don't care
-        //if the inventory is valid.
-        if (inventory == null) {
-            (new Console()).info("! No inventory found.");
-            return null;
-        }
-
-        //If the forme is not in inventory, return null.
-        if (!inventory.containsKey(formeName)) {
-            (new Console()).info("! {0} not found in inventory.");
-            return null;
-        }
-
-        //Get inventory forme.
-        return installDir + "/formes/" + inventory.get(formeName).getInstallPath();
     }
 
     /**
@@ -212,8 +135,7 @@ public class Build implements Command {
             answers = (HashMap<String, Object>) parser.load(answerFileIS);
         }
 
-        //TODO: NOT RETURNING VALUES.
-        return (new UserPromptService(forme).requestAnswers(answers));
+        return new UserPromptService(forme).requestAnswers(answers);
 
     }
 
@@ -239,38 +161,40 @@ public class Build implements Command {
     /**
      * This function will check the build path and make sure its available for use as a build location.
      *
-     * @param buildPath The location of the build location.
-     * @param force     Should the build location be used regardless of readiness.
+     * @param buildLocation The location to build.
+     * @param force         Should the build location be used regardless of readiness.
      * @return boolean
      */
-    private boolean checkBuildPath(File buildPath, boolean force) {
-        boolean outputDirectoryExists = buildPath.exists();
-        boolean isDirectory = buildPath.isDirectory();
+    private boolean checkBuildPath(BuildLocation buildLocation, boolean force) {
+        File buildLocationObj = (new FileSystemService()).getByLocation(buildLocation.getPath());
+
+        boolean outputDirectoryExists = buildLocationObj.exists();
+        boolean isDirectory = buildLocationObj.isDirectory();
 
         if (outputDirectoryExists && !force) {
-            boolean isEmptyDirectory = buildPath.list().length == 0;
+            boolean isEmptyDirectory = buildLocationObj.list().length == 0;
 
             if (isDirectory && !isEmptyDirectory) {
-                (new Console()).error("! Could not build. {0} exists and is not empty.\n", buildPath.getAbsolutePath());
+                (new Console()).error("! Could not build. {0} exists and is not empty.\n", buildLocationObj.getAbsolutePath());
                 return false;
             }
 
             if (!isDirectory) {
-                (new Console()).error("! Could not build. {0} exists and is not a directory.\n", buildPath.getAbsolutePath());
+                (new Console()).error("! Could not build. {0} exists and is not a directory.\n", buildLocationObj.getAbsolutePath());
                 return false;
             }
         }
 
         if (outputDirectoryExists && force && !isDirectory) {
-            (new Console()).error("! Could not force build. {0} exists and is not a directory.\n", buildPath.getAbsolutePath());
+            (new Console()).error("! Could not force build. {0} exists and is not a directory.\n", buildLocationObj.getAbsolutePath());
             return false;
         }
 
         if (outputDirectoryExists && force)
-            (new Console()).warning("# {0} already exists. Building anyways.\n", buildPath.getAbsolutePath());
+            (new Console()).warning("# {0} already exists. Building anyways.\n", buildLocationObj.getAbsolutePath());
 
-        if (!outputDirectoryExists && !buildPath.mkdir()) {
-            (new Console()).warning("# {0} did not exist and could not be created.\n", buildPath.getAbsolutePath());
+        if (!outputDirectoryExists && !buildLocationObj.mkdir()) {
+            (new Console()).warning("# {0} did not exist and could not be created.\n", buildLocationObj.getAbsolutePath());
             return false;
         }
 

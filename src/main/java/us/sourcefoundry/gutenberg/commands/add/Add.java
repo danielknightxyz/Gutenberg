@@ -13,7 +13,7 @@ import us.sourcefoundry.gutenberg.models.ApplicationContext;
 import us.sourcefoundry.gutenberg.models.FormeInventoryItem;
 import us.sourcefoundry.gutenberg.models.forme.Forme;
 import us.sourcefoundry.gutenberg.services.Cli;
-import us.sourcefoundry.gutenberg.services.Console;
+import us.sourcefoundry.gutenberg.services.console.Console;
 import us.sourcefoundry.gutenberg.services.FileSystemService;
 
 import javax.inject.Inject;

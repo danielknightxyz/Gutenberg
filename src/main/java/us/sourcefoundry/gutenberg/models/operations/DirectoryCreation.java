@@ -3,7 +3,7 @@ package us.sourcefoundry.gutenberg.models.operations;
 import us.sourcefoundry.gutenberg.models.BuildContext;
 import us.sourcefoundry.gutenberg.models.forme.DirectoryEntry;
 import us.sourcefoundry.gutenberg.models.templates.FormattedStringTemplate;
-import us.sourcefoundry.gutenberg.services.Console;
+import us.sourcefoundry.gutenberg.services.console.Console;
 import us.sourcefoundry.gutenberg.services.FileSystemService;
 
 import javax.inject.Inject;
@@ -29,7 +29,7 @@ public class DirectoryCreation implements FileSystemOperation<DirectoryEntry> {
                         .create(variables);
 
         //Since this is a event, tell the user.
-        this.console.info("\t+ Creating Directory... {0}", destination);
+        this.console.info("+ Creating Directory... {0}", destination);
         //Create the directory use the file system service.
         (new FileSystemService()).createDirectory(destination);
     }

@@ -5,7 +5,7 @@ import us.sourcefoundry.gutenberg.models.ApplicationContext;
 import us.sourcefoundry.gutenberg.models.forme.Permissions;
 import us.sourcefoundry.gutenberg.models.templates.FileTemplate;
 import us.sourcefoundry.gutenberg.services.Cli;
-import us.sourcefoundry.gutenberg.services.Console;
+import us.sourcefoundry.gutenberg.services.console.Console;
 
 import javax.inject.Inject;
 import java.io.File;

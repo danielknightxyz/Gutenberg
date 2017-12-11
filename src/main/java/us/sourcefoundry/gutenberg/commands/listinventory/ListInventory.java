@@ -4,7 +4,7 @@ import us.sourcefoundry.gutenberg.commands.Command;
 import us.sourcefoundry.gutenberg.factories.InventoryFactory;
 import us.sourcefoundry.gutenberg.models.ApplicationContext;
 import us.sourcefoundry.gutenberg.models.FormeInventoryItem;
-import us.sourcefoundry.gutenberg.services.Console;
+import us.sourcefoundry.gutenberg.services.console.Console;
 
 import javax.inject.Inject;
 import java.util.Map;

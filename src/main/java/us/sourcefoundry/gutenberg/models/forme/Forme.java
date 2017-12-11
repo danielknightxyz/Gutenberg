@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import us.sourcefoundry.gutenberg.models.FormeLocation;
 import us.sourcefoundry.gutenberg.factories.FormeFactory;
-import us.sourcefoundry.gutenberg.services.Console;
+import us.sourcefoundry.gutenberg.services.console.Console;
 import us.sourcefoundry.gutenberg.services.FileSystemService;
 
 import java.io.File;

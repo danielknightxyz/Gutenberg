@@ -14,7 +14,7 @@ import us.sourcefoundry.gutenberg.models.operations.DirectoryCreation;
 import us.sourcefoundry.gutenberg.models.operations.FileCreation;
 import us.sourcefoundry.gutenberg.models.templates.AnswersFileTemplate;
 import us.sourcefoundry.gutenberg.services.Cli;
-import us.sourcefoundry.gutenberg.services.Console;
+import us.sourcefoundry.gutenberg.services.console.Console;
 import us.sourcefoundry.gutenberg.services.FileSystemService;
 import us.sourcefoundry.gutenberg.services.UserPromptService;
 import us.sourcefoundry.gutenberg.utils.DependencyInjector;
@@ -177,26 +177,26 @@ public class Build implements Command {
             boolean isEmptyDirectory = buildLocationObj.list().length == 0;
 
             if (isDirectory && !isEmptyDirectory) {
-                this.console.error("! Could not build. {0} exists and is not empty.\n", buildLocationObj.getAbsolutePath());
+                this.console.error("Could not build. {0} exists and is not empty.\n", buildLocationObj.getAbsolutePath());
                 return false;
             }
 
             if (!isDirectory) {
-                this.console.error("! Could not build. {0} exists and is not a directory.\n", buildLocationObj.getAbsolutePath());
+                this.console.error("Could not build. {0} exists and is not a directory.\n", buildLocationObj.getAbsolutePath());
                 return false;
             }
         }
 
         if (outputDirectoryExists && force && !isDirectory) {
-            this.console.error("! Could not force build. {0} exists and is not a directory.\n", buildLocationObj.getAbsolutePath());
+            this.console.error("Could not force build. {0} exists and is not a directory.\n", buildLocationObj.getAbsolutePath());
             return false;
         }
 
         if (outputDirectoryExists && force)
-            this.console.warning("# {0} already exists. Building anyways.\n", buildLocationObj.getAbsolutePath());
+            this.console.warning("{0} already exists. Building anyways.\n", buildLocationObj.getAbsolutePath());
 
         if (!outputDirectoryExists && !buildLocationObj.mkdir()) {
-            this.console.warning("# {0} did not exist and could not be created.\n", buildLocationObj.getAbsolutePath());
+            this.console.warning("{0} did not exist and could not be created.\n", buildLocationObj.getAbsolutePath());
             return false;
         }
 

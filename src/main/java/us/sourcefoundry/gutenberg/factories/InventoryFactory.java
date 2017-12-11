@@ -3,7 +3,7 @@ package us.sourcefoundry.gutenberg.factories;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import us.sourcefoundry.gutenberg.models.FormeInventoryItem;
-import us.sourcefoundry.gutenberg.services.Console;
+import us.sourcefoundry.gutenberg.services.console.Console;
 import us.sourcefoundry.gutenberg.services.FileSystemService;
 
 import java.io.FileNotFoundException;

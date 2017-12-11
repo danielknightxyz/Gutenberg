@@ -5,7 +5,7 @@ import us.sourcefoundry.gutenberg.models.forme.FileEntry;
 import us.sourcefoundry.gutenberg.models.templates.FileTemplate;
 import us.sourcefoundry.gutenberg.models.templates.FormattedStringTemplate;
 import us.sourcefoundry.gutenberg.models.templates.StringTemplate;
-import us.sourcefoundry.gutenberg.services.Console;
+import us.sourcefoundry.gutenberg.services.console.Console;
 
 import javax.inject.Inject;
 import java.io.StringReader;
@@ -52,7 +52,7 @@ public class FileCreation implements FileSystemOperation<FileEntry> {
                 (new FormattedStringTemplate("{0}/{1}", formeLocation, fileSystemObject.getSource())).create(variables);
 
         //Since this is a event, tell the user.
-        this.console.info("\t+ Creating File... {0}", destFilePath);
+        this.console.info("+ Creating File... {0}", destFilePath);
         //Create the file.
         (new FileTemplate()).create(sourceFilePath, destFilePath, fileSystemObject.getPermissions(), variables);
     }

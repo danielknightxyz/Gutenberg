@@ -1,10 +1,13 @@
-package us.sourcefoundry.gutenberg.services;
+package us.sourcefoundry.gutenberg.services.console;
 
 import us.sourcefoundry.gutenberg.config.ApplicationProperties;
+import us.sourcefoundry.gutenberg.services.console.types.Error;
+import us.sourcefoundry.gutenberg.services.console.types.Info;
+import us.sourcefoundry.gutenberg.services.console.types.Message;
+import us.sourcefoundry.gutenberg.services.console.types.Warning;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.text.MessageFormat;
 
 /**
  * This class will write to the console different types of user information.
@@ -22,9 +25,11 @@ public class Console {
      * @param args    The arguments to inject into the message pattern.
      */
     public void message(String pattern, Object... args) {
-        this.print(
-                this.properties.getProperty("console.message.color"), pattern, args
-        );
+        String formattedMessage = new Message(
+                this.properties.getProperty("console.message.color"),
+                this.properties.getProperty("console.message.format"),
+                pattern, args).format();
+        this.print(formattedMessage);
     }
 
     /**
@@ -34,9 +39,11 @@ public class Console {
      * @param args    The arguments to inject into the message pattern.
      */
     public void info(String pattern, Object... args) {
-        this.print(
-                this.properties.getProperty("console.info.color"), pattern, args
-        );
+        String formattedMessage = new Info(
+                this.properties.getProperty("console.info.color"),
+                this.properties.getProperty("console.info.format"),
+                pattern, args).format();
+        this.print(formattedMessage);
     }
 
     /**
@@ -46,9 +53,11 @@ public class Console {
      * @param args    The arguments to inject into the message pattern.
      */
     public void warning(String pattern, Object... args) {
-        this.print(
-                this.properties.getProperty("console.warning.color"), pattern, args
-        );
+        String formattedMessage = new Warning(
+                this.properties.getProperty("console.warning.color"),
+                this.properties.getProperty("console.warning.format"),
+                pattern, args).format();
+        this.print(formattedMessage);
     }
 
     /**
@@ -58,23 +67,19 @@ public class Console {
      * @param args    The arguments to inject into the message pattern.
      */
     public void error(String pattern, Object... args) {
-        this.print(
-                this.properties.getProperty("console.error.color"), pattern, args
-        );
+        String formattedMessage = new Error(
+                this.properties.getProperty("console.error.color"),
+                this.properties.getProperty("console.error.format"),
+                pattern, args).format();
+        this.print(formattedMessage);
     }
 
     /**
      * Prints a informative message to the command line for the user.
      *
-     * @param colorCode The color to use for the message.
-     * @param pattern   The message as a pattern.
-     * @param args      The arguments to inject into the message pattern.
+     * @param message The message to print.
      */
-    private void print(String colorCode, String pattern, Object... args) {
-        if (colorCode == null)
-            colorCode = "00m";
-        String preparedMessage = MessageFormat.format(pattern, args);
-        String finalMessage = MessageFormat.format("\033[{0}{1}\033[0m", colorCode, preparedMessage);
-        System.out.println(finalMessage);
+    private void print(String message) {
+        System.out.println(message);
     }
 }

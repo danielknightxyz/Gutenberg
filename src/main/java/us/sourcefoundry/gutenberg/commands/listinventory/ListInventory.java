@@ -16,15 +16,19 @@ public class ListInventory implements Command {
 
     //The application context.
     private ApplicationContext applicationContext;
+    //The console.
+    private Console console;
 
     /**
      * Constructor.
      *
      * @param applicationContext The application context.
+     * @param console            The console service.
      */
     @Inject
-    public ListInventory(ApplicationContext applicationContext) {
+    public ListInventory(ApplicationContext applicationContext, Console console) {
         this.applicationContext = applicationContext;
+        this.console = console;
     }
 
     /**
@@ -37,19 +41,19 @@ public class ListInventory implements Command {
 
         //If inventory is not present, tell the user.
         if (inventory == null) {
-            (new Console()).warning("! Inventory not found or empty.");
+            this.console.warning("Inventory not found or empty.");
             return;
         }
 
         //If teh inventory is empty, tell the user.
         if (inventory.size() < 1) {
-            (new Console()).warning("! Inventory empty.");
+            this.console.warning("Inventory empty.");
             return;
         }
 
         //Otherwise, show the contents of the inventory to the user.
-        (new Console()).message("Inventory Contents:");
-        inventory.forEach((k, v) -> (new Console()).info("   > {0}", v.getName()));
-        (new Console()).message("\n");
+        this.console.message("Inventory Contents:");
+        inventory.forEach((k, v) -> this.console.info("> {0}", v.getName()));
+        this.console.message("\n");
     }
 }

@@ -49,6 +49,7 @@ public class Build implements Command {
      *
      * @param applicationContext The application context.
      * @param cli                The cli service.
+     * @param console            The console service.
      */
     @Inject
     public Build(ApplicationContext applicationContext, Cli cli, Console console) {

@@ -2,6 +2,7 @@ package us.sourcefoundry.gutenberg.services;
 
 import us.sourcefoundry.gutenberg.models.forme.Forme;
 import us.sourcefoundry.gutenberg.models.forme.VarPrompt;
+import us.sourcefoundry.gutenberg.services.console.Console;
 
 import java.text.MessageFormat;
 import java.util.HashMap;

@@ -5,7 +5,7 @@ import us.sourcefoundry.gutenberg.models.ApplicationContext;
 import us.sourcefoundry.gutenberg.models.forme.Permissions;
 import us.sourcefoundry.gutenberg.models.templates.FileTemplate;
 import us.sourcefoundry.gutenberg.services.Cli;
-import us.sourcefoundry.gutenberg.services.Console;
+import us.sourcefoundry.gutenberg.services.console.Console;
 
 import javax.inject.Inject;
 import java.io.File;
@@ -22,17 +22,21 @@ public class Init implements Command {
     private ApplicationContext applicationContext;
     //The command line.
     private Cli cli;
+    //The console.
+    private Console console;
 
     /**
      * Constructor.
      *
      * @param applicationContext The application context.
      * @param cli                The cli service.
+     * @param console            The console service.
      */
     @Inject
-    public Init(ApplicationContext applicationContext, Cli cli) {
+    public Init(ApplicationContext applicationContext, Cli cli, Console console) {
         this.applicationContext = applicationContext;
         this.cli = cli;
+        this.console = console;
     }
 
     /**
@@ -48,7 +52,7 @@ public class Init implements Command {
             return;
 
         //Tell the user what we are doing.
-        (new Console()).message("Creating Forme...");
+        this.console.message("Creating Forme...");
 
         //Create the file using the template in the resource directory.
         InputStream templateFileStream = Init.class.getClassLoader().getResourceAsStream("templates/forme.yml.mustache");
@@ -65,13 +69,15 @@ public class Init implements Command {
     private boolean checkOutputLocation(String destFilePath, boolean force) {
         File formeFile = new File(destFilePath);
 
+        //If the forme exists, and it the force option is not set, then don't do anything.
         if (formeFile.exists() && !force) {
-            (new Console()).error("! Already initialized.");
+            this.console.error("Already initialized.");
             return false;
         }
 
+        //If it exists and the force option is set, then initialize over the existing forme.
         if (formeFile.exists() && force)
-            (new Console()).warning("# Already initialized. Continuing anyways.");
+            this.console.warning("Already initialized. Continuing anyways;  this is going to overwrite the existing forme.");
 
         return true;
     }

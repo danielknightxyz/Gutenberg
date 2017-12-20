@@ -1,7 +1,7 @@
 package us.sourcefoundry.gutenberg.commands;
 
 import us.sourcefoundry.gutenberg.models.ApplicationContext;
-import us.sourcefoundry.gutenberg.services.Console;
+import us.sourcefoundry.gutenberg.services.console.Console;
 
 import javax.inject.Inject;
 

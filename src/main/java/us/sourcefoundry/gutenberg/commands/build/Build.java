@@ -14,9 +14,10 @@ import us.sourcefoundry.gutenberg.models.operations.DirectoryCreation;
 import us.sourcefoundry.gutenberg.models.operations.FileCreation;
 import us.sourcefoundry.gutenberg.models.templates.AnswersFileTemplate;
 import us.sourcefoundry.gutenberg.services.Cli;
-import us.sourcefoundry.gutenberg.services.Console;
+import us.sourcefoundry.gutenberg.services.console.Console;
 import us.sourcefoundry.gutenberg.services.FileSystemService;
 import us.sourcefoundry.gutenberg.services.UserPromptService;
+import us.sourcefoundry.gutenberg.utils.DependencyInjector;
 import us.sourcefoundry.gutenberg.utils.Pair;
 
 import javax.inject.Inject;
@@ -40,7 +41,7 @@ public class Build implements Command {
     //The CLI.
     private Cli cli;
     //The console.
-    private Console console = new Console();
+    private Console console;
 
 
     /**
@@ -48,11 +49,13 @@ public class Build implements Command {
      *
      * @param applicationContext The application context.
      * @param cli                The cli service.
+     * @param console            The console service.
      */
     @Inject
-    public Build(ApplicationContext applicationContext, Cli cli) {
+    public Build(ApplicationContext applicationContext, Cli cli, Console console) {
         this.applicationContext = applicationContext;
         this.cli = cli;
+        this.console = console;
     }
 
     /**
@@ -94,16 +97,16 @@ public class Build implements Command {
              * Run the process bellow.
              */
             //Show the message that the build is starting.
-            (new Console()).message("Building Forme \"{0}\"", forme.getName());
+            this.console.message("Building Forme \"{0}\"", forme.getName());
             //Make the directories.
-            forme.getDirectories().forEach(d -> (new DirectoryCreation()).execute(d, buildContext));
+            forme.getDirectories().forEach(d -> (DependencyInjector.getInstance(DirectoryCreation.class)).execute(d, buildContext));
             //Make the files from the templates.
-            forme.getFiles().forEach(f -> (new FileCreation()).execute(f, buildContext));
+            forme.getFiles().forEach(f -> (DependencyInjector.getInstance(FileCreation.class)).execute(f, buildContext));
             //Perform the static directory copy.  This is the same data but we do the directory entries first, since
             //they will need to exist in case a file copy needs it.
-            forme.getCopy().stream().filter(c -> c.getType().equals("directory")).forEach(c -> (new CopyOperation()).execute(c, buildContext));
+            forme.getCopy().stream().filter(c -> c.getType().equals("directory")).forEach(c -> (DependencyInjector.getInstance(CopyOperation.class)).execute(c, buildContext));
             //Perform the static file copy.
-            forme.getCopy().stream().filter(c -> c.getType().equals("file")).forEach(c -> (new CopyOperation()).execute(c, buildContext));
+            forme.getCopy().stream().filter(c -> c.getType().equals("file")).forEach(c -> (DependencyInjector.getInstance(CopyOperation.class)).execute(c, buildContext));
 
             //If the user wants their answers saved, then this will save those answers for use in later runs.
             //Also if there is an autosave enabled.
@@ -154,7 +157,7 @@ public class Build implements Command {
             if (allowed.contains(entry.getKey()))
                 answers.add(new Pair<>(entry.getKey(), entry.getValue()));
 
-        (new Console()).message("\nCreating Answer File... {0}", answersFilePath);
+        this.console.message("\nCreating Answer File... {0}", answersFilePath);
         (new AnswersFileTemplate()).create(answersFilePath, answers);
     }
 
@@ -175,26 +178,26 @@ public class Build implements Command {
             boolean isEmptyDirectory = buildLocationObj.list().length == 0;
 
             if (isDirectory && !isEmptyDirectory) {
-                (new Console()).error("! Could not build. {0} exists and is not empty.\n", buildLocationObj.getAbsolutePath());
+                this.console.error("Could not build. {0} exists and is not empty.\n", buildLocationObj.getAbsolutePath());
                 return false;
             }
 
             if (!isDirectory) {
-                (new Console()).error("! Could not build. {0} exists and is not a directory.\n", buildLocationObj.getAbsolutePath());
+                this.console.error("Could not build. {0} exists and is not a directory.\n", buildLocationObj.getAbsolutePath());
                 return false;
             }
         }
 
         if (outputDirectoryExists && force && !isDirectory) {
-            (new Console()).error("! Could not force build. {0} exists and is not a directory.\n", buildLocationObj.getAbsolutePath());
+            this.console.error("Could not force build. {0} exists and is not a directory.\n", buildLocationObj.getAbsolutePath());
             return false;
         }
 
         if (outputDirectoryExists && force)
-            (new Console()).warning("# {0} already exists. Building anyways.\n", buildLocationObj.getAbsolutePath());
+            this.console.warning("{0} already exists. Building anyways.\n", buildLocationObj.getAbsolutePath());
 
         if (!outputDirectoryExists && !buildLocationObj.mkdir()) {
-            (new Console()).warning("# {0} did not exist and could not be created.\n", buildLocationObj.getAbsolutePath());
+            this.console.warning("{0} did not exist and could not be created.\n", buildLocationObj.getAbsolutePath());
             return false;
         }
 

@@ -13,7 +13,7 @@ import us.sourcefoundry.gutenberg.models.ApplicationContext;
 import us.sourcefoundry.gutenberg.models.FormeInventoryItem;
 import us.sourcefoundry.gutenberg.models.forme.Forme;
 import us.sourcefoundry.gutenberg.services.Cli;
-import us.sourcefoundry.gutenberg.services.Console;
+import us.sourcefoundry.gutenberg.services.console.Console;
 import us.sourcefoundry.gutenberg.services.FileSystemService;
 
 import javax.inject.Inject;
@@ -39,17 +39,21 @@ public class Add implements Command {
     private ApplicationContext applicationContext;
     //The command line.
     private Cli cli;
+    //The console.
+    private Console console;
 
     /**
      * Constructor.
      *
      * @param applicationContext The application context.
      * @param cli                The cli service.
+     * @param console            The console service.
      */
     @Inject
-    public Add(ApplicationContext applicationContext, Cli cli) {
+    public Add(ApplicationContext applicationContext, Cli cli, Console console) {
         this.applicationContext = applicationContext;
         this.cli = cli;
+        this.console = console;
     }
 
     /**
@@ -76,8 +80,8 @@ public class Add implements Command {
 
                     String resourceURL = MessageFormat.format(githubURL, githubLocation.getUser(), githubLocation.getRepository(), githubLocation.getReference());
 
-                    (new Console()).message("Add from {0}", r);
-                    (new Console()).info("\n# Downloading {0}", resourceURL);
+                    this.console.message("Add from {0}", r);
+                    this.console.info("Downloading {0}", resourceURL);
 
                     try {
                         //Download the file from Github and buffer it for processing.
@@ -91,7 +95,7 @@ public class Add implements Command {
                         List<ArchiveScanResult> archiveScanResults = scanArchiveForFormes(bais);
                         bais.reset();
 
-                        (new Console()).message("\nAdding {0} formes: {1}", archiveScanResults.size(), String.join(
+                        this.console.message("Adding {0} formes: {1}", archiveScanResults.size(), String.join(
                                 ", ",
                                 archiveScanResults.stream()
                                         .map(
@@ -106,7 +110,7 @@ public class Add implements Command {
                         Map<String, FormeInventoryItem> newInventory = archiveScanResults
                                 .stream()
                                 .map(scanResult -> {
-                                    (new Console()).info("\t+ {0} added", scanResult.getForme().getName());
+                                    this.console.info("+ {0} added", scanResult.getForme().getName());
                                     FormeInventoryItem item = new FormeInventoryItem();
                                     item.setUsername(githubLocation.getUser());
                                     item.setRepository(githubLocation.getRepository());
@@ -119,7 +123,7 @@ public class Add implements Command {
 
                         inventory.putAll(newInventory);
                     } catch (FileNotFoundException | UnknownHostException e) {
-                        (new Console()).error("{0} could not be found on Github.", r);
+                        this.console.error("{0} could not be found on Github.", r);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

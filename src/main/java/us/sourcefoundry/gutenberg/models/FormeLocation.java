@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import us.sourcefoundry.gutenberg.factories.InventoryFactory;
 import us.sourcefoundry.gutenberg.services.Cli;
-import us.sourcefoundry.gutenberg.services.Console;
+import us.sourcefoundry.gutenberg.services.console.Console;
 
 import java.util.Map;
 

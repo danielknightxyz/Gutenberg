@@ -1,14 +1,19 @@
 package us.sourcefoundry.gutenberg;
 
 import us.sourcefoundry.gutenberg.commands.Command;
+import us.sourcefoundry.gutenberg.config.ApplicationProperties;
 import us.sourcefoundry.gutenberg.factories.ApplicationContextFactory;
+import us.sourcefoundry.gutenberg.factories.ApplicationPropertiesFactory;
 import us.sourcefoundry.gutenberg.factories.CliFactory;
 import us.sourcefoundry.gutenberg.factories.CommandFactory;
 import us.sourcefoundry.gutenberg.models.ApplicationContext;
 import us.sourcefoundry.gutenberg.services.Cli;
 import us.sourcefoundry.gutenberg.utils.DependencyInjector;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 /**
  * This is this main class and entry point into the application.
@@ -35,6 +40,8 @@ public class Main {
 
         //Create an application context for use later in the process.
         ApplicationContext applicationContext = (new ApplicationContextFactory()).newInstance(cli);
+        //Get the application properties.
+        (new ApplicationPropertiesFactory()).newInstance("application.properties");
 
         //Create the command.
         Command command = (new CommandFactory()).newInstance(applicationContext.getCommand());

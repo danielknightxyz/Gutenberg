@@ -66,8 +66,6 @@ public class Build implements Command {
     public void execute() {
         try {
 
-            this.console.message("\nBuilding...\n");
-
             //Get the forme location.
             FormeLocation formeLocation = FormeLocation.fromCli(this.cli, this.applicationContext, this.console);
 

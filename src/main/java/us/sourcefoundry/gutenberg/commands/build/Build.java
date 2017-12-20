@@ -69,14 +69,14 @@ public class Build implements Command {
             this.console.message("\nBuilding...\n");
 
             //Get the forme location.
-            FormeLocation formeLocation = FormeLocation.fromCli(this.cli, this.applicationContext);
+            FormeLocation formeLocation = FormeLocation.fromCli(this.cli, this.applicationContext, this.console);
 
             //If forme was not found, then just bounce out.
             if (formeLocation == null || formeLocation.getPath() == null)
                 return;
 
             //Get the forme file and make sure it exists.
-            Forme forme = Forme.fromLocation(formeLocation);
+            Forme forme = Forme.fromLocation(formeLocation,this.console);
 
             //Only continue if the forme was found.
             if (forme == null)
@@ -139,7 +139,7 @@ public class Build implements Command {
             answers = (HashMap<String, Object>) parser.load(answerFileIS);
         }
 
-        return new UserPromptService(forme).requestAnswers(answers);
+        return new UserPromptService(forme,this.console).requestAnswers(answers);
 
     }
 

@@ -62,11 +62,11 @@ public class Forme {
      * @param formeLocation The system path to the file.
      * @return Forme
      */
-    public static Forme fromLocation(FormeLocation formeLocation) throws FileNotFoundException {
+    public static Forme fromLocation(FormeLocation formeLocation, Console console) throws FileNotFoundException {
         //Get the forme file and make sure it exists.
         File formeFile = (new FileSystemService()).getByLocation("{0}/forme.yml", formeLocation.getPath());
         if (!formeFile.exists()) {
-            (new Console()).error("! Could not locate a forme file in source location.  Does it needs to be initialized?");
+            console.error("Could not locate a forme file in source location.  Does it needs to be initialized?");
             return null;
         }
 

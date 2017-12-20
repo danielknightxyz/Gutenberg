@@ -15,8 +15,12 @@ import javax.inject.Singleton;
 @Singleton
 public class Console {
 
+    private ApplicationProperties properties;
+
     @Inject
-    private ApplicationProperties properties = new ApplicationProperties();
+    public Console(ApplicationProperties properties){
+        this.properties = properties;
+    }
 
     /**
      * Prints a message to the command line for the user.

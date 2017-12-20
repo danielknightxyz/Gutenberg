@@ -21,14 +21,16 @@ public class UserPromptService {
 
     //The forme, which will supply the prompts.
     private Forme forme;
+    private Console console;
 
     /**
      * Constructor
      *
      * @param forme The forme.
      */
-    public UserPromptService(Forme forme) {
+    public UserPromptService(Forme forme, Console console) {
         this.forme = forme;
+        this.console = console;
     }
 
     /**
@@ -72,7 +74,7 @@ public class UserPromptService {
     private String promptForAnswer(VarPrompt prompt) {
 
         if (this.first) {
-            (new Console()).message("To build, please answer the following questions:");
+            this.console.message("Please answer the following questions:");
             this.first = false;
         }
 

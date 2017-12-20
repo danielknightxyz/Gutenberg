@@ -37,7 +37,6 @@ public class InventoryFactory extends AbstractFactory<Map<String, FormeInventory
 
             return (new Gson()).fromJson(new FileReader((new FileSystemService()).getByLocation(inventoryLocation)), type);
         } catch (FileNotFoundException e) {
-            (new Console()).error(e.getMessage());
             return new HashMap<>();
         }
     }

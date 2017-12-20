@@ -30,7 +30,7 @@ public class FormeLocation {
      *
      * @return String
      */
-    public static FormeLocation fromCli(Cli cli, ApplicationContext applicationContext) {
+    public static FormeLocation fromCli(Cli cli, ApplicationContext applicationContext, Console console) {
         //If the forme is local, then look some where other than the inventory; which will be supplied by the user.
         if (cli.hasOption("local"))
             //Get local forme.
@@ -43,7 +43,7 @@ public class FormeLocation {
         if (formeName == null)
             return null;
 
-        return determineInventoryFormeLocation(formeName, applicationContext);
+        return determineInventoryFormeLocation(formeName, applicationContext, console);
     }
 
     /**
@@ -53,7 +53,7 @@ public class FormeLocation {
      * @param formeName The name of the forme to look up in inventory.
      * @return
      */
-    private static FormeLocation determineInventoryFormeLocation(String formeName, ApplicationContext applicationContext) {
+    private static FormeLocation determineInventoryFormeLocation(String formeName, ApplicationContext applicationContext, Console console) {
         //Get the install directory.
         String installDir = applicationContext.getInstallDirectory();
         //Get the inventory.
@@ -62,13 +62,13 @@ public class FormeLocation {
         //Check to make sure the inventory is valid.  If the user is trying to run a local forme, then we don't care
         //if the inventory is valid.
         if (inventory == null) {
-            (new Console()).info("! No inventory found.");
+            console.info("No inventory found.");
             return null;
         }
 
         //If the forme is not in inventory, return null.
         if (!inventory.containsKey(formeName)) {
-            (new Console()).info("! {0} not found in inventory.");
+            console.info("{0} not found in inventory.");
             return null;
         }
 

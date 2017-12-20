@@ -9,14 +9,15 @@ import us.sourcefoundry.gutenberg.models.BuildLocation;
 import us.sourcefoundry.gutenberg.models.FormeLocation;
 import us.sourcefoundry.gutenberg.models.forme.Forme;
 import us.sourcefoundry.gutenberg.models.forme.VarPrompt;
-import us.sourcefoundry.gutenberg.models.operations.CopyOperation;
+import us.sourcefoundry.gutenberg.models.operations.DirectoryCopy;
 import us.sourcefoundry.gutenberg.models.operations.DirectoryCreation;
+import us.sourcefoundry.gutenberg.models.operations.FileCopy;
 import us.sourcefoundry.gutenberg.models.operations.FileCreation;
 import us.sourcefoundry.gutenberg.models.templates.AnswersFileTemplate;
 import us.sourcefoundry.gutenberg.services.Cli;
-import us.sourcefoundry.gutenberg.services.console.Console;
 import us.sourcefoundry.gutenberg.services.FileSystemService;
 import us.sourcefoundry.gutenberg.services.UserPromptService;
+import us.sourcefoundry.gutenberg.services.console.Console;
 import us.sourcefoundry.gutenberg.utils.DependencyInjector;
 import us.sourcefoundry.gutenberg.utils.Pair;
 
@@ -104,9 +105,9 @@ public class Build implements Command {
             forme.getFiles().forEach(f -> (DependencyInjector.getInstance(FileCreation.class)).execute(f, buildContext));
             //Perform the static directory copy.  This is the same data but we do the directory entries first, since
             //they will need to exist in case a file copy needs it.
-            forme.getCopy().stream().filter(c -> c.getType().equals("directory")).forEach(c -> (DependencyInjector.getInstance(CopyOperation.class)).execute(c, buildContext));
+            forme.getCopy().stream().filter(c -> c.getType().equals("directory")).forEach(c -> (DependencyInjector.getInstance(DirectoryCopy.class)).execute(c, buildContext));
             //Perform the static file copy.
-            forme.getCopy().stream().filter(c -> c.getType().equals("file")).forEach(c -> (DependencyInjector.getInstance(CopyOperation.class)).execute(c, buildContext));
+            forme.getCopy().stream().filter(c -> c.getType().equals("file")).forEach(c -> (DependencyInjector.getInstance(FileCopy.class)).execute(c, buildContext));
 
             //If the user wants their answers saved, then this will save those answers for use in later runs.
             //Also if there is an autosave enabled.

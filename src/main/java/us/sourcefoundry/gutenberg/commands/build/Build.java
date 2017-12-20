@@ -22,7 +22,6 @@ import us.sourcefoundry.gutenberg.utils.DependencyInjector;
 import us.sourcefoundry.gutenberg.utils.Pair;
 
 import javax.inject.Inject;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -74,7 +73,7 @@ public class Build implements Command {
                 return;
 
             //Get the forme file and make sure it exists.
-            Forme forme = Forme.fromLocation(formeLocation,this.console);
+            Forme forme = Forme.fromLocation(formeLocation, this.console);
 
             //Only continue if the forme was found.
             if (forme == null)
@@ -84,12 +83,23 @@ public class Build implements Command {
             BuildLocation buildLocation = BuildLocation.fromCli(this.cli, this.applicationContext);
 
             //Check to newInstance sure the output directory is available.
-            if (!this.checkBuildPath(buildLocation, this.cli.hasOption("f")))
+            BuildPathChecker buildPathChecker = new BuildPathChecker();
+            boolean buildPathCheck = buildPathChecker.check(buildLocation, this.cli.hasOption("f"));
+
+            //Check to see if there were in any errors or warnings.
+            if (buildPathChecker.hasErrors())
+                buildPathChecker.getErrors().forEach(e -> this.console.error(e.getDescription(), buildLocation.getPath()));
+            if (buildPathChecker.hasWarnings())
+                buildPathChecker.getWarnings().forEach(e -> this.console.warning(e.getDescription(), buildLocation.getPath()));
+
+            //If the check failed, meaning the output directly is not available, then bounce out.
+            if (!buildPathCheck)
                 return;
 
             //Run any prompts the forme may require.
-            HashMap<String, Object> userResponses = this.getUserResponseToPrompts(forme, cli);
+            Map<String, Object> userResponses = this.getUserResponseToPrompts(forme, cli);
 
+            //Create a build context to reduce the number of parameters getting passed around.
             BuildContext buildContext = new BuildContext(buildLocation, forme, formeLocation, userResponses);
 
             /*
@@ -127,17 +137,17 @@ public class Build implements Command {
      * @param cli   The command line.
      * @return Map of variable name to response.
      */
-    private HashMap<String, Object> getUserResponseToPrompts(Forme forme, Cli cli) throws FileNotFoundException {
+    private Map<String, Object> getUserResponseToPrompts(Forme forme, Cli cli) throws FileNotFoundException {
         Map<String, Object> answers = new HashMap<>();
 
         if (cli.hasOption("a")) {
             String answersFile = cli.getOptionValue("a");
             InputStream answerFileIS = new FileInputStream((new FileSystemService()).getByLocation(answersFile));
             Yaml parser = new Yaml(new Constructor(HashMap.class));
-            answers = (HashMap<String, Object>) parser.load(answerFileIS);
+            answers = (Map<String, Object>) parser.load(answerFileIS);
         }
 
-        return new UserPromptService(forme,this.console).requestAnswers(answers);
+        return new UserPromptService(forme, this.console).requestAnswers(answers);
 
     }
 
@@ -147,7 +157,7 @@ public class Build implements Command {
      * @param cli           The command line.
      * @param userResponses The user responses to prompts.
      */
-    private void saveUserAnswersFromPrompts(Cli cli, HashMap<String, Object> userResponses, List<String> allowed) throws FileNotFoundException {
+    private void saveUserAnswersFromPrompts(Cli cli, Map<String, Object> userResponses, List<String> allowed) throws FileNotFoundException {
         List<Pair<Object, Object>> answers = new ArrayList<>();
         String answersFilePath = (cli.hasOption("s") ? cli.getOptionValue("s") : "auto-save.yml");
 
@@ -158,48 +168,5 @@ public class Build implements Command {
 
         this.console.message("\nCreating Answer File... {0}", answersFilePath);
         (new AnswersFileTemplate()).create(answersFilePath, answers);
-    }
-
-    /**
-     * This function will check the build path and make sure its available for use as a build location.
-     *
-     * @param buildLocation The location to build.
-     * @param force         Should the build location be used regardless of readiness.
-     * @return boolean
-     */
-    private boolean checkBuildPath(BuildLocation buildLocation, boolean force) {
-        File buildLocationObj = (new FileSystemService()).getByLocation(buildLocation.getPath());
-
-        boolean outputDirectoryExists = buildLocationObj.exists();
-        boolean isDirectory = buildLocationObj.isDirectory();
-
-        if (outputDirectoryExists && !force) {
-            boolean isEmptyDirectory = buildLocationObj.list().length == 0;
-
-            if (isDirectory && !isEmptyDirectory) {
-                this.console.error("Could not build. {0} exists and is not empty.\n", buildLocationObj.getAbsolutePath());
-                return false;
-            }
-
-            if (!isDirectory) {
-                this.console.error("Could not build. {0} exists and is not a directory.\n", buildLocationObj.getAbsolutePath());
-                return false;
-            }
-        }
-
-        if (outputDirectoryExists && force && !isDirectory) {
-            this.console.error("Could not force build. {0} exists and is not a directory.\n", buildLocationObj.getAbsolutePath());
-            return false;
-        }
-
-        if (outputDirectoryExists && force)
-            this.console.warning("{0} already exists. Building anyways.\n", buildLocationObj.getAbsolutePath());
-
-        if (!outputDirectoryExists && !buildLocationObj.mkdir()) {
-            this.console.warning("{0} did not exist and could not be created.\n", buildLocationObj.getAbsolutePath());
-            return false;
-        }
-
-        return true;
     }
 }

@@ -24,7 +24,7 @@ public class BuildLocation {
     }
 
     /**
-     * Build the build location from the commandl ine.
+     * Build the build location from the command line.
      *
      * @param cli                THe command line.
      * @param applicationContext The context for the application.

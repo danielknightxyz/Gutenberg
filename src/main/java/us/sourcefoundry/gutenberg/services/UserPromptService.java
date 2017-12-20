@@ -38,9 +38,9 @@ public class UserPromptService {
      *
      * @return Map
      */
-    public HashMap<String, Object> requestAnswers(Map<String, Object> providedAnswers) {
+    public Map<String, Object> requestAnswers(Map<String, Object> providedAnswers) {
         //Map containing the user responses.
-        HashMap<String, Object> userResponses = new HashMap<>();
+        Map<String, Object> userResponses = new HashMap<>();
 
         //For each prompt in the forme, prompt the user.
         for (VarPrompt prompt : this.forme.getPrompts()) {

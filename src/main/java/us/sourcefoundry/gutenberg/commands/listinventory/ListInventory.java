@@ -7,6 +7,7 @@ import us.sourcefoundry.gutenberg.models.FormeInventoryItem;
 import us.sourcefoundry.gutenberg.services.console.Console;
 
 import javax.inject.Inject;
+import java.text.MessageFormat;
 import java.util.Map;
 
 /**
@@ -51,9 +52,29 @@ public class ListInventory implements Command {
             return;
         }
 
+        final int longestName = this.getLongestFormeName(inventory);
+
         //Otherwise, show the contents of the inventory to the user.
-        this.console.message("Inventory Contents:");
-        inventory.forEach((k, v) -> this.console.info("> {0}", v.getName()));
-        this.console.message("\n");
+        this.printContents(longestName, "NAME", "REFERENCE");
+        inventory.forEach((k, v) -> this.printContents(longestName, v.getName(),
+                this.buildReference(v.getUsername(), v.getRepository(), v.getReference())));
+    }
+
+    private void printContents(int minWidth, String name, String reference) {
+        System.out.format("%-" + (minWidth + 4) + "s %-35s %n", name, reference);
+    }
+
+    private String buildReference(String username, String repository, String reference) {
+        return MessageFormat.format("{0}/{1}:{2}", username, repository, reference);
+    }
+
+    private int getLongestFormeName( Map<String, FormeInventoryItem> inventory){
+        final int[] longestName = {0};
+        inventory.forEach((k, v) -> {
+            if (v.getName().length() > longestName[0])
+                longestName[0] = v.getName().length();
+        });
+
+        return longestName[0];
     }
 }

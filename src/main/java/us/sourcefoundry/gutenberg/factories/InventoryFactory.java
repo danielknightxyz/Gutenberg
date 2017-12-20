@@ -31,7 +31,6 @@ public class InventoryFactory extends AbstractFactory<Map<String, FormeInventory
      */
     public Map<String, FormeInventoryItem> newInstance(String inventoryLocation) {
         try {
-            Map<String, FormeInventoryItem> inventory = new HashMap<>();
             Type type = new TypeToken<Map<String, FormeInventoryItem>>() {
             }.getType();
 

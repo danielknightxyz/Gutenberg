@@ -95,7 +95,7 @@ public class Add implements Command {
                         List<ArchiveScanResult> archiveScanResults = scanArchiveForFormes(bais);
                         bais.reset();
 
-                        this.console.message("Adding {0} formes: {1}", archiveScanResults.size(), String.join(
+                        this.console.message( "\n{0} formes found: {1}\n", archiveScanResults.size(), String.join(
                                 ", ",
                                 archiveScanResults.stream()
                                         .map(

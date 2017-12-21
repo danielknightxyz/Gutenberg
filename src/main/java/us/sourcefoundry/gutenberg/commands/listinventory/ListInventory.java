@@ -56,7 +56,7 @@ public class ListInventory implements Command {
 
         //Otherwise, show the contents of the inventory to the user.
         this.printContents(longestName, "NAME", "REFERENCE");
-        inventory.forEach((k, v) -> this.printContents(longestName, v.getName(),
+        inventory.forEach((k, v) -> this.printContents(longestName,   v.getName(),
                 this.buildReference(v.getUsername(), v.getRepository(), v.getReference())));
     }
 

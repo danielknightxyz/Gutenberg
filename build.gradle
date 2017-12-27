@@ -45,6 +45,20 @@ task install(type: Exec, dependsOn: build){
     commandLine "etc/install.sh"
 }
 
+//This will uninstall the application.
+task uninstall(type: Exec){
+    commandLine "etc/uninstall.sh"
+}
+
+//This will perform a complete rebuild, uninstall, and install.  This can not be run if the application has not be already
+//installed.
+task reinstall{
+    dependsOn 'clean'
+    dependsOn 'uninstall'
+    dependsOn 'install'
+    tasks.findByName('install').mustRunAfter 'uninstall'
+}
+
 //This will create a zip file for release and distribution through Homebrew.
 task brewDist(type: Zip, dependsOn: build) {
     from ('build/libs/')

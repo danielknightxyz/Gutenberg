@@ -127,11 +127,14 @@ public class Add implements Command {
         this.printResultsHeader("NAME", "TAG", "REFERENCE", "ADDED");
         installationResults.forEach(result -> {
                     String installationMessage = this.getInstallationMessage(result.getArchiveScanResult().getAction());
+                    String tag = (result.getArchiveScanResult().getForme().getTag() != null ? result.getArchiveScanResult().getForme().getTag() : "none");
+                    String actionTaken = (result.isInstalled() ? "Yes" : "No") + " " + installationMessage;
+
                     this.printResults(
                             result.getFormeInventoryItem().getKey(),
-                            result.getArchiveScanResult().getForme().getTag(),
+                            tag,
                             result.getLocationReference().toFQN(),
-                            (result.isInstalled() ? "Yes" : "No") + " " + installationMessage
+                            actionTaken
                     );
                 }
         );

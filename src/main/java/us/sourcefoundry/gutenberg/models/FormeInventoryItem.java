@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 /**
  * An entry from the inventory file.
  */
@@ -22,5 +24,11 @@ public class FormeInventoryItem {
     private String name;
     //The location it was installed in the installation directory.
     private String installPath;
+    //The tag for the release.
+    private String tag;
+    //The key for a forme.
+    private String key;
+    //The date it was addedOn;
+    private LocalDateTime addedOn;
 
 }

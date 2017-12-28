@@ -4,6 +4,7 @@ import us.sourcefoundry.gutenberg.commands.Command;
 import us.sourcefoundry.gutenberg.factories.InventoryFactory;
 import us.sourcefoundry.gutenberg.models.ApplicationContext;
 import us.sourcefoundry.gutenberg.models.FormeInventoryItem;
+import us.sourcefoundry.gutenberg.models.HumanFriendlyDate;
 import us.sourcefoundry.gutenberg.services.console.Console;
 
 import javax.inject.Inject;
@@ -11,7 +12,7 @@ import java.text.MessageFormat;
 import java.util.Map;
 
 /**
- * This will list any formes added to inventory.
+ * This will list any formes addedOn to inventory.
  */
 public class ListInventory implements Command {
 
@@ -40,39 +41,49 @@ public class ListInventory implements Command {
         //Get the inventory.
         Map<String, FormeInventoryItem> inventory = (new InventoryFactory()).newInstance(this.applicationContext.getInstallDirectory() + "/inventory.json");
 
-        //If inventory is not present, tell the user.
-        if (inventory == null) {
-            this.console.warning("Inventory not found or empty.");
-            return;
-        }
-
         //If teh inventory is empty, tell the user.
-        if (inventory.size() < 1) {
-            this.console.warning("Inventory empty.");
+        if (inventory == null || inventory.size() < 1) {
+            this.console.message("");
+            this.console.message("Your inventory empty.");
+            this.console.message("");
             return;
         }
 
         final int longestName = this.getLongestFormeName(inventory);
 
+        this.console.message("");
         //Otherwise, show the contents of the inventory to the user.
-        this.printContents(longestName, "NAME", "REFERENCE");
-        inventory.forEach((k, v) -> this.printContents(longestName,   v.getName(),
-                this.buildReference(v.getUsername(), v.getRepository(), v.getReference())));
+        this.printContentsHeader(longestName, "NAME", "TAG", "SOURCE", "ADDED");
+        inventory.forEach((key, inventoryItem) ->
+                this.printContents(
+                        longestName,
+                        inventoryItem.getKey(),
+                        (inventoryItem.getTag() == null ? "none" : inventoryItem.getTag()),
+                        this.buildReference(inventoryItem.getUsername(), inventoryItem.getRepository(), inventoryItem.getReference()),
+                        HumanFriendlyDate.fromLocalDateTime(inventoryItem.getAddedOn()).getPrettyTime()
+                )
+        );
+
+        this.console.message("");
     }
 
-    private void printContents(int minWidth, String name, String reference) {
-        System.out.format("%-" + (minWidth + 4) + "s %-35s %n", name, reference);
+    private void printContentsHeader(int minWidth, String name, String tag, String reference, String dateAdded) {
+        System.out.format("\u001B[90m%-" + (minWidth + 4) + "s %-10s %-60s %-10s\u001B[0m %n", name, tag, reference, dateAdded);
+    }
+
+    private void printContents(int minWidth, String name, String tag, String reference, String dateAdded) {
+        System.out.format("%-" + (minWidth + 4) + "s %-10s %-60s %-10s%n", name, tag, reference, dateAdded);
     }
 
     private String buildReference(String username, String repository, String reference) {
         return MessageFormat.format("{0}/{1}:{2}", username, repository, reference);
     }
 
-    private int getLongestFormeName( Map<String, FormeInventoryItem> inventory){
+    private int getLongestFormeName(Map<String, FormeInventoryItem> inventory) {
         final int[] longestName = {0};
         inventory.forEach((k, v) -> {
-            if (v.getName().length() > longestName[0])
-                longestName[0] = v.getName().length();
+            if (v.getKey().length() > longestName[0])
+                longestName[0] = v.getKey().length();
         });
 
         return longestName[0];

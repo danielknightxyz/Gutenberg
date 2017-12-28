@@ -31,6 +31,8 @@ public class Forme {
     private String author;
     //The email for support.
     private String email;
+    //The release tag for the forme.
+    private String tag;
     //Any variables to set for use in templating.
     private Map<String, Object> variables = new HashMap<>();
     //Any meta data for use in templating.

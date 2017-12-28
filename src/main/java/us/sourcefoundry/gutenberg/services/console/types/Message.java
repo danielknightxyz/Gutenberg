@@ -55,6 +55,6 @@ public class Message implements IConsoleOut {
             colorCode = "00m";
         String preparedMessage = MessageFormat.format(pattern, args);
         String finalMessage = MessageFormat.format(finalPattern, preparedMessage);
-        return MessageFormat.format("\033[{0}{1}\033[0m", colorCode, finalMessage);
+        return MessageFormat.format("\u001B[{0}{1}\u001B[0m", colorCode, finalMessage);
     }
 }

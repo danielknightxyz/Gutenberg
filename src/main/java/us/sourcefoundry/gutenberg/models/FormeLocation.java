@@ -68,7 +68,7 @@ public class FormeLocation {
 
         //If the forme is not in inventory, return null.
         if (!inventory.containsKey(formeName)) {
-            console.info("{0} not found in inventory.");
+            console.info("{0} not found in inventory.", formeName);
             return null;
         }
 

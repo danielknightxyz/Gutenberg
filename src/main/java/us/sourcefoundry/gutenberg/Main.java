@@ -25,7 +25,7 @@ public class Main {
      *
      * @param args Command line arguments.
      */
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         //Initialize the dependency injection.
         DependencyInjector.init();
 

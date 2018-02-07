@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 @Getter
 @Setter
 @NoArgsConstructor
-public class GithubLocation implements ILocationReference<GithubLocation> {
+public class GithubLocation implements ILocationReference {
 
     //The regex pattern which will identify and allow the above components to be parsed.
     private final Pattern PATTERN = Pattern.compile("^(.+)\\/(.+):(.+)$|^(.+)\\/(.+)$");
@@ -37,16 +37,6 @@ public class GithubLocation implements ILocationReference<GithubLocation> {
     }
 
     /**
-     * Returns the tag for the location.
-     *
-     * @return String
-     */
-    @Override
-    public String getTag() {
-        return this.reference;
-    }
-
-    /**
      * Creates a new github location from a string.
      *
      * @param location The Github location.
@@ -54,6 +44,16 @@ public class GithubLocation implements ILocationReference<GithubLocation> {
      */
     public static GithubLocation fromString(String location) {
         return new GithubLocation(location);
+    }
+
+    /**
+     * Returns the tag for the location.
+     *
+     * @return String
+     */
+    @Override
+    public String getTag() {
+        return this.reference;
     }
 
     /**

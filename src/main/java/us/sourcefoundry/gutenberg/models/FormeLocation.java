@@ -3,7 +3,7 @@ package us.sourcefoundry.gutenberg.models;
 import lombok.Getter;
 import lombok.Setter;
 import us.sourcefoundry.gutenberg.factories.InventoryFactory;
-import us.sourcefoundry.gutenberg.services.Cli;
+import us.sourcefoundry.gutenberg.services.commandcli.CliCommand;
 import us.sourcefoundry.gutenberg.services.console.Console;
 
 import java.util.Map;
@@ -17,6 +17,7 @@ public class FormeLocation {
 
     /**
      * Constructor
+     *
      * @param path The path for the forme location.
      */
     private FormeLocation(String path) {
@@ -25,19 +26,19 @@ public class FormeLocation {
 
     /**
      * Determines the location of the Forme file.  First by seeing if the forme location is being supplied by the user
-     * via the local option.  If not, its going to check and make sure there's a forme name provided as an argument.  If
+     * via the local reference.  If not, its going to check and make sure there's a forme name provided as an argument.  If
      * the forme name is given as a argument, this will be looked up in the inventory.
      *
      * @return String
      */
-    public static FormeLocation fromCli(Cli cli, ApplicationContext applicationContext, Console console) {
+    public static FormeLocation fromCliCommand(CliCommand cli, ApplicationContext applicationContext, Console console) {
         //If the forme is local, then look some where other than the inventory; which will be supplied by the user.
-        if (cli.hasOption("local"))
+        if (cli.hasOption("l"))
             //Get local forme.
-            return cli.getOptionValue("local").equals(".") ? new FormeLocation(applicationContext.getWorkingDirectory()) : new FormeLocation(cli.getOptionValue("local"));
+            return cli.getOption("l").getValue().equals(".") ? new FormeLocation(applicationContext.getWorkingDirectory()) : new FormeLocation(cli.getOption("l").getValue());
 
         //Else, lets check out the inventory.
-        String formeName = (cli.getArgList().get(1) != null ? cli.getArgList().get(1).toString() : null);
+        String formeName = (cli.getAdditionalArgs().get(0) != null ? cli.getAdditionalArgs().get(0).toString() : null);
 
         //If the forme name is not provided, return null.
         if (formeName == null)

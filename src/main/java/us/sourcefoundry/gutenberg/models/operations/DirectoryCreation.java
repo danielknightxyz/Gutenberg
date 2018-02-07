@@ -3,8 +3,8 @@ package us.sourcefoundry.gutenberg.models.operations;
 import us.sourcefoundry.gutenberg.models.BuildContext;
 import us.sourcefoundry.gutenberg.models.forme.DirectoryEntry;
 import us.sourcefoundry.gutenberg.models.templates.FormattedStringTemplate;
-import us.sourcefoundry.gutenberg.services.console.Console;
 import us.sourcefoundry.gutenberg.services.FileSystemService;
+import us.sourcefoundry.gutenberg.services.console.Console;
 
 import javax.inject.Inject;
 import java.util.HashMap;

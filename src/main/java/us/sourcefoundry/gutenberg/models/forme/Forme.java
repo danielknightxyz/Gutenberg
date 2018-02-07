@@ -3,10 +3,10 @@ package us.sourcefoundry.gutenberg.models.forme;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import us.sourcefoundry.gutenberg.models.FormeLocation;
 import us.sourcefoundry.gutenberg.factories.FormeFactory;
-import us.sourcefoundry.gutenberg.services.console.Console;
+import us.sourcefoundry.gutenberg.models.FormeLocation;
 import us.sourcefoundry.gutenberg.services.FileSystemService;
+import us.sourcefoundry.gutenberg.services.console.Console;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -48,16 +48,6 @@ public class Forme {
     //Any static content to copy.
     private List<CopyEntry> copy = new ArrayList<>();
 
-
-    /**
-     * Should the answers be auto-saved.
-     *
-     * @return boolean
-     */
-    public boolean shouldAutoSaveAnswers() {
-        return autoSaveAnswers;
-    }
-
     /**
      * This will find the forme file given a location on the file system.
      *
@@ -76,5 +66,14 @@ public class Forme {
         return (new FormeFactory()).newInstance(
                 (new FileSystemService()).streamFile(formeFile)
         );
+    }
+
+    /**
+     * Should the answers be auto-saved.
+     *
+     * @return boolean
+     */
+    public boolean shouldAutoSaveAnswers() {
+        return autoSaveAnswers;
     }
 }

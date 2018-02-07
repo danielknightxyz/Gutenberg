@@ -20,7 +20,7 @@ public class Message implements IConsoleOut {
      * @param formatColor   The color of the message.
      * @param messageFormat The overall format the message.
      * @param pattern       The message pattern.
-     * @param args          Arguments to replace in the pattern.
+     * @param args          Argument to replace in the pattern.
      */
     public Message(String formatColor, String messageFormat, String pattern, Object... args) {
         this.formatColor = formatColor;

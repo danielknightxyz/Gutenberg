@@ -32,11 +32,11 @@ public class FileCreation implements FileSystemOperation<FileEntry> {
 
         //Create the file from a source file template.
         if (fileSystemObject.isFileSourced()) {
-            this.createFromSourceFile(fileSystemObject,buildContext.getFormeLocation().getPath(), destFilePath, variables);
+            this.createFromSourceFile(fileSystemObject, buildContext.getFormeLocation().getPath(), destFilePath, variables);
             return;
         }
         //Create the file from the content provided in the forme file.
-        this.createFromSourceContent(fileSystemObject,destFilePath, variables);
+        this.createFromSourceContent(fileSystemObject, destFilePath, variables);
     }
 
     /**

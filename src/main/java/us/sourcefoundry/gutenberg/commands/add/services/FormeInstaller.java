@@ -28,6 +28,15 @@ public class FormeInstaller {
 
     private Console console;
 
+    /**
+     * Installs formes from an archive file stream.
+     *
+     * @param archiveFileStream  The stream for the file.
+     * @param destination        The install destination.
+     * @param archiveScanResults The scan results to determine what to do.
+     * @param locationReference  The source of the file.
+     * @return List
+     */
     public List<InstallationResult> install(InputStream archiveFileStream, String destination, List<ArchiveScanResult> archiveScanResults, ILocationReference locationReference) {
         //Open the archive from the input stream.
         List<InstallationResult> installationResults = new ArrayList<>();

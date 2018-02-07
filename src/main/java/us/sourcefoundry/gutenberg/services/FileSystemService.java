@@ -24,7 +24,7 @@ public class FileSystemService {
      * Allows you to get a location from the file system by providing a path with message formatting.
      *
      * @param location The location of the file or directory to get.
-     * @param args     Replacement Arguments.
+     * @param args     Replacement Argument.
      * @return A File
      */
     public File getByLocation(String location, Object... args) {

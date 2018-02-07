@@ -39,4 +39,14 @@ public class Unknown implements Command {
         //Throw an error because the requested command is not valid.
         this.console.error("Action \"{0}\" is not valid. See help for usage.", this.applicationContext.getCommand());
     }
+
+    @Override
+    public void help() {
+
+    }
+
+    @Override
+    public boolean hasHelp() {
+        return false;
+    }
 }

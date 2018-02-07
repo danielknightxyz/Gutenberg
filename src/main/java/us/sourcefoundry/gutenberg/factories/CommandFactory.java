@@ -7,6 +7,7 @@ import us.sourcefoundry.gutenberg.commands.build.Build;
 import us.sourcefoundry.gutenberg.commands.init.Init;
 import us.sourcefoundry.gutenberg.commands.listinventory.ListInventory;
 import us.sourcefoundry.gutenberg.commands.removeinventory.RemoveInventory;
+import us.sourcefoundry.gutenberg.commands.root.RootCommand;
 import us.sourcefoundry.gutenberg.utils.DependencyInjector;
 
 /**
@@ -38,6 +39,8 @@ public class CommandFactory extends AbstractFactory<Command> {
                 return this.getCommandInstance(Build.class);
             case "remove":
                 return this.getCommandInstance(RemoveInventory.class);
+            case "":
+                return this.getCommandInstance(RootCommand.class);
             default:
                 return this.getCommandInstance(Unknown.class);
         }

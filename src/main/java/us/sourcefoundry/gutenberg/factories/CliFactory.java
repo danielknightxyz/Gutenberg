@@ -1,30 +1,30 @@
 package us.sourcefoundry.gutenberg.factories;
 
-import us.sourcefoundry.gutenberg.services.Cli;
+import us.sourcefoundry.gutenberg.services.CliService;
 
 /**
- * Creates a Cli object for the application.
+ * Creates a CliService object for the application.
  */
-public class CliFactory extends AbstractFactory<Cli> {
+public class CliFactory extends AbstractFactory<CliService> {
 
     /**
      * New Instance
      *
-     * @return Cli
+     * @return CliService
      */
     @Override
-    public Cli newInstance() {
-        return this.getInstance(Cli.class);
+    public CliService newInstance() {
+        return this.getInstance(CliService.class);
     }
 
     /**
      * New Instance w/ arguments.
      *
      * @param args The application arguments.
-     * @return Cli
+     * @return CliService
      */
-    public Cli newInstance(String[] args) {
-        Cli newObj = this.getInstance(Cli.class);
+    public CliService newInstance(String[] args) {
+        CliService newObj = this.getInstance(CliService.class);
         newObj.load(args);
         return newObj;
     }

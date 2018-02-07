@@ -67,18 +67,67 @@ public class ListInventory implements Command {
         this.console.message("");
     }
 
+    /**
+     * Prints the help for the command.
+     */
+    @Override
+    public void help() {
+    }
+
+    /**
+     * Is the help been requested.
+     *
+     * @return boolean
+     */
+    @Override
+    public boolean hasHelp() {
+        return false;
+    }
+
+    /**
+     * Prints the results header.
+     *
+     * @param minWidth  Min width of the first cell.
+     * @param name      The name header.
+     * @param tag       The tag header.
+     * @param reference The reference header.
+     * @param dateAdded The date added header.
+     */
     private void printContentsHeader(int minWidth, String name, String tag, String reference, String dateAdded) {
         System.out.format("\u001B[90m%-" + (minWidth + 4) + "s %-10s %-60s %-10s\u001B[0m %n", name, tag, reference, dateAdded);
     }
 
+    /**
+     * Prints the results row.
+     *
+     * @param minWidth  Min width of the first cell.
+     * @param name      The name row.
+     * @param tag       The tag row.
+     * @param reference The reference row.
+     * @param dateAdded The date added row.
+     */
     private void printContents(int minWidth, String name, String tag, String reference, String dateAdded) {
         System.out.format("%-" + (minWidth + 4) + "s %-10s %-60s %-10s%n", name, tag, reference, dateAdded);
     }
 
+    /**
+     * Build a Github reference.
+     *
+     * @param username   The Github user.
+     * @param repository The Github repo.
+     * @param reference  The Github tag or reference.
+     * @return String
+     */
     private String buildReference(String username, String repository, String reference) {
         return MessageFormat.format("{0}/{1}:{2}", username, repository, reference);
     }
 
+    /**
+     * Gets the length of the longest name. This will be used for man width of the results table.
+     *
+     * @param inventory The inventory.
+     * @return int
+     */
     private int getLongestFormeName(Map<String, FormeInventoryItem> inventory) {
         final int[] longestName = {0};
         inventory.forEach((k, v) -> {

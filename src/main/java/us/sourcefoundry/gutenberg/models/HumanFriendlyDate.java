@@ -11,11 +11,11 @@ public class HumanFriendlyDate {
 
     private String prettyTime;
 
-    private HumanFriendlyDate(String prettyTime){
+    private HumanFriendlyDate(String prettyTime) {
         this.prettyTime = prettyTime;
     }
 
-    public static HumanFriendlyDate fromLocalDateTime(LocalDateTime localDateTime){
+    public static HumanFriendlyDate fromLocalDateTime(LocalDateTime localDateTime) {
         return new HumanFriendlyDate(new PrettyTime().format(Timestamp.valueOf(localDateTime)));
     }
 }

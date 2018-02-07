@@ -1,19 +1,13 @@
 package us.sourcefoundry.gutenberg;
 
 import us.sourcefoundry.gutenberg.commands.Command;
-import us.sourcefoundry.gutenberg.config.ApplicationProperties;
 import us.sourcefoundry.gutenberg.factories.ApplicationContextFactory;
 import us.sourcefoundry.gutenberg.factories.ApplicationPropertiesFactory;
 import us.sourcefoundry.gutenberg.factories.CliFactory;
 import us.sourcefoundry.gutenberg.factories.CommandFactory;
 import us.sourcefoundry.gutenberg.models.ApplicationContext;
-import us.sourcefoundry.gutenberg.services.Cli;
+import us.sourcefoundry.gutenberg.services.CliService;
 import us.sourcefoundry.gutenberg.utils.DependencyInjector;
-
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
 
 /**
  * This is this main class and entry point into the application.
@@ -30,21 +24,29 @@ public class Main {
         DependencyInjector.init();
 
         //Start by getting the CLI args.
-        Cli cli = (new CliFactory()).newInstance(args);
+        CliService cliService = (new CliFactory()).newInstance(args);
 
-        //If we need to show a blocking option, do it.
-        if (cli.hasBlockingOption()) {
-            cli.printBlockingOption();
+        //Check to see if the version was requested.
+        if (cliService.hasVersion()) {
+            cliService.printVersion();
             return;
         }
 
         //Create an application context for use later in the process.
-        ApplicationContext applicationContext = (new ApplicationContextFactory()).newInstance(cli);
+        ApplicationContext applicationContext = (new ApplicationContextFactory()).newInstance(cliService);
         //Get the application properties.
         (new ApplicationPropertiesFactory()).newInstance("application.properties");
 
         //Create the command.
         Command command = (new CommandFactory()).newInstance(applicationContext.getCommand());
+
+        //If the help as been requested, then print the command help.
+        if (command.hasHelp()) {
+            command.help();
+            return;
+        }
+
+        //Execute the command.
         command.execute();
     }
 }

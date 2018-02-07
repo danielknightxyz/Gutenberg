@@ -14,8 +14,10 @@ import us.sourcefoundry.gutenberg.config.ApplicationProperties;
 import us.sourcefoundry.gutenberg.factories.InventoryFactory;
 import us.sourcefoundry.gutenberg.models.ApplicationContext;
 import us.sourcefoundry.gutenberg.models.FormeInventoryItem;
-import us.sourcefoundry.gutenberg.services.Cli;
+import us.sourcefoundry.gutenberg.services.CliService;
 import us.sourcefoundry.gutenberg.services.FileSystemService;
+import us.sourcefoundry.gutenberg.services.commandcli.CliCommand;
+import us.sourcefoundry.gutenberg.services.commandcli.models.Option;
 import us.sourcefoundry.gutenberg.services.console.Console;
 
 import javax.inject.Inject;
@@ -37,7 +39,7 @@ public class Add implements Command {
     //The application context.
     private ApplicationContext applicationContext;
     //The command line.
-    private Cli cli;
+    private CliCommand cli;
     //The console.
     private Console console;
 
@@ -45,13 +47,13 @@ public class Add implements Command {
      * Constructor.
      *
      * @param applicationContext The application context.
-     * @param cli                The cli service.
+     * @param cliService         The cliService service.
      * @param console            The console service.
      */
     @Inject
-    public Add(ApplicationContext applicationContext, Cli cli, Console console, ApplicationProperties applicationProperties) {
+    public Add(ApplicationContext applicationContext, CliService cliService, Console console, ApplicationProperties applicationProperties) {
         this.applicationContext = applicationContext;
-        this.cli = cli;
+        this.cli = cliService.getRootCommand().getSubCommand();
         this.console = console;
         this.applicationProperties = applicationProperties;
     }
@@ -122,23 +124,58 @@ public class Add implements Command {
         //Store the inventory.
         (new FileSystemService()).createFile(installDir + "/inventory.json", (new Gson().toJson(inventory)));
 
-        //Print the results for the user.
-        this.console.message("");
-        this.printResultsHeader("NAME", "TAG", "REFERENCE", "ADDED");
-        installationResults.forEach(result -> {
-                    String installationMessage = this.getInstallationMessage(result.getArchiveScanResult().getAction());
-                    String tag = (result.getArchiveScanResult().getForme().getTag() != null ? result.getArchiveScanResult().getForme().getTag() : "none");
-                    String actionTaken = (result.isInstalled() ? "Yes" : "No") + " " + installationMessage;
+        if (installationResults.isEmpty())
+            this.console.info("Nothing Installed. See help for usage.");
 
-                    this.printResults(
-                            result.getFormeInventoryItem().getKey(),
-                            tag,
-                            result.getLocationReference().toFQN(),
-                            actionTaken
-                    );
-                }
-        );
-        this.console.message("");
+        if (!installationResults.isEmpty()) {
+            //Print the results for the user.
+            this.console.message("");
+
+            this.printResultsHeader("NAME", "TAG", "REFERENCE", "ADDED");
+            installationResults.forEach(result -> {
+                        String installationMessage = this.getInstallationMessage(result.getArchiveScanResult().getAction());
+                        String tag = (result.getArchiveScanResult().getForme().getTag() != null ? result.getArchiveScanResult().getForme().getTag() : "none");
+                        String actionTaken = (result.isInstalled() ? "Yes" : "No") + " " + installationMessage;
+
+                        this.printResults(
+                                result.getFormeInventoryItem().getKey(),
+                                tag,
+                                result.getLocationReference().toFQN(),
+                                actionTaken
+                        );
+                    }
+            );
+
+            this.console.message("");
+        }
+    }
+
+    /**
+     * Prints the help for the command.
+     */
+    @Override
+    public void help() {
+        System.out.println("add usage: gutenberg add [-h] [REPOSITORY...] \n");
+
+        System.out.println("Options:");
+
+        for (Option option : this.cli.getReference().getOptions()) {
+            String shortOption = (option.getName() != null ? "-" + option.getName() + "," : "");
+            String longOption = (option.getLongName() != null ? "--" + option.getLongName() : "");
+            String description = option.getDescription();
+
+            System.out.format("%-1s %-13s %-60s %n", shortOption, longOption, (description != null ? description : ""));
+        }
+    }
+
+    /**
+     * Is the help been requested.
+     *
+     * @return boolean
+     */
+    @Override
+    public boolean hasHelp() {
+        return this.cli.hasOption("h");
     }
 
     /**
@@ -171,7 +208,7 @@ public class Add implements Command {
      * @return List
      */
     private List<String> getCommandLineLocations() {
-        return this.cli.getArgList().subList(1, this.cli.getArgList().size());
+        return this.cli.getAdditionalArgs();
     }
 
     /**

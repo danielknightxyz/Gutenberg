@@ -4,7 +4,9 @@ import us.sourcefoundry.gutenberg.commands.Command;
 import us.sourcefoundry.gutenberg.models.ApplicationContext;
 import us.sourcefoundry.gutenberg.models.forme.Permissions;
 import us.sourcefoundry.gutenberg.models.templates.FileTemplate;
-import us.sourcefoundry.gutenberg.services.Cli;
+import us.sourcefoundry.gutenberg.services.CliService;
+import us.sourcefoundry.gutenberg.services.commandcli.CliCommand;
+import us.sourcefoundry.gutenberg.services.commandcli.models.Option;
 import us.sourcefoundry.gutenberg.services.console.Console;
 
 import javax.inject.Inject;
@@ -21,7 +23,7 @@ public class Init implements Command {
     //The application context.
     private ApplicationContext applicationContext;
     //The command line.
-    private Cli cli;
+    private CliCommand cli;
     //The console.
     private Console console;
 
@@ -29,13 +31,13 @@ public class Init implements Command {
      * Constructor.
      *
      * @param applicationContext The application context.
-     * @param cli                The cli service.
+     * @param cliService         The cliService service.
      * @param console            The console service.
      */
     @Inject
-    public Init(ApplicationContext applicationContext, Cli cli, Console console) {
+    public Init(ApplicationContext applicationContext, CliService cliService, Console console) {
         this.applicationContext = applicationContext;
-        this.cli = cli;
+        this.cli = cliService.getRootCommand().getSubCommand();
         this.console = console;
     }
 
@@ -58,6 +60,35 @@ public class Init implements Command {
         InputStream templateFileStream = Init.class.getClassLoader().getResourceAsStream("templates/forme.yml.mustache");
         //Create the file in the output path.
         (new FileTemplate()).create(new InputStreamReader(templateFileStream), new Permissions(), destFilePath, new HashMap<>());
+    }
+
+    /**
+     * Prints the help for the command.
+     */
+    @Override
+    public void help() {
+        System.out.println("init usage: gutenberg init [-h] [-f] \n");
+
+        System.out.println("Options:");
+
+        for (Option option : this.cli.getReference().getOptions()) {
+            String shortOption = (option.getName() != null ? "-" + option.getName() + "," : "");
+            String longOption = (option.getLongName() != null ? "--" + option.getLongName() : "");
+            String description = option.getDescription();
+
+            System.out.format("%-1s %-13s %-60s %n", shortOption, longOption, (description != null ? description : ""));
+        }
+
+    }
+
+    /**
+     * Is the help been requested.
+     *
+     * @return boolean
+     */
+    @Override
+    public boolean hasHelp() {
+        return this.cli.hasOption("h");
     }
 
     /**

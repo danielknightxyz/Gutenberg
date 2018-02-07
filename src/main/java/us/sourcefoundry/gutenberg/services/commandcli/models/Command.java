@@ -5,6 +5,9 @@ import lombok.Getter;
 
 import java.util.List;
 
+/**
+ * This is a cli command.
+ */
 @Getter
 @Builder
 public class Command {

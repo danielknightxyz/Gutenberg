@@ -3,6 +3,9 @@ package us.sourcefoundry.gutenberg.services.commandcli.models;
 import lombok.Builder;
 import lombok.Getter;
 
+/**
+ * This is a cli option for a defined command.
+ */
 @Getter
 @Builder
 public class Option {

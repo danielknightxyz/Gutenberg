@@ -9,6 +9,10 @@ import us.sourcefoundry.gutenberg.utils.Pair;
 
 import java.util.*;
 
+/**
+ * This is the command line reader.  This class is responsible for reading the user provided arguments and matching them up
+ * to command and command options defined for the application.
+ */
 @NoArgsConstructor
 public class CliReader {
 
@@ -17,21 +21,25 @@ public class CliReader {
         Map<String, CliOption> readArgumentMap = new HashMap<>();
         List<String> additionalArgs = new ArrayList<>();
 
-        Command currentCommand = command;
-
+        //Index the sub-commands so that if one is encountered, it will be recognized and then processed.
         Map<String, Command> subCommandIndex = new HashMap<>();
 
-        if (currentCommand.getSubCommands() != null)
-            currentCommand.getSubCommands().forEach(c -> subCommandIndex.put(c.getName(), c));
+        if (command.getSubCommands() != null)
+            command.getSubCommands().forEach(c -> subCommandIndex.put(c.getName(), c));
 
+        //The indexed options.
         Map<String, Option> optionMap = new HashMap<>();
+        //Need to be able to lookup options based off long option names.
         Map<String, Option> longOptionMap = new HashMap<>();
 
-        if (currentCommand.getOptions() != null) {
-            currentCommand.getOptions().forEach(o -> optionMap.put(o.getName(), o));
-            currentCommand.getOptions().forEach(o -> longOptionMap.put(o.getLongName(), o));
-        }
+        //Perform the indexing of the options.
+        if (command.getOptions() != null)
+            command.getOptions().forEach(o -> {
+                optionMap.put(o.getName(), o);
+                longOptionMap.put(o.getLongName(), o);
+            });
 
+        //Place holder for any subcommand that is read.
         CliCommand subCommand = null;
 
         //Process each argument.
@@ -51,9 +59,10 @@ public class CliReader {
                     indexMap = longOptionMap;
                 }
 
-                //Parse the
+                //Parse the argument.
                 Pair<String, CliOption> argumentPair = this.parseArgument(arg.substring(trimIndex), args, i, indexMap);
 
+                //If the par is null, don't put it in the read arg map.
                 if (argumentPair != null) {
                     readArgumentMap.put(argumentPair.getKey(), argumentPair.getValue());
                     if (argumentPair.getValue().getReference().isExpectParameter())
@@ -68,45 +77,64 @@ public class CliReader {
             //Its an additional argument.
             else if (
                 //This is needed so that a named root command is not picked up as an additional argument.
-                    !arg.equals(currentCommand.getName()) &&
+                    !arg.equals(command.getName()) &&
                             !subCommandIndex.containsKey(arg)
                     ) {
                 additionalArgs.add(arg);
             }
         }
 
+        //Create a cli command.
         CliCommand cliCommand = new CliCommand();
-        cliCommand.setReference(currentCommand);
+        cliCommand.setReference(command);
         cliCommand.setSubCommand(subCommand);
         cliCommand.setReadOptions(readArgumentMap);
         cliCommand.setAdditionalArgs(additionalArgs);
         return cliCommand;
     }
 
+    /**
+     * This will parse and argument as an cli option.
+     *
+     * @param arg       The argument value.
+     * @param args      The set of arguments for the application.
+     * @param index     The index of argument.
+     * @param optionMap The option map to use to lookup the reference.
+     * @return Pair
+     */
     private Pair<String, CliOption> parseArgument(String arg, String[] args, int index, Map<String, Option> optionMap) {
-        String optionName = arg, optionValue = null;
+        //Default the option name to the argument
+        String optionName = arg,
+                //Default the value to null.
+                optionValue = null;
 
-        if (arg.contains("=")) {
+        //Look for a equal sign.  This indicates that the option was provided a vlue.
+        if (arg.contains("="))
             optionName = arg.split("=")[0];
-        }
 
+
+        //Look up the option reference.
         Option foundOption = optionMap.get(optionName);
 
+        //If the option reference is not found then there's nothing to do, return a null value.
         if (foundOption == null)
             return null;
 
-        if (foundOption.isExpectParameter()) {
-            if (arg.contains("=")) {
+        //If the option reference is expecting a value, then this will extract it.
+        if (foundOption.isExpectParameter())
+            //Look for the equals.
+            if (arg.contains("="))
                 optionValue = arg.split("=")[1];
-            } else {
+            //If the equals was not found, then assume (since we are expecting a parameter) that the next argument is the value.
+            else
                 optionValue = args[index + 1];
-            }
-        }
 
+        //Create an option with the ref and value.
         CliOption cliOption = new CliOption();
         cliOption.setReference(foundOption);
         cliOption.setValue(optionValue);
 
+        //Return the Name/Value pair.
         return new Pair<>(foundOption.getName(), cliOption);
     }
 

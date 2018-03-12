@@ -45,7 +45,7 @@ public class CliService {
                         }})
                 .subCommands(
                         new ArrayList<Command>() {{
-                            add(Command.builder().name("build").description("Build a forme.").documented(true)
+                            add(Command.builder().name("build").description("Generate assets using a forme.").documented(true)
                                     .options(new ArrayList<Option>() {{
                                         add(Option.builder().name("h").longName("help").description("Shows this message.").build());
                                         add(Option.builder().name("a").longName("answersfile").description("The location of an answers file.").expectParameter(true).parameterName("path").build());

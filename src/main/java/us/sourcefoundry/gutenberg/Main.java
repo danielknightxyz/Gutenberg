@@ -7,6 +7,7 @@ import us.sourcefoundry.gutenberg.factories.CliFactory;
 import us.sourcefoundry.gutenberg.factories.CommandFactory;
 import us.sourcefoundry.gutenberg.models.ApplicationContext;
 import us.sourcefoundry.gutenberg.services.CliService;
+import us.sourcefoundry.gutenberg.services.commandcli.exceptions.UnknownArgumentException;
 import us.sourcefoundry.gutenberg.utils.DependencyInjector;
 
 /**
@@ -24,7 +25,16 @@ public class Main {
         DependencyInjector.init();
 
         //Start by getting the CLI args.
-        CliService cliService = (new CliFactory()).newInstance(args);
+        CliService cliService;
+
+        //Try to build the CliService, which includes parsing the provided arguments.  Because the possibility exists that
+        //a user will provide a unsupported argument, the runtime exception needs to be caught.
+        try {
+            cliService = (new CliFactory()).newInstance(args);
+        } catch (UnknownArgumentException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
 
         //Check to see if the version was requested.
         if (cliService.hasVersion()) {

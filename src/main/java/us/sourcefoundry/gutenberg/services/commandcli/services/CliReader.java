@@ -2,6 +2,7 @@ package us.sourcefoundry.gutenberg.services.commandcli.services;
 
 import lombok.NoArgsConstructor;
 import us.sourcefoundry.gutenberg.services.commandcli.CliCommand;
+import us.sourcefoundry.gutenberg.services.commandcli.exceptions.UnknownArgumentException;
 import us.sourcefoundry.gutenberg.services.commandcli.models.CliOption;
 import us.sourcefoundry.gutenberg.services.commandcli.models.Command;
 import us.sourcefoundry.gutenberg.services.commandcli.models.Option;
@@ -112,20 +113,19 @@ public class CliReader {
         if (arg.contains("="))
             optionName = arg.split("=")[0];
 
-
         //Look up the option reference.
         Option foundOption = optionMap.get(optionName);
 
         //If the option reference is not found then there's nothing to do, return a null value.
         if (foundOption == null)
-            return null;
+            throw new UnknownArgumentException(arg);
 
         //If the option reference is expecting a value, then this will extract it.
         if (foundOption.isExpectParameter())
             //Look for the equals.
             if (arg.contains("="))
                 optionValue = arg.split("=")[1];
-            //If the equals was not found, then assume (since we are expecting a parameter) that the next argument is the value.
+                //If the equals was not found, then assume (since we are expecting a parameter) that the next argument is the value.
             else
                 optionValue = args[index + 1];
 

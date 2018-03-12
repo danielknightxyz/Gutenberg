@@ -2,6 +2,7 @@ package us.sourcefoundry.gutenberg.services.commandcli.services;
 
 import org.junit.Test;
 import us.sourcefoundry.gutenberg.services.commandcli.CliCommand;
+import us.sourcefoundry.gutenberg.services.commandcli.exceptions.UnknownArgumentException;
 import us.sourcefoundry.gutenberg.services.commandcli.models.Command;
 import us.sourcefoundry.gutenberg.services.commandcli.models.Option;
 
@@ -398,4 +399,67 @@ public class CliReaderTest {
         assertEquals("test",cliCommand.getSubCommand().getOption("o").getValue());
     }
 
+    @Test
+    public void testNamedRootCommandWithUnknownArguement() {
+        //The argument.
+        String[] args = new String[2];
+        args[0] = "-z";
+        args[1] = "build";
+
+        //Stand up some expected options.
+        List<Option> optionList = new ArrayList<>();
+        optionList.add(Option.builder().name("h").build());
+
+        List<Command> subCommandList = new ArrayList<>();
+        Command subCommand = Command.builder().name("build").options(
+                new ArrayList<Option>() {{
+                    add(Option.builder().name("o").expectParameter(true).build());
+                }}
+        ).build();
+        subCommandList.add(subCommand);
+
+        Command rootCommand = Command.builder().options(optionList).subCommands(subCommandList).build();
+
+        //Read the arguments.
+        CliReader reader = new CliReader();
+
+        try {
+            reader.read(args, rootCommand);
+            fail("Bad argument was accepted.");
+        } catch (Exception e){
+            assertTrue(e instanceof UnknownArgumentException);
+        }
+    }
+
+    @Test
+    public void testNamedSubcommandWithUnknownArguement() {
+        //The argument.
+        String[] args = new String[2];
+        args[0] = "build";
+        args[1] = "-z";
+
+        //Stand up some expected options.
+        List<Option> optionList = new ArrayList<>();
+        optionList.add(Option.builder().name("h").build());
+
+        List<Command> subCommandList = new ArrayList<>();
+        Command subCommand = Command.builder().name("build").options(
+                new ArrayList<Option>() {{
+                    add(Option.builder().name("o").expectParameter(true).build());
+                }}
+        ).build();
+        subCommandList.add(subCommand);
+
+        Command rootCommand = Command.builder().options(optionList).subCommands(subCommandList).build();
+
+        //Read the arguments.
+        CliReader reader = new CliReader();
+
+        try {
+            reader.read(args, rootCommand);
+            fail("Bad argument was accepted.");
+        } catch (Exception e){
+            assertTrue(e instanceof UnknownArgumentException);
+        }
+    }
 }

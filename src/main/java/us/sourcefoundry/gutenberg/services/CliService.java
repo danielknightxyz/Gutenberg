@@ -2,6 +2,7 @@ package us.sourcefoundry.gutenberg.services;
 
 import lombok.Getter;
 import us.sourcefoundry.gutenberg.services.commandcli.CliCommand;
+import us.sourcefoundry.gutenberg.services.commandcli.exceptions.UnknownArgumentException;
 import us.sourcefoundry.gutenberg.services.commandcli.models.Command;
 import us.sourcefoundry.gutenberg.services.commandcli.models.Option;
 import us.sourcefoundry.gutenberg.services.commandcli.services.CliReader;
@@ -35,6 +36,7 @@ public class CliService {
      * @param args ApplicationManager arguments.
      */
     public void load(String[] args) {
+        //Lets build the commands.
         Command command = Command.builder()
                 .options(
                         new ArrayList<Option>() {{
@@ -73,13 +75,9 @@ public class CliService {
                 )
                 .build();
 
-        try {
-            //Get the options values from the command line.
-            this.rootCommand = this.buildCLI(command, args);
-            this.cliOptions = command;
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
+        //Get the options values from the command line.
+        this.rootCommand = this.buildCLI(command, args);
+        this.cliOptions = command;
     }
 
     /**

@@ -2,7 +2,6 @@ package us.sourcefoundry.gutenberg.services;
 
 import lombok.Getter;
 import us.sourcefoundry.gutenberg.services.commandcli.CliCommand;
-import us.sourcefoundry.gutenberg.services.commandcli.exceptions.UnknownArgumentException;
 import us.sourcefoundry.gutenberg.services.commandcli.models.Command;
 import us.sourcefoundry.gutenberg.services.commandcli.models.Option;
 import us.sourcefoundry.gutenberg.services.commandcli.services.CliReader;

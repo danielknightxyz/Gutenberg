@@ -1,5 +1,6 @@
 package us.sourcefoundry.gutenberg;
 
+import sun.misc.Unsafe;
 import us.sourcefoundry.gutenberg.commands.Command;
 import us.sourcefoundry.gutenberg.factories.ApplicationContextFactory;
 import us.sourcefoundry.gutenberg.factories.ApplicationPropertiesFactory;
@@ -9,6 +10,8 @@ import us.sourcefoundry.gutenberg.models.ApplicationContext;
 import us.sourcefoundry.gutenberg.services.CliService;
 import us.sourcefoundry.gutenberg.services.commandcli.exceptions.UnknownArgumentException;
 import us.sourcefoundry.gutenberg.utils.DependencyInjector;
+
+import java.lang.reflect.Field;
 
 /**
  * This is this main class and entry point into the application.
@@ -21,6 +24,10 @@ public class Main {
      * @param args Command line arguments.
      */
     public static void main(String[] args) {
+        //This is a hack to prevent an ugly warning about GUICE from being displayed.
+        //TODO: Remove when Guice is updated for Java >= 9.
+        disableWarning();
+
         //Initialize the dependency injection.
         DependencyInjector.init();
 
@@ -58,5 +65,25 @@ public class Main {
 
         //Execute the command.
         command.execute();
+    }
+
+    /**
+     * Disable Startup Warning.
+     *
+     * This function disables a warning related to Guice and Java 9.
+     * This will need to be removed once Guice is updated for Java >= 9.
+     */
+    static void disableWarning() {
+        try {
+            Field theUnsafe = Unsafe.class.getDeclaredField("theUnsafe");
+            theUnsafe.setAccessible(true);
+            Unsafe u = (Unsafe) theUnsafe.get(null);
+
+            Class cls = Class.forName("jdk.internal.module.IllegalAccessLogger");
+            Field logger = cls.getDeclaredField("logger");
+            u.putObjectVolatile(cls, u.staticFieldOffset(logger), null);
+        } catch (Exception e) {
+            // ignore
+        }
     }
 }

@@ -20,7 +20,7 @@ public class ApplicationPropertiesFactory extends AbstractFactory<ApplicationPro
     }
 
     /**
-     * Creates a new instance from options in the Cli.
+     * Creates a new instance from options in the CliService.
      *
      * @param filename The name of the properites file.
      * @return ApplicationContext

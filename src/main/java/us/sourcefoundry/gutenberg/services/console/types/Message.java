@@ -20,7 +20,7 @@ public class Message implements IConsoleOut {
      * @param formatColor   The color of the message.
      * @param messageFormat The overall format the message.
      * @param pattern       The message pattern.
-     * @param args          Arguments to replace in the pattern.
+     * @param args          Argument to replace in the pattern.
      */
     public Message(String formatColor, String messageFormat, String pattern, Object... args) {
         this.formatColor = formatColor;
@@ -55,6 +55,6 @@ public class Message implements IConsoleOut {
             colorCode = "00m";
         String preparedMessage = MessageFormat.format(pattern, args);
         String finalMessage = MessageFormat.format(finalPattern, preparedMessage);
-        return MessageFormat.format("\033[{0}{1}\033[0m", colorCode, finalMessage);
+        return MessageFormat.format("\u001B[{0}{1}\u001B[0m", colorCode, finalMessage);
     }
 }

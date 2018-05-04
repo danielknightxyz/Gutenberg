@@ -6,6 +6,8 @@ import us.sourcefoundry.gutenberg.commands.add.Add;
 import us.sourcefoundry.gutenberg.commands.build.Build;
 import us.sourcefoundry.gutenberg.commands.init.Init;
 import us.sourcefoundry.gutenberg.commands.listinventory.ListInventory;
+import us.sourcefoundry.gutenberg.commands.removeinventory.RemoveInventory;
+import us.sourcefoundry.gutenberg.commands.root.RootCommand;
 import us.sourcefoundry.gutenberg.utils.DependencyInjector;
 
 /**
@@ -35,7 +37,13 @@ public class CommandFactory extends AbstractFactory<Command> {
                 return this.getCommandInstance(Init.class);
             case "build":
                 return this.getCommandInstance(Build.class);
+            case "remove":
+                return this.getCommandInstance(RemoveInventory.class);
+            case "":
+                //If the command is not provided in the command line, then assume root command.
+                return this.getCommandInstance(RootCommand.class);
             default:
+                //If anything other than a known command or empty string is provided, its unkown and should error.
                 return this.getCommandInstance(Unknown.class);
         }
     }

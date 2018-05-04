@@ -2,7 +2,7 @@ package us.sourcefoundry.gutenberg.models;
 
 import lombok.Getter;
 import lombok.Setter;
-import us.sourcefoundry.gutenberg.services.Cli;
+import us.sourcefoundry.gutenberg.services.commandcli.CliCommand;
 
 /**
  * This represents the location of the generated files should go.
@@ -30,10 +30,10 @@ public class BuildLocation {
      * @param applicationContext The context for the application.
      * @return BuildLocation
      */
-    public static BuildLocation fromCli(Cli cli, ApplicationContext applicationContext) {
+    public static BuildLocation fromCliCommand(CliCommand cli, ApplicationContext applicationContext) {
         if (cli.hasOption("o"))
             //Get local forme.
-            return new BuildLocation(cli.getOptionValue("o"));
+            return new BuildLocation(cli.getOption("o").getValue());
 
         //If an output directory is not provided in the commandline, then just assume they mean the current working
         //directory.

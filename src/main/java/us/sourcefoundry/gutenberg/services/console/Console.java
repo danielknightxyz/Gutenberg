@@ -18,7 +18,7 @@ public class Console {
     private ApplicationProperties properties;
 
     @Inject
-    public Console(ApplicationProperties properties){
+    public Console(ApplicationProperties properties) {
         this.properties = properties;
     }
 

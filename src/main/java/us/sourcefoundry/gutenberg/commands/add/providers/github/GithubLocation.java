@@ -1,9 +1,11 @@
-package us.sourcefoundry.gutenberg.commands.add;
+package us.sourcefoundry.gutenberg.commands.add.providers.github;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import us.sourcefoundry.gutenberg.commands.add.models.ILocationReference;
 
+import java.text.MessageFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,7 +15,7 @@ import java.util.regex.Pattern;
 @Getter
 @Setter
 @NoArgsConstructor
-public class GithubLocation {
+public class GithubLocation implements ILocationReference {
 
     //The regex pattern which will identify and allow the above components to be parsed.
     private final Pattern PATTERN = Pattern.compile("^(.+)\\/(.+):(.+)$|^(.+)\\/(.+)$");
@@ -45,13 +47,22 @@ public class GithubLocation {
     }
 
     /**
+     * Returns the tag for the location.
+     *
+     * @return String
+     */
+    @Override
+    public String getTag() {
+        return this.reference;
+    }
+
+    /**
      * Attempts to match the location.
      *
-     * @param pattern  The regex pattern.
      * @param location The Github location.
      * @return Matcher
      */
-    private Matcher locationMatches(Pattern pattern, String location) {
+    private Matcher locationMatches(String location) {
         return PATTERN.matcher(location);
     }
 
@@ -62,7 +73,7 @@ public class GithubLocation {
      */
     private void parseLocation(String location) {
         //Match it.
-        Matcher matcher = this.locationMatches(PATTERN, location);
+        Matcher matcher = this.locationMatches(location);
 
         //If it doesn't match. Don't do anything.
         if (!matcher.matches())
@@ -77,5 +88,14 @@ public class GithubLocation {
         this.setUser(user);
         this.setRepository(repository);
         this.setReference(reference);
+    }
+
+    /**
+     * Produces a full description of the location.
+     *
+     * @return String
+     */
+    public String toFQN() {
+        return MessageFormat.format("{0}/{1}:{2}", this.getUser(), this.getRepository(), this.getReference());
     }
 }

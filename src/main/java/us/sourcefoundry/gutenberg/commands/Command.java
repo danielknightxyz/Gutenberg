@@ -9,4 +9,16 @@ public interface Command {
      * Executes the command.
      */
     void execute();
+
+    /**
+     * Shows the command's help.
+     */
+    void help();
+
+    /**
+     * Has the help for the command been requested by the user.
+     *
+     * @return boolean
+     */
+    boolean hasHelp();
 }
